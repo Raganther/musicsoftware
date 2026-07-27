@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.vite/
+*.local
+.DS_Store
+
+# Audio scratch — renders, samples, bounces. Keep the repo light.
+scratch/
+*.wav
+*.aiff
+*.flac
+*.mp3
+*.ogg
+!research/assets/**
+
+.env
+.env.*

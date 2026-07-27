@@ -1,0 +1,21 @@
+{
+  "name": "musicsoftware",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A sandbox for prototyping music software — sequencers, synths, DAW pieces, improvisational tools.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "check": "tsc --noEmit",
+    "smoke": "node scripts/smoke.mjs",
+    "test": "npm run check && npm run smoke",
+    "new": "node scripts/new-sketch.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.5"
+  }
+}
