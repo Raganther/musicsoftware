@@ -19,19 +19,33 @@ export interface MountTargets {
   status: (text: string) => void
 }
 
+export interface MountOptions {
+  /** Where the sketch's bus connects. Defaults to the master bus. */
+  dest?: AudioNode
+  /**
+   * Whether mounting applies the sketch's bpm/division to the transport.
+   * Jam mode mounts many sketches at once — the last one must not win.
+   */
+  applyTransport?: boolean
+}
+
 export interface MountedSketch {
   entry: SketchEntry
   store: ParamStore
   unmount(): void
 }
 
-export function mountSketch(entry: SketchEntry, targets: MountTargets): MountedSketch {
+export function mountSketch(
+  entry: SketchEntry,
+  targets: MountTargets,
+  opts: MountOptions = {},
+): MountedSketch {
   const { ctx, master } = audio()
   const def = entry.def
 
   const out = ctx.createGain()
   out.gain.value = 1
-  out.connect(master)
+  out.connect(opts.dest ?? master)
 
   const store = new ParamStore(entry.id, def.params ?? {})
   const disposers: Array<() => void> = []
@@ -40,8 +54,10 @@ export function mountSketch(entry: SketchEntry, targets: MountTargets): MountedS
   targets.stage.innerHTML = ''
   const disposePanel = renderPanel(targets.panel, store)
 
-  if (def.bpm) clock.bpm = def.bpm
-  clock.division = def.division ?? 4
+  if (opts.applyTransport !== false) {
+    if (def.bpm) clock.bpm = def.bpm
+    clock.division = def.division ?? 4
+  }
 
   const sketchCtx: SketchContext<ParamMap> = {
     audio: ctx,

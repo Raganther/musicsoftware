@@ -56,6 +56,24 @@ page from a script, importing `/src/core/audio.ts` by bare path can hand back
 a *second* copy of the module with its own AudioContext. Resolve the real URL
 from `performance.getEntriesByType('resource')`.
 
+## Jam mode
+
+`#/jam` mounts many sketches at once as channel strips (level, DJ filter,
+mute/solo, meters), with scenes (1-4), tap tempo (b) and master WAV record
+(shift+R). Consequences for sketch authors:
+
+- Sketches must work **without owning the page**: only touch `ctx.root`,
+  never assume a viewport-sized stage (strips are ~264px tall), and never
+  grab global input exclusively. All existing sketches already comply.
+- In jam mode `def.bpm`/`def.division` are **not** applied (the last-mounted
+  sketch must not clobber the shared transport) — `mountSketch` takes
+  `{ applyTransport: false, dest }` for this.
+- Recording taps the post-limiter analyser via `src/core/record.ts` and a
+  capture worklet; it records exactly what is heard, in solo or jam mode.
+- QWERTY-listening sketches all receive keys simultaneously in a jam —
+  that's accepted layering for now. Don't bind 'b' or shift+R (transport
+  shortcuts); 't' is a note key, which is why tap is on 'b'.
+
 ## Writing a sketch
 
 ```ts

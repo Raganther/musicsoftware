@@ -7,6 +7,7 @@
 
 export * from './audio'
 export * from './clock'
+export * from './record'
 export * from './theory'
 export * from './random'
 export * from './voices'

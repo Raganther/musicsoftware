@@ -217,10 +217,34 @@ try {
   const residual = await sample(800)
   if (residual > 0.02) failures.push(`audio still sounding after unmount (${residual.toFixed(3)})`)
 
+  // Jam mode: two channels on the one transport must sound together, and
+  // leaving the jam must leave silence.
+  await page.evaluate(() => (location.hash = '#/jam'))
+  await page.waitForTimeout(400)
+  await page.click('.sketch-list .item[href="#/step-sequencer"]')
+  await page.click('.sketch-list .item[href="#/euclidean-drift"]')
+  await page.waitForTimeout(300)
+  const jamChannels = await page.evaluate(() => document.querySelectorAll('.strip').length)
+  if ((await page.textContent('#play')) !== '■') await page.click('#play')
+  const jamPeak = await sample(2000)
+
+  await page.evaluate(() => (location.hash = '#/call-response'))
+  await page.waitForTimeout(300)
+  await page.evaluate(async (u) => (await import(u.clock)).clock.stop(), urls)
+  await page.waitForTimeout(900)
+  const jamResidual = await sample(800)
+
+  if (jamChannels !== 2) failures.push(`jam: expected 2 channels, got ${jamChannels}`)
+  if (jamPeak < 0.02) failures.push(`jam: near-silent with two channels (${jamPeak.toFixed(3)})`)
+  if (jamPeak > 1) failures.push(`jam: clipping into the limiter (${jamPeak.toFixed(2)})`)
+  if (jamResidual > 0.02) failures.push(`jam: still sounding after leaving (${jamResidual.toFixed(3)})`)
+
   if (errors.length) failures.push(`console errors:\n  ${errors.join('\n  ')}`)
 
   for (const r of rows) console.log(`  ${r.id.padEnd(24)} peak ${r.peak}`)
   console.log(`  ${'(residual after unmount)'.padEnd(24)} peak ${residual.toFixed(3)}`)
+  console.log(`  ${'(jam: 2 channels)'.padEnd(24)} peak ${jamPeak.toFixed(3)}`)
+  console.log(`  ${'(jam residual)'.padEnd(24)} peak ${jamResidual.toFixed(3)}`)
 } finally {
   await browser?.close()
   server.kill('SIGTERM')

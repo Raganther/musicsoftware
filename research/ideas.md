@@ -47,6 +47,14 @@ and link to what came of it.
 - A DAW arrangement view where clips have gravity and snap into phrases.
 - Score that renders as a diagram of tension rather than notation.
 
+## Jam / performance (sparked by building jam mode)
+
+- Per-channel input routing: focus a strip to own the QWERTY keys and MIDI.
+- Stem recording: one aligned WAV per channel, not just the master.
+- Global key/scale broadcast sketches can opt into — change key mid-jam.
+- Scene morph: glide numeric params to the target over a bar instead of jumping.
+- Crossfader assignable to any two channels.
+
 ## Wild
 
 - Music software with no undo — everything is a performance.

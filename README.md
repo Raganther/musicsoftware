@@ -13,6 +13,28 @@ npm run new my-idea  # scaffold a sketch
 Press <kbd>space</kbd> to start the transport. `[` and `]` move between
 sketches, `/` focuses the filter.
 
+## Jam mode
+
+Click **⚡ jam** in the sidebar. The gallery becomes a palette: clicking a
+sketch adds it as a channel strip, and every channel runs on the one global
+transport, so everything locks together by construction.
+
+Each strip has a level fader, a bipolar DJ filter (left = lowpass closes,
+right = highpass rises, double-click resets), mute, solo, a meter, and the
+sketch's parameters behind `···`. The rack persists across reloads.
+
+Performance controls, everywhere:
+
+| Control | What it does |
+| --- | --- |
+| `1`–`4` | recall scene (`shift` stores — every param, level, filter, mute, bpm, swing) |
+| `b` / tap | tap tempo |
+| `shift+R` / ● | record the master output to a 16-bit WAV — exactly what you hear |
+| QWERTY row | plays every listening channel at once; mute what you don't want layered |
+
+The classic move: store a scene, mute a channel, rework its params behind the
+mute, store that as the next scene, and step between them on the beat.
+
 ## Layout
 
 ```
