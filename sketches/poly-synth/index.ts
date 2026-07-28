@@ -13,9 +13,14 @@ export default defineSketch({
   status: 'sketch',
   params: {
     wave: { type: 'select', value: 'sawtooth', options: ['sawtooth', 'square', 'triangle', 'sine'] },
+    sub: { type: 'number', value: 0, min: 0, max: 1, step: 0.01, label: 'Sub osc' },
+    filterType: { type: 'select', value: 'lowpass', options: ['lowpass', 'highpass', 'bandpass'], label: 'Filter' },
     cutoff: { type: 'number', value: 1600, min: 120, max: 12000, step: 10, unit: 'Hz' },
     resonance: { type: 'number', value: 7, min: 0.5, max: 24, step: 0.1, label: 'Resonance' },
     envAmount: { type: 'number', value: 2.2, min: 0, max: 5, step: 0.1, label: 'Filter env', unit: 'oct' },
+    velToFilter: { type: 'number', value: 0.5, min: 0, max: 1, step: 0.01, label: 'Vel→filter' },
+    keytrack: { type: 'number', value: 0.3, min: 0, max: 1, step: 0.01, label: 'Keytrack' },
+    spread: { type: 'number', value: 0.4, min: 0, max: 1, step: 0.01, label: 'Width' },
     detune: { type: 'number', value: 9, min: 0, max: 40, step: 0.5, unit: 'cents' },
     attack: { type: 'number', value: 0.01, min: 0.001, max: 1.5, step: 0.001, unit: 's' },
     decay: { type: 'number', value: 0.25, min: 0.01, max: 2, step: 0.01, unit: 's' },
@@ -28,8 +33,12 @@ export default defineSketch({
 The filter envelope is where most of the character lives — try short decay
 with high filter env for a pluck, then long attack for a pad.
 
-Next thing worth trying: velocity -> filter cutoff, not just amplitude.
-That single mapping is most of why real synths feel responsive.
+Vel→filter was the "next thing worth trying" from day one and it delivered:
+soft notes go darker, not just quieter, and the keyboard immediately feels
+like an instrument instead of a trigger. Keytrack does the rest — high notes
+open up the way acoustic instruments do.
+
+Sub + Width is the quick thick-pad recipe: sub ~0.5, width ~0.7, slow attack.
   `,
 
   setup(ctx) {
@@ -46,9 +55,14 @@ That single mapping is most of why real synths feel responsive.
     const apply = () => {
       synth.set({
         wave: ctx.params.wave as Wave,
+        sub: ctx.params.sub,
+        filterType: ctx.params.filterType as 'lowpass' | 'highpass' | 'bandpass',
         cutoff: ctx.params.cutoff,
         resonance: ctx.params.resonance,
         envAmount: ctx.params.envAmount,
+        velToFilter: ctx.params.velToFilter,
+        keytrack: ctx.params.keytrack,
+        spread: ctx.params.spread,
         detune: ctx.params.detune,
         attack: ctx.params.attack,
         decay: ctx.params.decay,
@@ -57,7 +71,11 @@ That single mapping is most of why real synths feel responsive.
       })
     }
     apply()
-    for (const key of ['wave', 'cutoff', 'resonance', 'envAmount', 'detune', 'attack', 'decay', 'sustain', 'release'] as const) {
+    for (const key of [
+      'wave', 'sub', 'filterType', 'cutoff', 'resonance', 'envAmount',
+      'velToFilter', 'keytrack', 'spread', 'detune', 'attack', 'decay',
+      'sustain', 'release',
+    ] as const) {
       ctx.onParam(key, apply)
     }
     ctx.onParam('delayMix', (v) => dly.setMix(v))

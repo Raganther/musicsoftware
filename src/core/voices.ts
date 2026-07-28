@@ -24,6 +24,19 @@ export interface SynthOptions {
   resonance: number
   /** Filter envelope depth in octaves above cutoff. */
   envAmount: number
+  /** Filter topology. Lowpass unless you mean it. */
+  filterType: 'lowpass' | 'highpass' | 'bandpass'
+  /** Sine sub-oscillator one octave down, 0..1 relative level. */
+  sub: number
+  /**
+   * Stereo spread 0..1. Voices are placed deterministically around the field
+   * (golden-angle sequence), so the image is wide but reproducible.
+   */
+  spread: number
+  /** How much velocity scales the filter envelope, 0..1. Soft = darker. */
+  velToFilter: number
+  /** Cutoff keyboard tracking, 0..1. High notes open the filter. */
+  keytrack: number
   attack: number
   decay: number
   sustain: number
@@ -43,6 +56,11 @@ const DEFAULTS: SynthOptions = {
   cutoff: 1800,
   resonance: 6,
   envAmount: 2,
+  filterType: 'lowpass',
+  sub: 0,
+  spread: 0,
+  velToFilter: 0,
+  keytrack: 0,
   attack: 0.005,
   decay: 0.18,
   sustain: 0.6,
@@ -64,6 +82,7 @@ export class PolySynth {
   private dest: AudioNode
   private held = new Map<number, Voice>()
   private active: Voice[] = []
+  private voiceSerial = 0
 
   constructor(dest: AudioNode, opts: Partial<SynthOptions> = {}) {
     this.dest = dest
@@ -82,15 +101,22 @@ export class PolySynth {
 
     const amp = ctx.createGain()
     const filter = ctx.createBiquadFilter()
-    filter.type = 'lowpass'
+    filter.type = o.filterType
     filter.Q.value = o.resonance
 
-    const peakCutoff = Math.min(ctx.sampleRate / 2 - 1000, o.cutoff * Math.pow(2, o.envAmount))
+    // Keytracking opens the filter as pitch rises; velocity scales the
+    // envelope so soft notes are darker, not just quieter.
+    const baseCutoff = Math.min(
+      18000,
+      Math.max(40, o.cutoff * Math.pow(freq / 261.63, o.keytrack)),
+    )
+    const envDepth = o.envAmount * (1 - o.velToFilter * (1 - velocity))
+    const peakCutoff = Math.min(ctx.sampleRate / 2 - 1000, baseCutoff * Math.pow(2, envDepth))
     filter.frequency.cancelScheduledValues(time)
-    filter.frequency.setValueAtTime(Math.max(40, o.cutoff), time)
+    filter.frequency.setValueAtTime(baseCutoff, time)
     filter.frequency.linearRampToValueAtTime(peakCutoff, time + o.attack)
     filter.frequency.exponentialRampToValueAtTime(
-      Math.max(40, o.cutoff),
+      baseCutoff,
       time + o.attack + o.decay + 0.001,
     )
 
@@ -101,8 +127,11 @@ export class PolySynth {
     // ~+16dB at cutoff). Normalise both so `gain` really is roughly the peak
     // amplitude of one voice, and changing resonance doesn't change loudness.
     const oscMix = ctx.createGain()
-    oscMix.gain.value = 1 / oscCount
-    const qComp = 1 / Math.sqrt(Math.max(1, o.resonance))
+    oscMix.gain.value = 1 / (oscCount + o.sub)
+    // Resonance compensation is for filters whose peak grows with Q — a
+    // biquad bandpass peaks at unity regardless, so compensating it just
+    // makes the mode mysteriously quiet.
+    const qComp = o.filterType === 'bandpass' ? 1 : 1 / Math.sqrt(Math.max(1, o.resonance))
 
     const peak = o.gain * velocity * qComp
     amp.gain.cancelScheduledValues(time)
@@ -121,9 +150,33 @@ export class PolySynth {
       oscs.push(osc)
     }
 
+    const extras: AudioNode[] = [oscMix, filter, amp]
+
+    if (o.sub > 0) {
+      const sub = ctx.createOscillator()
+      sub.type = 'sine'
+      sub.frequency.value = freq / 2
+      const subGain = ctx.createGain()
+      subGain.gain.value = o.sub
+      sub.connect(subGain).connect(oscMix)
+      extras.push(subGain)
+      sub.start(time)
+      oscs.push(sub)
+    }
+
     oscMix.connect(filter)
     filter.connect(amp)
-    amp.connect(this.dest)
+
+    if (o.spread > 0) {
+      // Golden-angle walk around the stereo field: wide, even, and — unlike
+      // Math.random — the same every run.
+      const pan = ctx.createStereoPanner()
+      pan.pan.value = Math.sin(this.voiceSerial++ * 2.399963) * o.spread
+      amp.connect(pan).connect(this.dest)
+      extras.push(pan)
+    } else {
+      amp.connect(this.dest)
+    }
 
     const voice: Voice = {
       midi,
@@ -149,9 +202,7 @@ export class PolySynth {
         }
         amp.gain.linearRampToValueAtTime(0, end)
 
-        oscs.forEach((osc, i) =>
-          disposeAt(osc, end + 0.02, i === 0 ? [oscMix, filter, amp] : undefined),
-        )
+        oscs.forEach((osc, i) => disposeAt(osc, end + 0.02, i === 0 ? extras : undefined))
         voice.endTime = end + 0.02
       },
     }

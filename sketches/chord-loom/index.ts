@@ -36,6 +36,8 @@ export default defineSketch({
     quantise: { type: 'select', value: 'beat', options: ['free', 'beat', 'bar'] },
     seventh: { type: 'toggle', value: true, label: 'Add 7ths' },
     density: { type: 'number', value: 0.6, min: 0.05, max: 1, step: 0.01 },
+    brightness: { type: 'number', value: 1800, min: 500, max: 6000, step: 10, label: 'Brightness', unit: 'Hz' },
+    width: { type: 'number', value: 0.45, min: 0, max: 1, step: 0.01, label: 'Width' },
     hold: { type: 'toggle', value: false, label: 'Latch' },
   },
   notes: `
@@ -67,6 +69,13 @@ across and it should get busy.
     const VEL = { pad: 0.5, arp: 0.8, bloom: 0.55 } as const
     const vel = () => VEL[ctx.params.mode as keyof typeof VEL] ?? 0.5
     const r = rng(4)
+
+    const applyTone = () => {
+      synth.set({ cutoff: ctx.params.brightness, spread: ctx.params.width })
+    }
+    applyTone()
+    ctx.onParam('brightness', applyTone)
+    ctx.onParam('width', applyTone)
     ctx.cleanup(() => {
       synth.allNotesOff()
       dly.dispose()

@@ -23,17 +23,29 @@ Each strip has a level fader, a bipolar DJ filter (left = lowpass closes,
 right = highpass rises, double-click resets), mute, solo, a meter, and the
 sketch's parameters behind `···`. The rack persists across reloads.
 
+**The key row** syncs the whole rack: click a pitch class and every linked
+channel retunes to that root + scale on the next bar line — each instrument
+keeps its own register (the bass stays bass). Unlink a strip (its `key` chip)
+to hold it in the old key for deliberate bitonality, then resolve it on the
+bar. Clicking the lit key releases the rack.
+
+**Morph** makes scene changes performable: recall glides every numeric param,
+level, filter, bpm and swing over ½–4 bars instead of jumping. Mutes become
+fades. Seeds and roots snap (gliding a seed would re-roll the piece).
+
 Performance controls, everywhere:
 
 | Control | What it does |
 | --- | --- |
-| `1`–`4` | recall scene (`shift` stores — every param, level, filter, mute, bpm, swing) |
+| key row | retune every linked channel, quantised to the bar |
+| morph | how long scene recall takes: cut → 4 bars |
+| `1`–`4` | recall scene (`shift` stores — params, mix, key, bpm, swing) |
 | `b` / tap | tap tempo |
 | `shift+R` / ● | record the master output to a 16-bit WAV — exactly what you hear |
 | QWERTY row | plays every listening channel at once; mute what you don't want layered |
 
-The classic move: store a scene, mute a channel, rework its params behind the
-mute, store that as the next scene, and step between them on the beat.
+The classic move: store a scene, mute a channel, rework it behind the mute,
+store that as the next scene, and let a 2-bar morph write the transition.
 
 ## Layout
 

@@ -73,6 +73,15 @@ mute/solo, meters), with scenes (1-4), tap tempo (b) and master WAV record
 - QWERTY-listening sketches all receive keys simultaneously in a jam —
   that's accepted layering for now. Don't bind 'b' or shift+R (transport
   shortcuts); 't' is a note key, which is why tap is on 'b'.
+- **The global key broadcasts into params named `root` (number) + `scale`
+  (select)** — that naming convention is now a contract. Use those names in
+  any pitched sketch and it joins the jam's key system for free; the
+  broadcast preserves each channel's register (nearest octave of the target
+  pitch class, clamped to the param's range).
+- Scene morph glides numeric params on recall. Params named `seed` or `root`
+  snap instead — gliding a seed re-rolls the piece every frame. If a sketch
+  gains a numeric param that must never interpolate, name it accordingly or
+  flag it in review.
 
 ## Writing a sketch
 

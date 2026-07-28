@@ -36,6 +36,9 @@ export default defineSketch({
     root: { type: 'number', value: 45, min: 24, max: 72, step: 1, label: 'Root (MIDI)' },
     scale: { type: 'select', value: 'dorian', options: SCALE_NAMES },
     spread: { type: 'number', value: 12, min: 0, max: 24, step: 1, label: 'Pitch spread' },
+    wave: { type: 'select', value: 'triangle', options: ['triangle', 'sawtooth', 'square', 'sine'] },
+    tone: { type: 'number', value: 2600, min: 400, max: 8000, step: 10, label: 'Tone', unit: 'Hz' },
+    width: { type: 'number', value: 0.35, min: 0, max: 1, step: 0.01, label: 'Width' },
     drums: { type: 'toggle', value: true, label: 'Drums' },
     reseed: { type: 'button', label: 'New seed' },
   },
@@ -58,6 +61,18 @@ fires on steps where voice 1 was silent for two bars running.
       dly.dispose()
       rev.dispose()
     })
+
+    const applyTone = () => {
+      synth.set({
+        wave: ctx.params.wave as 'triangle' | 'sawtooth' | 'square' | 'sine',
+        cutoff: ctx.params.tone,
+        spread: ctx.params.width,
+      })
+    }
+    applyTone()
+    ctx.onParam('wave', applyTone)
+    ctx.onParam('tone', applyTone)
+    ctx.onParam('width', applyTone)
 
     // Per-voice state, all derived from the seed.
     let r = rng(ctx.params.seed)
