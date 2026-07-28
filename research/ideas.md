@@ -21,7 +21,15 @@ and link to what came of it.
 
 ## Improvisation & interaction
 
-- Accompanist that listens to MIDI input and fills the gaps you leave.
+- ~~Accompanist that listens to MIDI input and fills the gaps you leave.~~
+  → `sketches/call-response`. Works; inversion is the transformation that
+  sounds like a musician. See `research/log/2026-07-28-call-response.md`.
+- Answer the *contour* of a phrase rather than its notes — reply with the
+  opposite shape (rose → falls). Probably closer to what a human does.
+- A partner that sometimes declines to answer. Always replying reads as needy;
+  letting a phrase stand would feel considered.
+- Harmonise *under* a sustained note instead of answering after it —
+  accompanist rather than interlocutor. Different dynamic, own sketch.
 - Two-player instrument where each player controls half the parameters.
 - An instrument with deliberate latency — you commit a gesture a bar ahead.
 - Constraint-based improv: it refuses notes that break a rule you set.

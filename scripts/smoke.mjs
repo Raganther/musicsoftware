@@ -32,6 +32,9 @@ const PLAN = {
   'worklet-fold': 'play',
   'chord-loom': 'play+drag',
   'poly-synth': 'keys',
+  // 'converse' = transport on, play a few notes, release, then wait — for
+  // sketches that answer you back rather than sounding while you hold keys.
+  'call-response': 'converse',
 }
 
 // -- locate playwright -------------------------------------------------------
@@ -180,6 +183,14 @@ try {
       await page.click('#play') // a gesture, to wake the audio context
       await page.click('#play') // this sketch doesn't need the transport
       for (const k of ['a', 'e', 'g']) await page.keyboard.down(k)
+    }
+    if (act === 'converse') {
+      // Play a short phrase and let go — the response comes after the silence.
+      for (const k of ['a', 'e', 'g']) {
+        await page.keyboard.down(k)
+        await page.waitForTimeout(160)
+        await page.keyboard.up(k)
+      }
     }
 
     await installTap(urls)
