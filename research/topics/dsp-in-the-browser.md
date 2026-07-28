@@ -43,7 +43,24 @@ filters, anything with feedback inside the sample loop.
   continuous, and `port.postMessage` only for events. The message port is not
   sample-accurate.
 
-Working example: `sketches/worklet-fold/`.
+One hard boundary worth knowing: **a DelayNode inside a feedback cycle is
+clamped to one render quantum (128 samples)**. Any algorithm needing feedback
+shorter than that — a Karplus-Strong string above ~344 Hz, feedback FM, short
+comb filters — is worklet-only territory. This is why `aeolian-harp`'s
+strings live in a worklet while its reverb doesn't.
+
+Two findings from building it (details in
+`research/log/2026-07-28-aeolian-harp.md`):
+
+- Coupling delay-line voices by mixing each with the bank mean is provably
+  stable and musically wrong — the difference modes decay at `fb(1−s)`, so it
+  over-damps every individual pluck. Sympathetic coupling has to be
+  frequency-selective (shared partials), or it's just damping.
+- An in-loop one-pole filter adds ≈ (1−c)/c samples of phase delay; shorten
+  the line by that or every string plays flat. Measured error after
+  compensation: ~1 cent.
+
+Working examples: `sketches/worklet-fold/`, `sketches/aeolian-harp/`.
 
 - <https://developer.mozilla.org/en-US/docs/Web/API/AudioWorkletProcessor>
 - <https://developer.chrome.com/blog/audio-worklet>

@@ -35,6 +35,7 @@ const PLAN = {
   // 'converse' = transport on, play a few notes, release, then wait — for
   // sketches that answer you back rather than sounding while you hold keys.
   'call-response': 'converse',
+  'aeolian-harp': 'play+drag',
 }
 
 // -- locate playwright -------------------------------------------------------

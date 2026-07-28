@@ -14,7 +14,13 @@ and link to what came of it.
 
 ## Synthesis
 
-- Karplus-Strong string model in an AudioWorklet, with a bow rather than a pluck.
+- ~~Karplus-Strong string model in an AudioWorklet~~ → `sketches/aeolian-harp`:
+  strummable string bank + wind mode + partial-sharing sympathy. The bow is
+  still open. See `research/log/2026-07-28-aeolian-harp.md`.
+- Bowed excitation for the harp — sustained stick-slip instead of bursts.
+- A bridge model: strings coupled through a shared resonator with per-partial
+  transfer (the mean-coupling shortcut is damping, not sympathy — measured).
+- Palm damping as a gesture: choosing what *not* to ring.
 - Granular sampler driven by pointer position over a waveform.
 - A synth whose only control is a drawn curve — everything else derived from it.
 - Feedback FM: two operators modulating each other, kept just short of chaos.
