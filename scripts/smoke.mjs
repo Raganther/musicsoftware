@@ -36,6 +36,7 @@ const PLAN = {
   // sketches that answer you back rather than sounding while you hold keys.
   'call-response': 'converse',
   'aeolian-harp': 'play+drag',
+  'watershed': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

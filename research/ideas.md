@@ -59,4 +59,10 @@ and link to what came of it.
 
 - Music software with no undo — everything is a performance.
 - An instrument that gets slightly worse the longer you play it.
-- Sequencer where the grid is a map and the playhead is a wanderer.
+- ~~Sequencer where the grid is a map and the playhead is a wanderer.~~
+  → `sketches/watershed`: walkers are water on a self-eroding heightmap;
+  pitch = elevation, basins fill until the melody escapes. See
+  `research/log/2026-07-30-watershed.md`.
+- Watershed follow-ons: stream confluence merging voices; a "rain" button
+  dropping fresh walkers on peaks; moving carving channels deeper (erosion
+  asymmetry); elevation → stereo pan.

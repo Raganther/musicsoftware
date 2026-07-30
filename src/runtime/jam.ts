@@ -340,7 +340,9 @@ export class JamRack {
     filter.frequency.value = 20000
     filter.Q.value = 0.8
     const gain = ctx.createGain()
-    gain.gain.value = preset.level ?? 0.9
+    // 0.7 default leaves headroom for stacking — two hot sketches at 0.9
+    // each measured 1.15 pre-limiter in coincident transients.
+    gain.gain.value = preset.level ?? 0.7
     const analyser = ctx.createAnalyser()
     analyser.fftSize = 512
     filter.connect(gain).connect(master)
@@ -395,7 +397,7 @@ export class JamRack {
       gain,
       analyser,
       meterBuf: new Float32Array(analyser.fftSize),
-      level: preset.level ?? 0.9,
+      level: preset.level ?? 0.7,
       filterVal: preset.filter ?? 0,
       muted: preset.muted ?? false,
       soloed: false,
