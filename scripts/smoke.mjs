@@ -37,6 +37,7 @@ const PLAN = {
   'call-response': 'converse',
   'aeolian-harp': 'play+drag',
   'watershed': 'play',
+  'cats-cradle': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

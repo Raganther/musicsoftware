@@ -34,6 +34,11 @@ interface Walker {
   lastElev: number
   resting: boolean
   trail: Array<{ x: number; y: number }>
+  /** Elevation when this rest began, and the lip it must fill up to. */
+  restFloor: number
+  restLip: number
+  /** Wall-clock seconds of the last landing, for the flash. */
+  litAt: number
 }
 
 export default defineSketch({
@@ -78,6 +83,16 @@ touching a note. Raising a wall between two walkers un-syncs their registers.
 
 Restore keeps user edits temporary (weather, not architecture), which turned
 out right: you intervene, the piece absorbs it, the terrain remembers itself.
+
+Legibility rewrite (v2), after a first reader could not tell what the squares
+meant. The original mistake: sediment was drawn as a hue shift WITHIN the
+blues — about 4-10 degrees at realistic build-ups, i.e. invisible — so the
+central mechanic could only be heard, never seen. Three fixes: sediment is
+now a warm overlay in a genuinely different colour; a resting walker draws
+its pool filling toward the lip, so you watch the ostinato run out of time;
+and landing flashes the square, tying position to the note you just heard.
+Nothing about the sound changed — this was purely a failure to render the
+state that was already there.
 
 Next: walkers should hear each other — two streams merging into one channel
 could literally merge voices (unison). And a "rain" button that drops a new
@@ -150,6 +165,9 @@ walker at the highest point.
         lastElev: 1,
         resting: false,
         trail: [],
+        restFloor: 0,
+        restLip: 1,
+        litAt: -1e9,
       }))
     }
     generate()
@@ -180,11 +198,15 @@ walker at the highest point.
         let bestElev = elev[here]
         let bx = -1
         let by = -1
+        // The lip is the lowest way out, whether or not it is below us — it's
+        // the level the pool has to fill to before the walker can escape.
+        let lip = Infinity
         for (const [dx, dy] of NEIGHBOURS) {
           const nx = wk.x + dx
           const ny = wk.y + dy
           if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue
           const v = elev[at(nx, ny)]
+          lip = Math.min(lip, v)
           if (v < bestElev - 1e-4) {
             bestElev = v
             bx = nx
@@ -201,9 +223,14 @@ walker at the highest point.
           wk.x = bx
           wk.y = by
           wk.resting = false
+          wk.litAt = performance.now() / 1000
         } else {
           // Local minimum: rest and fill the basin. This is what ends every
           // ostinato — each repeat raises the floor until the lip is lower.
+          if (!wk.resting) {
+            wk.restFloor = elev[here]
+            wk.restLip = Number.isFinite(lip) ? lip : elev[here] + 0.1
+          }
           elev[here] += deposit * 0.02
           wk.resting = true
         }
@@ -238,16 +265,28 @@ walker at the highest point.
         for (let x = 0; x < W; x++) {
           const i = at(x, y)
           const v = clamp(elev[i], 0, 1.3)
-          const sediment = clamp((elev[i] - original[i]) * 3, -1, 1)
-          // Deep water-dark basins up to pale ridges; sediment tints warm.
-          const l = 8 + v * 40
-          const hue = 210 - sediment * 24
-          const sat = 45 - v * 25
-          g.fillStyle = `hsl(${hue} ${sat}% ${l}%)`
-          g.fillRect(ox + x * cw + 0.5, oy + y * chh + 0.5, cw - 1, chh - 1)
+          const px = ox + x * cw + 0.5
+          const py = oy + y * chh + 0.5
+
+          // Terrain: dark = low ground = low note, pale = high ground.
+          g.fillStyle = `hsl(210 ${45 - v * 25}% ${8 + v * 40}%)`
+          g.fillRect(px, py, cw - 1, chh - 1)
+
+          // Sediment as a warm wash on top. A hue shift within the blues was
+          // invisible at realistic build-ups (a few degrees); an overlay in a
+          // genuinely different colour is legible at a glance.
+          const sed = elev[i] - original[i]
+          if (sed > 0.004) {
+            g.fillStyle = `rgba(251, 176, 64, ${Math.min(0.55, sed * 3.2)})`
+            g.fillRect(px, py, cw - 1, chh - 1)
+          } else if (sed < -0.004) {
+            g.fillStyle = `rgba(56, 189, 248, ${Math.min(0.4, -sed * 2.4)})`
+            g.fillRect(px, py, cw - 1, chh - 1)
+          }
         }
       }
 
+      const now = performance.now() / 1000
       const colours = ['#7dd3fc', '#fbbf24', '#4ade80', '#fb7185']
       walkers.forEach((wk, i) => {
         const c = colours[i % colours.length]
@@ -259,24 +298,43 @@ walker at the highest point.
           g.fill()
         })
         g.globalAlpha = 1
+        const px = ox + wk.x * cw
+        const py = oy + wk.y * chh
+
+        if (wk.resting) {
+          // How full is this pool? It escapes when the floor reaches the lip.
+          // Without this the central mechanic was audible but invisible.
+          const span = Math.max(1e-4, wk.restLip - wk.restFloor)
+          const fill = clamp((elev[at(wk.x, wk.y)] - wk.restFloor) / span, 0, 1)
+          const fh = (chh - 2) * fill
+          g.fillStyle = c
+          g.globalAlpha = 0.28
+          g.fillRect(px + 1, py + (chh - 1) - fh, cw - 2, fh)
+          g.globalAlpha = 1
+          g.strokeStyle = c
+          g.lineWidth = 1.5
+          g.beginPath()
+          g.moveTo(px + 1, py + (chh - 1) - fh)
+          g.lineTo(px + cw - 1, py + (chh - 1) - fh)
+          g.stroke()
+        } else {
+          // Flash the square just landed on, so the link between where a
+          // walker is and the note you just heard is unmissable.
+          const age = now - wk.litAt
+          if (age < 0.28) {
+            g.strokeStyle = c
+            g.globalAlpha = 1 - age / 0.28
+            g.lineWidth = 2
+            g.strokeRect(px + 1.5, py + 1.5, cw - 3, chh - 3)
+            g.globalAlpha = 1
+            g.lineWidth = 1
+          }
+        }
+
         g.fillStyle = c
         g.beginPath()
-        g.arc(
-          ox + (wk.x + 0.5) * cw,
-          oy + (wk.y + 0.5) * chh,
-          cw * (wk.resting ? 0.16 : 0.24),
-          0,
-          Math.PI * 2,
-        )
+        g.arc(px + cw / 2, py + chh / 2, cw * (wk.resting ? 0.16 : 0.24), 0, Math.PI * 2)
         g.fill()
-        if (wk.resting) {
-          g.strokeStyle = c
-          g.globalAlpha = 0.5
-          g.beginPath()
-          g.arc(ox + (wk.x + 0.5) * cw, oy + (wk.y + 0.5) * chh, cw * 0.3, 0, Math.PI * 2)
-          g.stroke()
-          g.globalAlpha = 1
-        }
       })
 
       g.fillStyle = 'rgba(255,255,255,0.35)'

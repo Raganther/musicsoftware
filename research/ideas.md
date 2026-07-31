@@ -42,8 +42,17 @@ and link to what came of it.
 
 ## Composition tools
 
-- Piano roll that can only express relationships (this note is a 4th above
-  that one), so transposition is structural rather than a shift.
+- ~~Piano roll that can only express relationships (this note is a 4th above
+  that one), so transposition is structural rather than a shift.~~
+  → `sketches/cats-cradle`: intervals are the stored data, so transpose,
+  invert, stretch and retrograde are one parameter each. Verified the
+  algebra element-by-element. See `research/log/2026-07-31-cats-cradle.md`.
+- Counterpoint as a constraint: a second chain whose intervals are defined
+  against the first, not independently.
+- Let a node reference a non-predecessor — the chain becomes a graph and
+  motifs recur by reference rather than by copy.
+- Rhythm stored as duration *ratios* the same way pitch is stored as
+  intervals: swing and augmentation become single knobs.
 - A DAW arrangement view where clips have gravity and snap into phrases.
 - Score that renders as a diagram of tension rather than notation.
 
