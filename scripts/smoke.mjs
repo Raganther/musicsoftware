@@ -38,6 +38,7 @@ const PLAN = {
   'aeolian-harp': 'play+drag',
   'watershed': 'play',
   'cats-cradle': 'play',
+  'patina': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

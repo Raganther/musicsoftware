@@ -67,7 +67,15 @@ and link to what came of it.
 ## Wild
 
 - Music software with no undo — everything is a performance.
-- An instrument that gets slightly worse the longer you play it.
+- ~~An instrument that gets slightly worse the longer you play it.~~
+  → `sketches/patina`: per-pitch wear that detunes, dulls, softens and
+  rattles; rested notes recover. Measured −16.4% brightness and −47% level
+  on a worn note. See `research/log/2026-08-01-patina.md`.
+- Break-in curve: light early use should make a note *better* before it
+  starts to degrade — real instruments improve before they decline.
+- Sympathetic wear: playing C3 tires C4 a little, as a shared mechanism does.
+- Export a wear map as a score of what was played; load someone else's
+  used instrument and inherit their habits.
 - ~~Sequencer where the grid is a map and the playhead is a wanderer.~~
   → `sketches/watershed`: walkers are water on a self-eroding heightmap;
   pitch = elevation, basins fill until the melody escapes. See
