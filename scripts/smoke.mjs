@@ -39,6 +39,7 @@ const PLAN = {
   'watershed': 'play',
   'cats-cradle': 'play',
   'patina': 'play',
+  'attractor': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
@@ -216,7 +217,10 @@ try {
   await page.evaluate((next) => (location.hash = `#/${next}`), ids[1] ?? ids[0])
   await page.waitForTimeout(300)
   await page.evaluate(async (u) => (await import(u.clock)).clock.stop(), urls)
-  await page.waitForTimeout(900)
+  // Long enough for a legitimate tail to die: the slowest sketch here has
+  // ~1.4s notes into a 2.8s reverb. Anything still sounding after this with
+  // the transport stopped is genuinely stuck, not decaying.
+  await page.waitForTimeout(3200)
   const residual = await sample(800)
   if (residual > 0.02) failures.push(`audio still sounding after unmount (${residual.toFixed(3)})`)
 

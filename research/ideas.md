@@ -23,7 +23,15 @@ and link to what came of it.
 - Palm damping as a gesture: choosing what *not* to ring.
 - Granular sampler driven by pointer position over a waveform.
 - A synth whose only control is a drawn curve — everything else derived from it.
-- Feedback FM: two operators modulating each other, kept just short of chaos.
+- ~~Feedback FM: two operators modulating each other, kept just short of
+  chaos.~~ → `sketches/attractor`: the route to chaos as the timbre knob,
+  with the real phase portrait as the visual. The knee is at coupling ~1.9
+  and is a cliff, not a slope. See `research/log/2026-08-02-attractor.md`.
+- Per-note coupling for Attractor: velocity moves you through the
+  bifurcation, so dynamics and timbre are the same gesture.
+- A third FM operator — quasi-periodic (torus) territory, not just more chaos.
+- A harmonic-deviation measure for the core, so inharmonicity claims can be
+  tested; spectral flatness can only see noisiness.
 
 ## Improvisation & interaction
 
