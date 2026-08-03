@@ -45,7 +45,13 @@ and link to what came of it.
 - Harmonise *under* a sustained note instead of answering after it —
   accompanist rather than interlocutor. Different dynamic, own sketch.
 - Two-player instrument where each player controls half the parameters.
-- An instrument with deliberate latency — you commit a gesture a bar ahead.
+- ~~An instrument with deliberate latency — you commit a gesture a bar
+  ahead.~~ → `sketches/foreshadow`: commits land ahead of the playhead on a
+  decaying ring. Measured 2.40s gap against a 2.50s bar. See
+  `research/log/2026-08-03-foreshadow.md`.
+- Variable lead per note: a modifier key commits further out, so one
+  performance spans several time horizons at once.
+- Lead as a jam-wide parameter — the whole rack writing a bar ahead.
 - Constraint-based improv: it refuses notes that break a rule you set.
 
 ## Composition tools

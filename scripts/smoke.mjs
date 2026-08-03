@@ -40,6 +40,7 @@ const PLAN = {
   'cats-cradle': 'play',
   'patina': 'play',
   'attractor': 'play',
+  'foreshadow': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
