@@ -41,6 +41,7 @@ const PLAN = {
   'patina': 'play',
   'attractor': 'play',
   'foreshadow': 'play',
+  'convergence': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

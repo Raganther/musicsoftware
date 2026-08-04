@@ -8,7 +8,15 @@ and link to what came of it.
 
 - Sequencer where each step holds a *probability* and a *condition* ("only on
   every 3rd pass") rather than on/off — Elektron-style trig conditions.
-- Polymetric tracks: 5 against 7 against 16, all on one transport.
+- ~~Polymetric tracks: 5 against 7 against 16, all on one transport.~~
+  → `sketches/convergence`: a tempo canon, same phrase at 3:4:5, converging
+  every 5.19s (measured 5.05s from the audio envelope). See
+  `research/log/2026-08-04-convergence.md`.
+- Countdown to the next convergence point — the arrival lands harder if you
+  can watch it approach.
+- Accelerating canon (Nancarrow's other trick): a voice whose tempo changes
+  continuously, so convergences are non-periodic.
+- Per-voice transposition in a canon, so convergence is a chord not a unison.
 - A sequencer you edit by singing at it (pitch detection → steps).
 - Rhythm as a cellular automaton — Rule 110 as a drum pattern generator.
 
