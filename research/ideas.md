@@ -76,7 +76,14 @@ and link to what came of it.
 - Rhythm stored as duration *ratios* the same way pitch is stored as
   intervals: swing and augmentation become single knobs.
 - A DAW arrangement view where clips have gravity and snap into phrases.
-- Score that renders as a diagram of tension rather than notation.
+- ~~Score that renders as a diagram of tension rather than notation.~~
+  → `sketches/arc`: draw a tension curve, hear it realised; output tracks
+  the curve at r = 0.75-0.85 measured from audio. See
+  `research/log/2026-08-05-arc.md`.
+- Interpolate between chord-ladder rungs so a drawn curve is realised
+  continuously rather than in eight discrete jumps.
+- A second curve for volatility — how tense, and how fast it changes.
+- Export realised notes as MIDI, so a sketch hands off to a real score.
 
 ## Jam / performance (sparked by building jam mode)
 

@@ -42,6 +42,7 @@ const PLAN = {
   'attractor': 'play',
   'foreshadow': 'play',
   'convergence': 'play',
+  'arc': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
