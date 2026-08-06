@@ -43,6 +43,7 @@ const PLAN = {
   'foreshadow': 'play',
   'convergence': 'play',
   'arc': 'play',
+  'earshot': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

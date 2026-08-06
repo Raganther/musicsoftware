@@ -19,6 +19,10 @@ and link to what came of it.
 - Per-voice transposition in a canon, so convergence is a chord not a unison.
 - A sequencer you edit by singing at it (pitch detection → steps).
 - Rhythm as a cellular automaton — Rule 110 as a drum pattern generator.
+- Bounded confidence on *onsets* instead of pitches: a crowd of players who
+  drift toward the downbeat of whoever they can still hear. `sketches/earshot`
+  does this to pitch; the rhythmic version is a sequencer, and probably the
+  more interesting of the two.
 
 ## Synthesis
 
@@ -61,6 +65,8 @@ and link to what came of it.
   performance spans several time horizons at once.
 - Lead as a jam-wide parameter — the whole rack writing a bar ahead.
 - Constraint-based improv: it refuses notes that break a rule you set.
+- A zealot that decays rather than vanishing on release, so a held pitch
+  leaves a memory the crowd drifts back toward (`sketches/earshot`).
 
 ## Composition tools
 
@@ -96,6 +102,15 @@ and link to what came of it.
 ## Wild
 
 - Music software with no undo — everything is a performance.
+- ~~An instrument you play by persuading it rather than by triggering it.~~
+  → `sketches/earshot`: voices drift toward the average of whoever they can
+  hear; hold a pitch and the crowd walks to you. The consensus knee is a
+  *ratio* (earshot/spread ≈ 0.19), not a number of cents. See
+  `research/log/2026-08-06-earshot.md`.
+- Per-voice earshot — some of the crowd open-minded, some not. One line in
+  `earshot`, and known to change the outcome qualitatively.
+- Two crowds with different tolerances in one room, coupled only through the
+  few voices wide enough to hear across the gap.
 - ~~An instrument that gets slightly worse the longer you play it.~~
   → `sketches/patina`: per-pitch wear that detunes, dulls, softens and
   rattles; rested notes recover. Measured −16.4% brightness and −47% level
