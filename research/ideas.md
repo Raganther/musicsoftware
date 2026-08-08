@@ -33,6 +33,20 @@ and link to what came of it.
 - A bridge model: strings coupled through a shared resonator with per-partial
   transfer (the mean-coupling shortcut is damping, not sympathy — measured).
 - Palm damping as a gesture: choosing what *not* to ring.
+- ~~A reed and a bore, so the register break falls out of the model.~~
+  → `sketches/overblow`: quarter-wave bore (even harmonics −46 dB), and a vent
+  that is a *hole at a position* — 1/3 gives a twelfth, 1/5 gives two octaves
+  and a third, measured ×2.98 and ×4.98. See
+  `research/log/2026-08-08-overblow.md`.
+- Real tone holes for `overblow`: a row of them with open/closed state, so the
+  fingering system *is* the instrument.
+- A true conical waveguide (the spherical spreading term at the apex). The
+  cheap version — flipping the far-end reflection — does not oscillate at all,
+  measured; a cone is not a sign flip.
+- Multiphonics: place a vent where two modes both have a node and see whether
+  both speak.
+- Map breath against embouchure to get the reed's playable region — the wind
+  player's version of Schelleng's bow-force diagram, drawn from measurement.
 - Granular sampler driven by pointer position over a waveform.
 - A synth whose only control is a drawn curve — everything else derived from it.
 - ~~Feedback FM: two operators modulating each other, kept just short of

@@ -44,6 +44,8 @@ const PLAN = {
   'convergence': 'play',
   'arc': 'play',
   'earshot': 'play',
+  // a reed only sounds while you are blowing it
+  'overblow': 'keys',
 }
 
 // -- locate playwright -------------------------------------------------------
