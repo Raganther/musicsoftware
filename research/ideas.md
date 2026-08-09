@@ -79,6 +79,19 @@ and link to what came of it.
   performance spans several time horizons at once.
 - Lead as a jam-wide parameter — the whole rack writing a bar ahead.
 - Constraint-based improv: it refuses notes that break a rule you set.
+- ~~An accompanist that learns your habits and plays your part before you do.~~
+  → `sketches/understudy`: a variable-order Markov model over intervals, firing
+  at the top of the step it expects you on. Predictability summons it (−55 dB
+  of understudy on a loop vs −61 on a random walk) and `nerve` is a free
+  escape. See `research/log/2026-08-09-understudy.md`.
+- Score an accompanist's *timing* prediction separately from its pitch
+  prediction — they fail in different ways and one hit rate hides both.
+- A leash for `understudy`: cap how many notes in a row it may take, so the
+  duet cannot become a solo without you agreeing to it.
+- An understudy that listens to the whole *jam* rather than one keyboard, and
+  doubles whichever channel is currently the most predictable.
+- Draw the model: the graph of contexts growing as you play is the most
+  interesting object in `understudy` and is currently invisible.
 - A zealot that decays rather than vanishing on release, so a held pitch
   leaves a memory the crowd drifts back toward (`sketches/earshot`).
 
