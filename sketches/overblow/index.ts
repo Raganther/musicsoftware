@@ -59,7 +59,7 @@ export default defineSketch({
   notes: `
 One delay line with an inverting reflection is a quarter-wave resonator, so
 this bore has only odd modes and makes only odd harmonics. Measured from the
-audio: even-harmonic energy sits **-44.9 dB** below odd, and the sounding
+audio: even-harmonic energy sits **-46 dB** below odd, and the sounding
 pitch lands at 0.998x the note asked for (-3.5 cents, from the fractional
 delay and the bell filter's phase). Smith's reed table supplies the
 nonlinearity; everything else is the loop.

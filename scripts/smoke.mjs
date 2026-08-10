@@ -47,6 +47,7 @@ const PLAN = {
   // a reed only sounds while you are blowing it
   'overblow': 'keys',
   'understudy': 'keys',
+  'tiling': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

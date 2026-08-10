@@ -17,6 +17,17 @@ and link to what came of it.
 - Accelerating canon (Nancarrow's other trick): a voice whose tempo changes
   continuously, so convergences are non-periodic.
 - Per-voice transposition in a canon, so convergence is a chord not a unison.
+- ~~A rhythmic canon whose voices interlock to fill every pulse exactly once.~~
+  → `sketches/tiling`: draw a rhythm, and a complete backtracking search finds
+  the entry points that tile the cycle. Composite even to 0.07 of a pulse while
+  each voice wanders by 4.1. See `research/log/2026-08-10-tiling.md`.
+- Vuza canons — the rhythms that tile but whose entry set is *not* periodic.
+  The search in `tiling` almost finds them; it needs to reject entry sets that
+  are a union of cosets.
+- Augmentation in a tiling canon: a copy at double the pulse spacing, which is
+  how real mensuration canons work and changes the problem completely.
+- Fill each voice of a tiling canon with a pitch sequence rather than one note,
+  so the tiling is what keeps the melody from colliding with itself.
 - A sequencer you edit by singing at it (pitch detection → steps).
 - Rhythm as a cellular automaton — Rule 110 as a drum pattern generator.
 - Bounded confidence on *onsets* instead of pitches: a crowd of players who
