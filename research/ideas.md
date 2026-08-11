@@ -113,6 +113,16 @@ and link to what came of it.
   → `sketches/cats-cradle`: intervals are the stored data, so transpose,
   invert, stretch and retrograde are one parameter each. Verified the
   algebra element-by-element. See `research/log/2026-07-31-cats-cradle.md`.
+- ~~Harmony as a lattice you walk through, by minimal voice motion.~~
+  → `sketches/tonnetz`: neo-Riemannian P/L/R moves over the Tonnetz. Measured
+  1.40 semitones of voice motion per chord against 3.79 for random triads, and
+  exactly two common tones in 47 of 47 transitions. See
+  `research/log/2026-08-11-tonnetz.md`.
+- Path-find across the Tonnetz: click a distant triangle and let it find the
+  shortest route in P/L/R moves. That is the actual compositional tool — you
+  would be composing a modulation rather than watching a walk.
+- The seventh-chord Tonnetz: a four-dimensional lattice where voice leading
+  stays parsimonious. Richer, and only slightly harder to draw.
 - Counterpoint as a constraint: a second chain whose intervals are defined
   against the first, not independently.
 - Let a node reference a non-predecessor — the chain becomes a graph and

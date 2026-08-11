@@ -48,6 +48,7 @@ const PLAN = {
   'overblow': 'keys',
   'understudy': 'keys',
   'tiling': 'play',
+  'tonnetz': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
