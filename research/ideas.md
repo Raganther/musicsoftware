@@ -150,6 +150,18 @@ and link to what came of it.
 ## Wild
 
 - Music software with no undo — everything is a performance.
+- ~~A melody hidden under a band of noise — present in the signal, absent in
+  the ear.~~ → `sketches/veil`: simultaneous masking as an instrument. Measured
+  the two modes as mirror images (level sd 0.4 dB vs 9.4 dB), and the
+  constant-loudness amplitudes trace the masking curve. Whether you *hear* it
+  is unmeasured and is the open question. See
+  `research/log/2026-08-12-veil.md`.
+- Temporal masking: hide notes in the ~20 ms shadow after a drum hit. Same
+  effect, different time base, no new model needed.
+- The inverse of `veil`: play a melody and have the sketch synthesise the
+  narrowest band of noise that would hide it — composing the mask, not the tune.
+- Equal-loudness contours in `veil`, so its absolute floor is a real hearing
+  threshold rather than a flat number.
 - ~~An instrument you play by persuading it rather than by triggering it.~~
   → `sketches/earshot`: voices drift toward the average of whoever they can
   hear; hold a pitch and the crowd walks to you. The consensus knee is a

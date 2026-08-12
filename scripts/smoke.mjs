@@ -49,6 +49,7 @@ const PLAN = {
   'understudy': 'keys',
   'tiling': 'play',
   'tonnetz': 'play',
+  'veil': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
