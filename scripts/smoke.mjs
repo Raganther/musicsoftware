@@ -50,6 +50,7 @@ const PLAN = {
   'tiling': 'play',
   'tonnetz': 'play',
   'veil': 'play',
+  'bow': 'keys',
 }
 
 // -- locate playwright -------------------------------------------------------

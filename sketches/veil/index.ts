@@ -98,7 +98,6 @@ changes the total RMS of the output by **0.47 dB**, and the bottom 12 dB of
 that range by **0.06 dB**. The melody is a rounding error in the signal.
 
 **Not measured, because it cannot be from here: whether you hear it.** The
-**Not measured, because it cannot be from here: whether you hear it.** The
 whole point is a claim about perception, and a harness that reads spectra has
 nothing useful to say about it. Set \`Veil level\` to 0 to learn what the melody
 actually is, put it back, and then find the \`reveal\` setting where the melody

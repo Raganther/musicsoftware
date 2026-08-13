@@ -40,7 +40,18 @@ and link to what came of it.
 - ~~Karplus-Strong string model in an AudioWorklet~~ → `sketches/aeolian-harp`:
   strummable string bank + wind mode + partial-sharing sympathy. The bow is
   still open. See `research/log/2026-07-28-aeolian-harp.md`.
-- Bowed excitation for the harp — sustained stick-slip instead of bursts.
+- ~~Bowed excitation — sustained stick-slip instead of bursts.~~
+  → `sketches/bow`: a waveguide bowed string. Schelleng's force wedge is *not*
+  in it (memoryless friction has no minimum bow force), but the bow-position
+  comb is: bowing at 1/n notches partial n by 14-31 dB, six for six. See
+  `research/log/2026-08-13-bow.md`.
+- A hysteretic friction model — a real stick/slip state machine with distinct
+  static and dynamic coefficients. That is what would put Schelleng's wedge
+  into `bow` rather than merely onto it.
+- Fractional-delay interpolation on `bow`'s split point, so the node sits
+  exactly on the bow and the notch stops shallowing as n rises.
+- A "which partial carries the energy" helper in `@core` — hand-written in
+  three sketches now.
 - A bridge model: strings coupled through a shared resonator with per-partial
   transfer (the mean-coupling shortcut is damping, not sympathy — measured).
 - Palm damping as a gesture: choosing what *not* to ring.
