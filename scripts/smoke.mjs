@@ -51,6 +51,7 @@ const PLAN = {
   'tonnetz': 'play',
   'veil': 'play',
   'bow': 'keys',
+  'conduct': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

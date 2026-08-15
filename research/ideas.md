@@ -92,6 +92,16 @@ and link to what came of it.
   letting a phrase stand would feel considered.
 - Harmonise *under* a sustained note instead of answering after it —
   accompanist rather than interlocutor. Different dynamic, own sketch.
+- ~~An instrument you conduct rather than play.~~ → `sketches/conduct`: an
+  ensemble with individual reaction times that also correct toward what they
+  hear. Measured lag = base/(1−follow), four for four. See
+  `research/log/2026-08-15-conduct.md`.
+- Give `conduct`'s players separate spectral homes so the within-beat spread is
+  measurable from audio rather than only drawn.
+- Conduct with a gesture: the beat should come from the *turnaround* of a drag,
+  which is what a stick gives, and would let the ensemble anticipate.
+- A section leader — a player who watches another player rather than the mean.
+  That is how real orchestras keep the drag bounded.
 - Two-player instrument where each player controls half the parameters.
 - ~~An instrument with deliberate latency — you commit a gesture a bar
   ahead.~~ → `sketches/foreshadow`: commits land ahead of the playhead on a
