@@ -52,6 +52,8 @@ const PLAN = {
   'veil': 'play',
   'bow': 'keys',
   'conduct': 'play',
+  // sounds on its own; the transport is not involved
+  'continuum': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

@@ -30,6 +30,19 @@ and link to what came of it.
   so the tiling is what keeps the melody from colliding with itself.
 - A sequencer you edit by singing at it (pitch detection → steps).
 - Rhythm as a cellular automaton — Rule 110 as a drum pattern generator.
+- ~~Cowell's continuum: rhythm and pitch as one generator at different
+  speeds.~~ → `sketches/continuum`: pulse trains at whole-number ratios, one
+  slider spanning six octaves. Same 4:5:6 measured as pulse rates (1 : 1.2496 :
+  1.4994) and as partials (219.4 / 274.5 / 329.7 Hz). Tightening the tuning
+  from 20¢ to 4¢ costs 3.5 octaves of periodicity and stretches the bar from 4
+  pulses to 46 — one number, both ends. See
+  `research/log/2026-08-16-continuum.md`.
+- What sets `continuum`'s 78 Hz measurement boundary? Ping length, analysis
+  bandwidth and voice count were all tested and none of them move it.
+- Two chords on the continuum at once at different octaves — one heard as
+  harmony, one as rhythm, sharing a tuning.
+- Automate `Octaves down` from the transport so the rhythm/pitch crossing is a
+  musical gesture rather than a mouse drag.
 - Bounded confidence on *onsets* instead of pitches: a crowd of players who
   drift toward the downbeat of whoever they can still hear. `sketches/earshot`
   does this to pitch; the rhythmic version is a sequencer, and probably the
