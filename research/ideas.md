@@ -157,8 +157,23 @@ and link to what came of it.
   would be composing a modulation rather than watching a walk.
 - The seventh-chord Tonnetz: a four-dimensional lattice where voice leading
   stays parsimonious. Richer, and only slightly harder to draw.
-- Counterpoint as a constraint: a second chain whose intervals are defined
-  against the first, not independently.
+- ~~Counterpoint as a constraint: a second chain whose intervals are defined
+  against the first, not independently.~~ → `sketches/species`: every legal
+  first-species counterpoint at once, counted exactly and drawn uniformly, so
+  you compose by elimination. Verified against a brute-force enumerator (21 of
+  21 counts, marginals to 0.00e+0) and the draw is uniform (chi-square 21.9 on
+  29 df). The singable-line rule is worth more than the other four together —
+  144 counterpoints with it, 10,885 without. See
+  `research/log/2026-08-17-species.md`.
+- Second species for `species` — two notes against one, which needs passing
+  tones and a (note, beat) state. The dynamic program handles it; the rules
+  triple.
+- Draw the cantus firmus by hand instead of taking what the seed gives.
+  Everything downstream in `species` already re-derives.
+- Weight `species`'s draw by something other than uniform — prefer contrary
+  motion, or a target contour. One multiplication inside the DP.
+- Say *why* a square is dead in `species`: name the rule that kills it, and the
+  tool starts teaching rather than just enforcing.
 - Let a node reference a non-predecessor — the chain becomes a graph and
   motifs recur by reference rather than by copy.
 - Rhythm stored as duration *ratios* the same way pitch is stored as
