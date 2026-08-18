@@ -55,6 +55,7 @@ const PLAN = {
   // sounds on its own; the transport is not involved
   'continuum': 'play',
   'species': 'play',
+  'tartini': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

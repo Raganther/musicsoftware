@@ -205,6 +205,19 @@ and link to what came of it.
   constant-loudness amplitudes trace the masking curve. Whether you *hear* it
   is unmeasured and is the open question. See
   `research/log/2026-08-12-veil.md`.
+- ~~A melody that is not in the signal at all — carried by distortion products
+  the ear itself manufactures.~~ → `sketches/tartini`: two sine carriers whose
+  difference tone traces the tune. Measured at −84 to −191 dB in the wire and
+  −39 dB after a nonlinearity; splitting the primaries between the ears
+  collapses it by 38 dB. The audible carrier moves opposite to the phantom,
+  9 changes out of 9. See `research/log/2026-08-18-tartini.md`.
+- Two phantoms at once in `tartini`: the quadratic and cubic products move in
+  opposite directions, so one pair of carriers could carry two melodies.
+- Sweep `tartini`'s carrier while holding the phantom fixed — the tune stands
+  still while everything audible slides.
+- **A reveal control belongs on every absence claim.** `tartini`'s turned
+  "I measured nothing" into "and here is the same measurement finding
+  something". `veil` should have one.
 - Temporal masking: hide notes in the ~20 ms shadow after a drum hit. Same
   effect, different time base, no new model needed.
 - The inverse of `veil`: play a melody and have the sketch synthesise the
