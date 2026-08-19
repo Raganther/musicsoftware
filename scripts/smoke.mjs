@@ -56,6 +56,7 @@ const PLAN = {
   'continuum': 'play',
   'species': 'play',
   'tartini': 'play',
+  'bloom': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

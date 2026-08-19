@@ -58,6 +58,21 @@ and link to what came of it.
   in it (memoryless friction has no minimum bow force), but the bow-position
   comb is: bowing at 1/n notches partial n by 14-31 dB, six for six. See
   `research/log/2026-08-13-bow.md`.
+- ~~A gong rather than a bell: the shimmer that arrives *after* the strike,
+  which no linear model can produce.~~ → `sketches/bloom`: modal plate plus
+  resonant-triad coupling. Measured a 2.76× brightness rise peaking 0.47 s
+  after the strike against 1.05× at 0.08 s for the linear control, and modes
+  within 3.46% of the (m/a)²+(n/b)² eigenvalues. See
+  `research/log/2026-08-19-bloom.md`.
+- Find what clamps `bloom` above coupling 0.75 — the rise is non-monotonic,
+  which means a safety limit is setting the level rather than the knob.
+- Real von Kármán coupling coefficients for `bloom`, instead of the
+  detuning-weighted surrogate. The difference between *a* plate blooming and
+  *this* plate blooming.
+- Strike position should change `bloom`'s bloom, not just its attack: hitting a
+  node of the modes feeding the strongest triads should delay it. Sharp,
+  untested prediction.
+- Two plates coupled through a shared edge — which is what a gong rack is.
 - A hysteretic friction model — a real stick/slip state machine with distinct
   static and dynamic coefficients. That is what would put Schelleng's wedge
   into `bow` rather than merely onto it.
