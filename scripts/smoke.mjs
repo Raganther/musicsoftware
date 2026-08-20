@@ -57,6 +57,8 @@ const PLAN = {
   'species': 'play',
   'tartini': 'play',
   'bloom': 'play',
+  // needs both: the transport for the grid, and keys to learn a groove from
+  'groove': 'converse',
 }
 
 // -- locate playwright -------------------------------------------------------

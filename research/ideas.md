@@ -144,6 +144,22 @@ and link to what came of it.
   at the top of the step it expects you on. Predictability summons it (−55 dB
   of understudy on a loop vs −61 on a random walk) and `nerve` is a free
   escape. See `research/log/2026-08-09-understudy.md`.
+- ~~An accompanist that copies your *timing* rather than your notes.~~
+  → `sketches/groove`: a groove template — one running mean deviation per
+  position in the bar — driving a line it invents. Learned the injected groove
+  at r 0.997, and the partner's onsets measured from audio track it at r 0.986,
+  with feel 0 flat and `Against you` at r −0.969. See
+  `research/log/2026-08-20-groove.md`.
+- Learn note *lengths* as well as onsets in `groove` — staccato and legato are
+  as much of a signature as swing, and cost one more array.
+- Save and load a groove template, so you can play with someone else's feel.
+- Feed `groove`'s template into `conduct`, so an ensemble inherits one player's
+  groove instead of the click's.
+- **Every measurement should carry a known-answer channel.** `tartini`'s reveal
+  control and `groove`'s own key presses both turned "I measured nothing" into
+  "the detector is broken" — twice now.
+- A spectral-flux onset detector for the harness toolkit. Three sketches have
+  hand-rolled an envelope threshold and all three got it wrong first time.
 - Score an accompanist's *timing* prediction separately from its pitch
   prediction — they fail in different ways and one hit rate hides both.
 - A leash for `understudy`: cap how many notes in a row it may take, so the
