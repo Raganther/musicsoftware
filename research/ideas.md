@@ -14,8 +14,22 @@ and link to what came of it.
   `research/log/2026-08-04-convergence.md`.
 - Countdown to the next convergence point — the arrival lands harder if you
   can watch it approach.
-- Accelerating canon (Nancarrow's other trick): a voice whose tempo changes
-  continuously, so convergences are non-periodic.
+- ~~Accelerating canon (Nancarrow's other trick): a voice whose tempo changes
+  continuously, so convergences are non-periodic.~~ → `sketches/crossing`:
+  exponential tempo sweeps placed from the closed form t_n = ln(1+nk/r0)/k.
+  85 of 96 notes land within 10 ms of it, the voices trade places at 11.80 s
+  against a predicted 12.00, and coincidences arrive at 0.95 ± 0.66 s — a
+  spread that is exactly zero for any fixed-ratio canon. See
+  `research/log/2026-08-21-crossing.md`.
+- Non-symmetric sweeps in `crossing`: with k_a ≠ −k_b the product r_a·r_b stops
+  being invariant, so the coincidence rate should sweep too. One parameter away
+  and a sharper test of the same algebra.
+- Sweep tempo along a *drawn* curve rather than an exponential, so the
+  crossings can be composed. Needs a numerically inverted phase function.
+- Two crossings in one piece — sweep down then up, so the voices meet twice and
+  the second meeting is at a different tempo.
+- A 3 ms attack on a pure sine is still a broadband click. Band separation has
+  to account for the transient, not just the steady tone.
 - Per-voice transposition in a canon, so convergence is a chord not a unison.
 - ~~A rhythmic canon whose voices interlock to fill every pulse exactly once.~~
   → `sketches/tiling`: draw a rhythm, and a complete backtracking search finds

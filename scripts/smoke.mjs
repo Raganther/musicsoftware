@@ -59,6 +59,7 @@ const PLAN = {
   'bloom': 'play',
   // needs both: the transport for the grid, and keys to learn a groove from
   'groove': 'converse',
+  'crossing': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
