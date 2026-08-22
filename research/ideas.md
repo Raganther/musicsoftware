@@ -197,6 +197,25 @@ and link to what came of it.
   1.40 semitones of voice motion per chord against 3.79 for random triads, and
   exactly two common tones in 47 of 47 transitions. See
   `research/log/2026-08-11-tonnetz.md`.
+- ~~Developing variation as a search: how do I get from *this* idea to *that*
+  one?~~ → `sketches/develop`: shortest path over invert/retrograde/rotate/
+  widen/narrow plus single-note edits. Verified against an outside solver (24
+  paths, 0 illegal, 0 sub-optimal). The classical operations make paths ~2×
+  shorter and put a quarter of goals in reach at all — but rotate (+0.63) and
+  narrow (+0.60) carry it, while the famous invert (+0.25) and retrograde
+  (+0.23) matter least, because involutions open almost no new space. See
+  `research/log/2026-08-22-develop.md`.
+- Rhythm in `develop` — augmentation and diminution are half of what developing
+  variation means and are entirely absent. Doubles the state space.
+- Weighted moves in `develop`: a shortest path treats "nudge note 3" and
+  "invert the whole thing" as equally expensive, which is musically absurd.
+- Show `develop`'s runners-up — the moves that were one step longer. That is
+  what a composer would actually browse.
+- A path forced through a given motif in the middle: two searches joined, the
+  compositional equivalent of a waypoint.
+- A detector that cannot represent a repeat cannot measure music containing
+  one. Four consecutive onset/pitch detectors have each failed *plausibly*;
+  only the known-answer channel caught them.
 - Path-find across the Tonnetz: click a distant triangle and let it find the
   shortest route in P/L/R moves. That is the actual compositional tool — you
   would be composing a modulation rather than watching a walk.
