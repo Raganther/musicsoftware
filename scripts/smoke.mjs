@@ -61,6 +61,7 @@ const PLAN = {
   'groove': 'converse',
   'crossing': 'play',
   'develop': 'play',
+  'staircase': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

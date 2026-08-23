@@ -282,6 +282,28 @@ and link to what came of it.
 - **A reveal control belongs on every absence claim.** `tartini`'s turned
   "I measured nothing" into "and here is the same measurement finding
   something". `veil` should have one.
+- ~~A rhythm that speeds up forever and never arrives — Risset's rhythmic
+  Shepard tone.~~ → `sketches/staircase`: layers sliding up four octaves of
+  tempo under an amplitude bell, so the wrap happens in silence (2.9% of peak
+  energy there, against 122% with `Seam` at 1). Stacked per-band correlation
+  0.960 at exactly the cycle and −0.18 at L/4. See
+  `research/log/2026-08-23-staircase.md`.
+- **The rhythm recurs N times as often as the sound does.** `staircase`'s mix
+  envelope repeats every L/N because it cannot hear pitch; only the per-band
+  stack distinguishes a true repeat. Probably a large part of why the illusion
+  works, and worth testing directly.
+- Shepard pitch *and* Risset rhythm at once — everything rising, nothing
+  arriving. Band separation gets much harder, which is why it is worth doing.
+- A descending staircase: the literature says falling Shepard tones are less
+  convincing, and the same harness could test it.
+- Hide `staircase`'s wrap with masking rather than an amplitude bell, and see
+  whether the illusion survives at seam 1.
+- An envelope-detector box must be at least one *carrier* period long. A flat
+  4 ms box is fine at 370 Hz and useless at 92 Hz. Cost `continuum` and
+  `staircase` a run each.
+- Numbers in the notes must come from the build being committed. `staircase`
+  nearly shipped a 90/90 match rate measured two gain changes earlier; the real
+  figure was 45/90.
 - Temporal masking: hide notes in the ~20 ms shadow after a drum hit. Same
   effect, different time base, no new model needed.
 - The inverse of `veil`: play a melody and have the sketch synthesise the
