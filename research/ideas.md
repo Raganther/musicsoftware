@@ -72,6 +72,23 @@ and link to what came of it.
   in it (memoryless friction has no minimum bow force), but the bow-position
   comb is: bowing at 1/n notches partial n by 14-31 dB, six for six. See
   `research/log/2026-08-13-bow.md`.
+- ~~Put the effort into the *excitation* rather than the resonator: a real
+  Hertzian contact instead of a canned impulse.~~ → `sketches/mallet`: a
+  Chaigne–Askenfelt mallet against a free-free beam. Contact time fits
+  v^((1-p)/(1+p)) to three figures (0.000 / -0.204 / -0.338 / -0.500 against
+  0.000 / -0.200 / -0.333 / -0.500), and in the audio the linear control at
+  p = 1 is flat to 1% over a 16× velocity range while p = 3 climbs at 2.641.
+  See `research/log/2026-08-25-mallet.md`.
+- Two-point contact: a mallet with a soft outer layer over a hard core has two
+  regimes, and real players choose a mallet for exactly that knee. One extra
+  spring in series and the force curve gets an elbow.
+- Contact *hysteresis* — Stulov's relaxation term, where the head does not
+  return the energy it stored. It is what makes a felt hammer sound felt, and
+  it is one convolution away in the same worklet.
+- Strike the bar twice within one contact time and see what the interference
+  does; a roll at 300 Hz is not thirty strikes, it is one continuous contact.
+- The same rig with a *string* rather than a beam: the piano hammer problem,
+  where the strike point kills the 8th partial and everyone can hear it.
 - ~~A gong rather than a bell: the shimmer that arrives *after* the strike,
   which no linear model can produce.~~ → `sketches/bloom`: modal plate plus
   resonant-triad coupling. Measured a 2.76× brightness rise peaking 0.47 s
