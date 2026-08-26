@@ -121,3 +121,12 @@ sketch's level, drive the page with Playwright (installed globally; Chromium
 at `/opt/pw-browsers/`), tap the master bus *before* the limiter, and check:
 sketch produces sound, pre-limiter peak stays under 1.0, and nothing is still
 audible after navigating away.
+
+**A driven page runs slower than real time unless you say otherwise.** Chromium
+throttles timers in a page it thinks is backgrounded, and the lookahead
+scheduler then only ever fills its own horizon — so the transport advances at
+roughly `dur*2` seconds of music per wall-clock second. Timestamps stay
+correct, because they come off the audio clock, but a 200 s run yields about a
+third of the events you expected, which quietly guts any measurement that needs
+a long window. Launch with `--disable-background-timer-throttling`,
+`--disable-backgrounding-occluded-windows` and `--disable-renderer-backgrounding`.

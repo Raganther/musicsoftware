@@ -159,8 +159,33 @@ and link to what came of it.
   measurable from audio rather than only drawn.
 - Conduct with a gesture: the beat should come from the *turnaround* of a drag,
   which is what a stick gives, and would let the ensemble anticipate.
-- A section leader — a player who watches another player rather than the mean.
-  That is how real orchestras keep the drag bounded.
+- ~~A section leader — a player who watches another player rather than the mean.
+  That is how real orchestras keep the drag bounded.~~ → `sketches/entrain`
+  took the leader away entirely: an ensemble agreeing on a tempo by ear, where
+  the only variable is the listening graph. Near agreement it is linear
+  consensus, so the rate is set by the graph's algebraic connectivity λ₂ — and
+  measured rate/β came out 0.602 / 1.033 / 8.353 against λ₂ of 0.586 / 1.000 /
+  8.000. See `research/log/2026-08-26-entrain.md`.
+- The *directed* version, which is the original idea and a different
+  prediction: one player listens to nobody. The Laplacian stops being
+  symmetric, the sum is no longer conserved, and the ensemble should land on
+  the leader's tempo instead of the mean.
+- Consensus **with delay**. Real players hear each other late, and past some
+  coupling strength a delayed consensus system oscillates rather than
+  converging — which is the flutter a large ensemble gets in a live room.
+  One parameter away in `entrain`.
+- Let the listening graph change while it plays: musicians look up and look
+  away, so λ₂ becomes a function of time and the rate should track it.
+- Edge weights as a mix decision — how loud each player is *is* how much they
+  are heard, which makes λ₂ something you perform rather than configure.
+- **Repulsive coupling gives two camps, not an even spread.** Predicted a
+  splay, measured clustering at half a beat: "avoid whoever you can hear" is
+  satisfied by anti-phase, and an even ring requires knowing how many players
+  there are, which no player does. Worth a rule that does know.
+- When a residual has a tidy explanation, the explanation needs the experiment
+  that would kill it in the same breath. `entrain`'s decay error ordered
+  perfectly by graph diameter and the story was still wrong — it was the
+  discrete-time correction, and shrinking β proved it in one run.
 - Two-player instrument where each player controls half the parameters.
 - ~~An instrument with deliberate latency — you commit a gesture a bar
   ahead.~~ → `sketches/foreshadow`: commits land ahead of the playhead on a

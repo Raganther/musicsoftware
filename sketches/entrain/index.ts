@@ -323,7 +323,7 @@ TODO:measure
        * because the instantaneous order parameter jitters and would pump.
        */
       coh += (order().r - coh) * 0.04
-      const gain = (0.24 + ctx.params.level * 0.62) / (1 + (n - 1) * coh)
+      const gain = (0.28 + ctx.params.level * 0.36) / (1 + (n - 1) * coh)
 
       for (let guard = 0; guard < 512; guard++) {
         let j = 0
