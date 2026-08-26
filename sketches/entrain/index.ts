@@ -98,7 +98,7 @@ export default defineSketch({
 
   params: {
     players: { type: 'number', value: 8, min: 3, max: 12, step: 1, label: 'Players' },
-    graph: { type: 'select', value: 'ring', options: [...GRAPHS], label: 'Who hears whom' },
+    graph: { type: 'select', value: 'star', options: [...GRAPHS], label: 'Who hears whom' },
     phase: { type: 'number', value: 0.18, min: -0.4, max: 0.6, step: 0.01, label: 'Phase pull (− pushes apart)' },
     tempo: { type: 'number', value: 0.15, min: 0, max: 0.4, step: 0.005, label: 'Tempo pull' },
     spread: { type: 'number', value: 18, min: 0, max: 40, step: 1, label: 'Starting disagreement', unit: '%' },
@@ -365,7 +365,7 @@ master at 2.3 and n put it at 0.08. Defaults DEFPEAK; the loudest thing reachabl
        * because the instantaneous order parameter jitters and would pump.
        */
       coh += (order().r - coh) * 0.04
-      const gain = (0.28 + ctx.params.level * 0.36) / (1 + (n - 1) * coh)
+      const gain = (0.40 + ctx.params.level * 0.30) / (1 + (n - 1) * coh)
 
       for (let guard = 0; guard < 512; guard++) {
         let j = 0
