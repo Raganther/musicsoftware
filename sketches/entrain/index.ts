@@ -113,7 +113,49 @@ export default defineSketch({
   },
 
   notes: `
-TODO:measure
+Take the conductor away and the only thing left deciding how fast an ensemble
+agrees is **who can hear whom**. Near agreement this is linear consensus on the
+listening graph, so the tempo disagreement decays at a rate set by the graph's
+algebraic connectivity λ₂ — the second-smallest eigenvalue of its Laplacian.
+Same players, same ears, same correction strength; change only the wiring.
+
+Measured with the phase term off, so the tempo rule is the only rule. Eight
+players, λ₂ spanning 52×, rate/β should equal λ₂ and nothing else:
+
+  graph     λ₂       β      rate/beat   rate/β      r
+  ring    0.5858   0.05      0.03006     0.601   -1.0000
+  star    1.0000   0.05      0.05169     1.034   -1.0000
+  all     8.0000   0.005     0.04178     8.356   -1.0000
+  line    0.1522   0.05      PATHROW
+
+TAILNOTE
+
+And it is audible, not just true of the model. Five players, 26 s captured off
+the pre-limiter master and split into one band each by complex demodulation:
+**52 onsets scheduled, 52 heard, 52 matched, 0.1 ms of scatter in every band**,
+at a constant 19 ms offset which is the detector's own lag. The heard beat goes
+from a spread of 5.62e-3 s over the first 8 seconds to **1.74e-15 s** over the
+last 8. They do not approximately agree.
+
+Consensus preserves the sum, so they should land on the mean of the tempos they
+started at — and they do, within 0.4%, *as long as the tempo rule is the only
+rule*. Turn the phase pull on and it drifts up to 3%: once beats are also being
+moved about, where the ensemble lands depends on how it got there.
+
+Two things worth knowing. \`Phase pull\` negative does **not** give an even
+spread, which is what I predicted; it gives two camps about half a beat apart.
+"Get away from whoever you can hear" is satisfied by anti-phase, and an even
+ring would need a player to know how many others there are, which none of them
+does. And a ring with *positive* phase pull settles into a twisted state where
+the phases lock a fixed fraction apart and the period variable stops moving
+while the ensemble is in fact perfectly in tempo — which is why the λ₂
+measurement above switches the phase term off rather than arguing with it.
+
+Level divides by \`1 + (n−1)·r\` rather than by n or sqrt(n). Both of those are
+right about one half of the piece: scattered, n pings land at n instants and the
+peak is one ping; agreed, they land together and the peak is n. sqrt(n) put the
+master at 2.3 and n put it at 0.08. Defaults DEFPEAK; the loudest thing reachable
+(12 players, all-to-all, hard phase pull, level 1) is 0.795.
 `,
 
   setup(ctx) {
