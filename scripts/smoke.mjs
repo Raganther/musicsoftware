@@ -63,6 +63,7 @@ const PLAN = {
   'develop': 'play',
   'staircase': 'play',
   'mallet': 'play',
+  'entrain': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
