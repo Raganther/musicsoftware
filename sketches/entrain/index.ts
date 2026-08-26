@@ -174,8 +174,9 @@ measurement above switches the phase term off rather than arguing with it.
 Level divides by \`1 + (n−1)·r\` rather than by n or sqrt(n). Both of those are
 right about one half of the piece: scattered, n pings land at n instants and the
 peak is one ping; agreed, they land together and the peak is n. sqrt(n) put the
-master at 2.3 and n put it at 0.08. Defaults DEFPEAK; the loudest thing reachable
-(12 players, all-to-all, hard phase pull, level 1) is 0.795.
+master at 2.3 and n put it at 0.08. Defaults peak **0.508** pre-limiter; the
+loudest configuration reachable — 12 players, all-to-all, hard phase pull,
+level 1 — is 0.874.
 `,
 
   setup(ctx) {
