@@ -122,13 +122,33 @@ Same players, same ears, same correction strength; change only the wiring.
 Measured with the phase term off, so the tempo rule is the only rule. Eight
 players, λ₂ spanning 52×, rate/β should equal λ₂ and nothing else:
 
-  graph     λ₂       β      rate/beat   rate/β      r
-  ring    0.5858   0.05      0.03006     0.601   -1.0000
-  star    1.0000   0.05      0.05169     1.034   -1.0000
-  all     8.0000   0.005     0.04178     8.356   -1.0000
-  line    0.1522   0.05      PATHROW
+  graph     λ₂       β      rate/beat   rate/β      λ₂      r
+  line    0.1522   0.05      0.00767     0.153   0.152  -1.0000
+  ring    0.5858   0.05      0.03006     0.601   0.586  -1.0000
+  star    1.0000   0.05      0.05169     1.034   1.000  -1.0000
+  all     8.0000   0.005     0.04178     8.356   8.000  -1.0000
 
-TAILNOTE
+Four graphs, 52x apart in λ₂, agreeing with it to within 4.5% and each a
+straight line on a log axis to four decimal places. A chain of eight players
+really does take fifty times as long to agree as eight who all hear each other.
+
+The line took three attempts and each failure was a different lesson. β has to
+be small: the true per-beat factor is |1 − β·λ₂| and the rate is −ln of it, so
+at β = 0.15 the discrete correction is already 8% and I spent a while inventing
+a theory about within-beat propagation to explain it. And the fit has to start
+after the faster modes have gone, because the disagreement is a sum over
+eigenmodes each decaying at its own λ. That matters for exactly one of these
+four: the path is the only graph here whose λ₂ is *not* repeated —
+
+  path P₈   0, 0.152, 0.586, 1.235, 2, 2.765, 3.414, 3.848   all distinct
+  ring C₈   0, 0.586, 2, 3.414, 4, 3.414, 2, 0.586           λ₂ twice
+  star S₈   0, 1, 1, 1, 1, 1, 1, 8                           λ₂ six times
+  K₈        0, 8, 8, 8, 8, 8, 8, 8                           λ₂ seven times
+
+— so its λ₃ runs 3.85x ahead of its λ₂ and pollutes any window opened too early.
+Sweeping the fit start is self-diagnosing: 0.206, 0.159, 0.153, 0.153, 0.153,
+0.153. A rate still falling has a faster mode in it; a rate that has stopped
+moving is the answer.
 
 And it is audible, not just true of the model. Five players, 26 s captured off
 the pre-limiter master and split into one band each by complex demodulation:
@@ -365,7 +385,11 @@ master at 2.3 and n put it at 0.08. Defaults DEFPEAK; the loudest thing reachabl
        * because the instantaneous order parameter jitters and would pump.
        */
       coh += (order().r - coh) * 0.04
-      const gain = (0.40 + ctx.params.level * 0.30) / (1 + (n - 1) * coh)
+      // A narrow trim on purpose: the coherence term already does the level
+      // work, and the span between the default and the loudest configuration a
+      // user can dial in (12 players, all-to-all, hard phase pull, fast tempo)
+      // is most of the available headroom on its own.
+      const gain = (0.52 + ctx.params.level * 0.18) / (1 + (n - 1) * coh)
 
       for (let guard = 0; guard < 512; guard++) {
         let j = 0
