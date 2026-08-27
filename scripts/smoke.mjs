@@ -64,6 +64,7 @@ const PLAN = {
   'staircase': 'play',
   'mallet': 'play',
   'entrain': 'play',
+  'rhyme': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

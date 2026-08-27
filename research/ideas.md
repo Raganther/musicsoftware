@@ -280,8 +280,31 @@ and link to what came of it.
   motion, or a target contour. One multiplication inside the DP.
 - Say *why* a square is dead in `species`: name the rule that kills it, and the
   tool starts teaching rather than just enforcing.
-- Let a node reference a non-predecessor — the chain becomes a graph and
-  motifs recur by reference rather than by copy.
+- ~~Let a node reference a non-predecessor — the chain becomes a graph and
+  motifs recur by reference rather than by copy.~~ → `sketches/rhyme`: a score
+  with no copies at all. Every repeat is a rhyme — "this span is that span,
+  transposed / inverted / backwards" — which in scale degrees is affine with
+  two ±1 coefficients, so the score is a signed graph and the notes you
+  actually chose are its unpinned components. Signed union-find agrees with row
+  reduction over the rationals 50 of 50, 980 of 980 constraint rows hold in the
+  realised score, 66 refusals all independently confirmed justified, and every
+  rhyme holds in the recording. See `research/log/2026-08-27-rhyme.md`.
+- Rhymes over *rhythm*: durations as ratios are affine in log time, so
+  augmentation and diminution drop straight into `rhyme`'s solver — and that is
+  also the rhythm half `develop` is missing.
+- Draw the rhyme by hand in `rhyme`: select two spans, pick a transform, watch
+  the free-note count fall. Everything downstream already re-derives.
+- A rhyme with a *tolerance* — "roughly that span, up a third" — turning the
+  exact solve into least squares, which is much closer to how music rhymes.
+- `species`'s rules as extra rows in `rhyme`'s system: counterpoint and form
+  solved together is the next altitude up from either.
+- Export only the free notes as the score. Hand someone eighteen notes and a
+  rhyme list and they have the whole piece — the compression claim made real.
+- **When two independent methods give the same wrong answer, the bug is
+  upstream of both.** Two unrelated pitch detectors scored 80.0/85.0/65.0 to
+  one decimal in `rhyme`; the fault was the candidate list, not either
+  detector. Three of the last four days went on improving a detector that was
+  not the problem.
 - Rhythm stored as duration *ratios* the same way pitch is stored as
   intervals: swing and augmentation become single knobs.
 - A DAW arrangement view where clips have gravity and snap into phrases.
