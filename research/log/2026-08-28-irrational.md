@@ -135,6 +135,40 @@ is clean and repeatable. Something else about that script differs and I have
 not found it. No shipped number depends on it: the levels quoted here come from
 the parameter sweep and from the smoke suite, which agree with each other.
 
+## And the gate was making the same mistake
+
+`npm run smoke` failed once on `call-response: silent` and passed on a re-run
+with nothing changed. Chasing that found the same defect as above, in the thing
+whose whole job is to catch it.
+
+`sample()` read a 2048-sample analyser — a **46 ms window** — once every
+**100 ms**. Fifty-four milliseconds in every hundred were never examined. For a
+dense sketch that hardly matters, because the peak comes round again. For a
+sparse one it is the difference between a number and a coin flip, and
+`call-response` deliberately answers *after* a silence, so its single response
+either lands in a sampled window or does not exist.
+
+The meter now runs in the page on a 20 ms interval, so the windows overlap and
+the timeline is covered. Every sketch in the suite was then re-measured, and
+the correction has exactly the shape it should:
+
+| | old meter | corrected |
+| --- | --- | --- |
+| watershed | 0.542 | **0.839** |
+| staircase | 0.508 | **0.775** |
+| understudy | 0.507 | 0.624 |
+| tartini | 0.476 | 0.476 |
+| tiling | 0.457 | 0.430 |
+
+Sparse, peaky sketches were under-reported by about half. Dense ones did not
+move at all, because their peak recurs inside every window. Nothing was over
+1.0, so no sketch was actually clipping — but **every level number this repo has
+quoted was a lower bound**, and the ones for sparse sketches were a poor one.
+
+That is two instances of the same error in one day, found independently: a peak
+is a maximum, and a maximum cannot be sampled sparsely. It has to be
+accumulated.
+
 ## Next
 
 - [ ] Two voices whose *densities* are α and 1−α, so between them they hit every
@@ -152,5 +186,6 @@ the parameter sweep and from the smoke suite, which agree with each other.
 - [ ] Let α drift slowly. The rhythm would pass through its own convergents in
       order, locking briefly at each and slipping between, which is a form nobody
       has to compose.
-- [ ] A peak-measuring pass that runs long enough to see rare coincidences, or
-      better, computes the worst case rather than sampling for it.
+- [ ] The smoke meter is continuous now but still only watches 2.4 s per
+      sketch. `irrational` needed 35 s to show its worst case. Either watch for
+      longer or compute the worst case rather than waiting for it.

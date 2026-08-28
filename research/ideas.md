@@ -57,10 +57,17 @@ and link to what came of it.
   line, drag it, and the slope is the only parameter there is.
 - Let α drift slowly, so the rhythm passes through its own convergents in
   order — locking briefly at each and slipping between. A form nobody composes.
-- **A peak is a maximum, so a short run under-reports it rather than
-  estimating it.** `irrational` read 0.335 over 24 s and 3.010 over 35 s from
-  the same build: three consonant voices coinciding sum in phase, and the
-  coincidence is rare. Every level in this repo was checked over 20-40 s.
+- **A peak is a maximum, so it cannot be sampled sparsely — it has to be
+  accumulated.** Two instances of this in one day. `irrational` read 0.335 over
+  24 s and 3.010 over 35 s from the same build, because three consonant voices
+  coinciding sum in phase and the coincidence is rare. And `npm run smoke` was
+  metering a 46 ms analyser window every 100 ms, so it never looked at more than
+  half the timeline: sparse sketches were under-reported by ~50% (watershed
+  0.542 → 0.839, staircase 0.508 → 0.775) while dense ones did not move at all.
+  Fixed; every level quoted before 2026-08-28 was a lower bound.
+- The smoke meter is continuous now but still watches only 2.4 s per sketch,
+  and `irrational` needed 35 s to reveal its worst case. Watch longer, or
+  compute the worst case instead of waiting for it.
 - A sequencer you edit by singing at it (pitch detection → steps).
 - Rhythm as a cellular automaton — Rule 110 as a drum pattern generator.
 - ~~Cowell's continuum: rhythm and pitch as one generator at different
