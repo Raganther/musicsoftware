@@ -174,24 +174,30 @@ try {
       master.connect(a)
       window.__tap = a
       window.__tapBuf = new Float32Array(a.fftSize)
+      window.__peak = 0
+      /**
+       * The meter runs in the page, not in the driver.
+       *
+       * 2048 samples is about 46 ms, so reading it from Playwright every 100 ms
+       * left 54 ms of every 100 unexamined. A peak is a maximum, so that does
+       * not merely add noise — it under-reports every level in the suite, and a
+       * sparse sketch whose only note in the window falls in a gap reads as
+       * silent. That is what made `call-response` fail one run and pass the
+       * next. At 20 ms the windows overlap and the timeline is covered.
+       */
+      window.__peakTimer = setInterval(() => {
+        a.getFloatTimeDomainData(window.__tapBuf)
+        for (const v of window.__tapBuf) {
+          const m = v < 0 ? -v : v
+          if (m > window.__peak) window.__peak = m
+        }
+      }, 20)
     }, u)
 
-  const peak = () =>
-    page.evaluate(() => {
-      if (!window.__tap) return 0
-      window.__tap.getFloatTimeDomainData(window.__tapBuf)
-      let m = 0
-      for (const v of window.__tapBuf) m = Math.max(m, Math.abs(v))
-      return m
-    })
-
   const sample = async (ms = 2400) => {
-    let max = 0
-    for (let i = 0; i < ms / 100; i++) {
-      await page.waitForTimeout(100)
-      max = Math.max(max, await peak())
-    }
-    return max
+    await page.evaluate(() => (window.__peak = 0))
+    await page.waitForTimeout(ms)
+    return page.evaluate(() => window.__peak ?? 0)
   }
 
   for (const id of ids) {
