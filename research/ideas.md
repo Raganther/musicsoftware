@@ -42,6 +42,25 @@ and link to what came of it.
   how real mensuration canons work and changes the problem completely.
 - Fill each voice of a tiling canon with a pitch sequence rather than one note,
   so the tiling is what keeps the melody from colliding with itself.
+- ~~A rhythm at an irrational ratio, so it never comes back at all.~~
+  → `sketches/irrational`: the characteristic Sturmian word, which is the same
+  bucket-and-wrap as `euclid()` and so *is* E(p,q) at rational α — verified
+  maximally even 20 of 20 and n+1 distinct windows 8 of 8. The finding was that
+  "never repeats" is a claim no window supports: the apparent period is the
+  denominator of the best fraction you can resolve, agreeing 24 of 24 with a
+  derivation from fractional parts. π−3 has apparent period 113 forever; the
+  golden ratio has none. See `research/log/2026-08-28-irrational.md`.
+- Two voices at densities α and 1−α: between them they hit every step exactly
+  once, which is a tiling canon with an irrational rhythm — something `tiling`
+  cannot express.
+- A Sturmian word is the cutting sequence of a line through a grid. Draw the
+  line, drag it, and the slope is the only parameter there is.
+- Let α drift slowly, so the rhythm passes through its own convergents in
+  order — locking briefly at each and slipping between. A form nobody composes.
+- **A peak is a maximum, so a short run under-reports it rather than
+  estimating it.** `irrational` read 0.335 over 24 s and 3.010 over 35 s from
+  the same build: three consonant voices coinciding sum in phase, and the
+  coincidence is rare. Every level in this repo was checked over 20-40 s.
 - A sequencer you edit by singing at it (pitch detection → steps).
 - Rhythm as a cellular automaton — Rule 110 as a drum pattern generator.
 - ~~Cowell's continuum: rhythm and pitch as one generator at different

@@ -65,6 +65,7 @@ const PLAN = {
   'mallet': 'play',
   'entrain': 'play',
   'rhyme': 'play',
+  'irrational': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
