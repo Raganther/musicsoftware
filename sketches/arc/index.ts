@@ -120,11 +120,13 @@ hear the difference. That mapping needs rethinking rather than rebalancing.
     const dly = delay(rev.input, { time: '1/8', feedback: 0.24, mix: 0.16 })
     const synth = poly(dly.input, {
       wave: 'sawtooth',
-      // 1.95, not 3.4. At 3.4 this peaked 1.478 pre-limiter — 48% over — which
+      // 1.7, not 3.4. At 3.4 this peaked 1.478 pre-limiter — 48% over — which
       // the smoke suite missed for three weeks because it listened for 2.4 s
-      // and the tension curve puts the loud part late in a 20.9 s form. The
-      // correlations below are ratios and do not move with the level.
-      gain: 1.95,
+      // and the tension curve puts the loud part late in a 20.9 s form. 1.95
+      // brought it to 0.906 over a full minute, still a shade past the ~0.9
+      // CLAUDE.md asks for, so a notch further. The correlations below are
+      // ratios and do not move with the level.
+      gain: 1.7,
       cutoff: 1500,
       resonance: 4,
       envAmount: 1.8,
