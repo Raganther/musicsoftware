@@ -149,21 +149,37 @@ sparse one it is the difference between a number and a coin flip, and
 either lands in a sampled window or does not exist.
 
 The meter now runs in the page on a 20 ms interval, so the windows overlap and
-the timeline is covered. Every sketch in the suite was then re-measured, and
-the correction has exactly the shape it should:
+the timeline is covered.
 
-| | old meter | corrected |
-| --- | --- | --- |
-| watershed | 0.542 | **0.839** |
-| staircase | 0.508 | **0.775** |
-| understudy | 0.507 | 0.624 |
-| tartini | 0.476 | 0.476 |
-| tiling | 0.457 | 0.430 |
+**Correction, 2026-08-29.** What was written here originally was a before/after
+table — watershed 0.542 → 0.839, staircase 0.508 → 0.775 — presented as showing
+that sparse sketches had been under-reported by about half. That table does not
+support that claim and I should not have published it. It compared one run of
+the old meter against one run of the new one, and these are generative
+sketches: two runs of the *same* meter the next day gave watershed 0.872 and
+0.520, and `bow` silent then 0.558. The run-to-run spread is as large as the
+effect I attributed to the fix.
 
-Sparse, peaky sketches were under-reported by about half. Dense ones did not
-move at all, because their peak recurs inside every window. Nothing was over
-1.0, so no sketch was actually clipping — but **every level number this repo has
-quoted was a lower bound**, and the ones for sparse sketches were a poor one.
+I also guessed at a mechanism — that Chromium was throttling the in-page timer
+— and that is wrong too. Measured directly, the interval ticks 50 times a
+second with the anti-throttling flags and 49.9 without them, four runs.
+
+The honest measurement is a within-run one: meter the same signal two ways at
+once, one accumulating every 20 ms and one only looking every 100 ms as the old
+driver did. Same audio, same window, so the only difference is the gap.
+
+| sketch | continuous | every 100 ms | under-reported |
+| --- | --- | --- | --- |
+| watershed | 0.873 | 0.767 | 12.2% |
+| groove | 0.194 | 0.187 | 3.9% |
+| staircase, irrational, crab, step-sequencer, arc, bloom, tartini | — | — | 0.0% |
+
+**Mean 1.6%, worst 12.2%.** The sampling gap was real and worth closing, and it
+is nothing like fifty percent. The change stands; the evidence I gave for it
+did not.
+
+The same probe found something the gate had been missing for far longer, which
+is in `research/log/2026-08-29-crab.md`.
 
 That is two instances of the same error in one day, found independently: a peak
 is a maximum, and a maximum cannot be sampled sparsely. It has to be

@@ -137,11 +137,10 @@ try {
       '--mute-audio',
       '--no-sandbox',
       '--disable-dev-shm-usage',
-      // The peak meter is a setInterval running *in the page*, and Chromium
-      // throttles timers in a page it thinks is backgrounded — to about 1 Hz.
-      // A meter that reads a 46 ms window once a second is far worse than the
-      // driver-side polling it replaced, and it is what made `bow` read silent.
-      // Same flags CLAUDE.md asks for on any driven page, for the same reason.
+      // Standard for a driven page, as CLAUDE.md asks. Note they are *not*
+      // load-bearing for the meter: measured directly, the in-page interval
+      // ticks 49.9 times a second without them and 50.0 with. I assumed
+      // throttling was behind a flaky `bow: silent` and it was not.
       '--disable-background-timer-throttling',
       '--disable-backgrounding-occluded-windows',
       '--disable-renderer-backgrounding',
@@ -188,11 +187,12 @@ try {
        * The meter runs in the page, not in the driver.
        *
        * 2048 samples is about 46 ms, so reading it from Playwright every 100 ms
-       * left 54 ms of every 100 unexamined. A peak is a maximum, so that does
-       * not merely add noise — it under-reports every level in the suite, and a
-       * sparse sketch whose only note in the window falls in a gap reads as
-       * silent. That is what made `call-response` fail one run and pass the
-       * next. At 20 ms the windows overlap and the timeline is covered.
+       * left 54 ms of every 100 unexamined. A peak is a maximum, so a gap
+       * under-reports rather than adding noise. Metering the same signal both
+       * ways at once puts the cost at 12.2% for `watershed`, 3.9% for `groove`
+       * and 0.0% for everything else — real, worth closing, and much smaller
+       * than the ~50% I first claimed from comparing single runs of generative
+       * sketches. At 20 ms the windows overlap and the timeline is covered.
        */
       window.__peakTimer = setInterval(() => {
         a.getFloatTimeDomainData(window.__tapBuf)
@@ -203,7 +203,20 @@ try {
       }, 20)
     }, u)
 
-  const sample = async (ms = 2400) => {
+  /**
+   * Ten seconds, not 2.4.
+   *
+   * A peak is a maximum, and several sketches here shape a form over tens of
+   * seconds — their loudest moment is nowhere near the start. `arc` reads 0.396
+   * over 2.4 s and 1.455 over ten, so the gate was passing a sketch that
+   * overshoots by 45% and has done since it was written. A gate that only
+   * listens to the opening bars is not checking the thing it claims to.
+   *
+   * This roughly doubles the suite's runtime, which is the price of the check
+   * being real. It is still not enough for a sketch whose form is longer than
+   * the window — see `arc`'s 20.9 s pass.
+   */
+  const sample = async (ms = 10000) => {
     await page.evaluate(() => (window.__peak = 0))
     await page.waitForTimeout(ms)
     return page.evaluate(() => window.__peak ?? 0)
