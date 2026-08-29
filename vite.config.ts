@@ -3,10 +3,10 @@ import { fileURLToPath, URL } from 'node:url'
 
 const r = (p: string) => fileURLToPath(new URL(p, import.meta.url))
 
-export default defineConfig({
-  // Relative, so the built app works wherever it is served from — the root in
-  // dev, and /musicsoftware/ on GitHub Pages — without a second config.
-  base: './',
+export default defineConfig(({ command }) => ({
+  // Served from https://raganther.github.io/musicsoftware/ in production;
+  // root during `vite dev` so localhost:5173 keeps working.
+  base: command === 'build' ? '/musicsoftware/' : '/',
   resolve: {
     alias: {
       '@core': r('./src/core'),
@@ -25,4 +25,4 @@ export default defineConfig({
     // those. Any `*.worklet.js` is exempt from inlining.
     assetsInlineLimit: (filePath) => (filePath.endsWith('.worklet.js') ? false : undefined),
   },
-})
+}))
