@@ -66,6 +66,7 @@ const PLAN = {
   'entrain': 'play',
   'rhyme': 'play',
   'irrational': 'play',
+  'crab': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
@@ -136,6 +137,14 @@ try {
       '--mute-audio',
       '--no-sandbox',
       '--disable-dev-shm-usage',
+      // The peak meter is a setInterval running *in the page*, and Chromium
+      // throttles timers in a page it thinks is backgrounded — to about 1 Hz.
+      // A meter that reads a 46 ms window once a second is far worse than the
+      // driver-side polling it replaced, and it is what made `bow` read silent.
+      // Same flags CLAUDE.md asks for on any driven page, for the same reason.
+      '--disable-background-timer-throttling',
+      '--disable-backgrounding-occluded-windows',
+      '--disable-renderer-backgrounding',
     ],
   })
 

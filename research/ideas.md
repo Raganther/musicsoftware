@@ -395,6 +395,25 @@ and link to what came of it.
 - Numbers in the notes must come from the build being committed. `staircase`
   nearly shipped a 90/90 match rate measured two gain changes earlier; the real
   figure was 45/90.
+- ~~A piece that is its own reverse, so playing it backwards should change
+  nothing.~~ → `sketches/crab`: a canon against its own retrograde, score
+  palindromic 50 of 50. The question it answers is which cue gives time its
+  direction: the note's envelope costs 0.4728 of mirror correlation and the
+  room only 0.3105, against a method spread of 0.0005. Not what I expected —
+  but the room does nothing until mix 0.35 and then collapses, while the
+  envelope degrades from the first nudge, which is probably why backwards
+  reverb is the cue everyone can name. See `research/log/2026-08-29-crab.md`.
+- Contour as the third arrow of time: a rising line reversed is a falling one,
+  and that may beat both envelope and room. Needs a line that is *not* its own
+  retrograde, which `crab` cannot currently make.
+- Split `crab`'s `Bite` into attack asymmetry and decay asymmetry — they move
+  together now and there is no reason they should weigh the same.
+- A table canon: line, retrograde, inversion and retrograde-inversion at once.
+  That is the Bach puzzle canon and it is one more voice in `crab`.
+- **Print a measurement's repeatability above the comparison it licenses.**
+  `crab`'s first run said the room beat the envelope by 0.046 with ±0.05 of
+  noise — a wrong answer that agreed with the folk intuition, which is the
+  hardest kind to catch. Three repeats took two minutes and settled it.
 - Temporal masking: hide notes in the ~20 ms shadow after a drum hit. Same
   effect, different time base, no new model needed.
 - The inverse of `veil`: play a melody and have the sketch synthesise the
