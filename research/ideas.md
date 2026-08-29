@@ -58,16 +58,30 @@ and link to what came of it.
 - Let α drift slowly, so the rhythm passes through its own convergents in
   order — locking briefly at each and slipping between. A form nobody composes.
 - **A peak is a maximum, so it cannot be sampled sparsely — it has to be
-  accumulated.** Two instances of this in one day. `irrational` read 0.335 over
-  24 s and 3.010 over 35 s from the same build, because three consonant voices
-  coinciding sum in phase and the coincidence is rare. And `npm run smoke` was
-  metering a 46 ms analyser window every 100 ms, so it never looked at more than
-  half the timeline: sparse sketches were under-reported by ~50% (watershed
-  0.542 → 0.839, staircase 0.508 → 0.775) while dense ones did not move at all.
-  Fixed; every level quoted before 2026-08-28 was a lower bound.
-- The smoke meter is continuous now but still watches only 2.4 s per sketch,
-  and `irrational` needed 35 s to reveal its worst case. Watch longer, or
-  compute the worst case instead of waiting for it.
+  accumulated.** `irrational` read 0.335 over 24 s and 3.010 over 35 s from the
+  same build, because three consonant voices coinciding sum in phase and the
+  coincidence is rare. `npm run smoke` had the same shape of bug, metering a
+  46 ms window every 100 ms so it never saw more than half the timeline.
+  (Corrected 2026-08-29: I first wrote that this under-reported sparse sketches
+  by ~50%, from a single-run before/after on generative sketches. Metered
+  properly — the same signal both ways at once — the gap costs 12.2% on
+  `watershed`, 3.9% on `groove`, 0.0% elsewhere. Real, worth closing, not
+  fifty percent.)
+- ~~The smoke meter watches only 2.4 s per sketch, and `irrational` needed 35 s
+  to reveal its worst case.~~ → the window is 10 s now, and widening it
+  immediately caught `arc` clipping at 1.478 pre-limiter, 48% over, which the
+  suite had passed since 2026-08-05: its tension curve shapes a 20.9 s form so
+  the loud part is late, and the gate was only ever hearing the opening bars.
+  Fixed at the source (gain 3.4 → 1.95).
+- **Ten seconds is still shorter than several forms here.** `arc`'s pass is
+  20.9 s; `staircase`'s cycle is 24. A sketch whose loudest moment falls
+  outside the window is still invisible to the gate. Either sample a full
+  form per sketch, or compute the worst case instead of waiting for it.
+- Guessing at a mechanism is not measuring it. I attributed a flaky smoke run
+  to Chromium throttling the in-page meter; measured directly it ticks 49.9/s
+  without the anti-throttling flags and 50.0 with. The sampling gap it
+  replaced was real but cost 1.6% on average, not the ~50% I first published
+  from comparing single runs of generative sketches.
 - A sequencer you edit by singing at it (pitch detection → steps).
 - Rhythm as a cellular automaton — Rule 110 as a drum pattern generator.
 - ~~Cowell's continuum: rhythm and pitch as one generator at different
