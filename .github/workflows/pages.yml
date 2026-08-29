@@ -1,0 +1,53 @@
+name: Deploy to GitHub Pages
+
+# The gallery is a static Vite build, so it can just be served. `base` is './'
+# in vite.config.ts, which is what lets the same build work from the repo root
+# in dev and from /musicsoftware/ here.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never two deploys at once, but never cancel one either — a half-finished
+# deploy is worse than a slow one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      # `npm run build` is `tsc --noEmit && vite build`, so a type error fails
+      # the deploy rather than shipping a broken gallery.
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+        with:
+          # Turns Pages on for the repo the first time this runs, so there is
+          # no settings toggle to remember.
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

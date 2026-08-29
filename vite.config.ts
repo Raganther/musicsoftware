@@ -4,6 +4,9 @@ import { fileURLToPath, URL } from 'node:url'
 const r = (p: string) => fileURLToPath(new URL(p, import.meta.url))
 
 export default defineConfig({
+  // Relative, so the built app works wherever it is served from — the root in
+  // dev, and /musicsoftware/ on GitHub Pages — without a second config.
+  base: './',
   resolve: {
     alias: {
       '@core': r('./src/core'),
