@@ -153,6 +153,35 @@ and link to what came of it.
   three sketches now.
 - A bridge model: strings coupled through a shared resonator with per-partial
   transfer (the mean-coupling shortcut is damping, not sympathy — measured).
+- ~~The cello wolf note, as physics rather than as a defect.~~ → `sketches/wolf`:
+  a string mode coupled to a body resonance, which is an avoided crossing you
+  can play. 19 of 20 predicted normal modes found in the audio within 1.5 Hz
+  (mean 0.066), closest approach 6.67 Hz predicted / 6.44 measured — never zero.
+  The modes trade character across the crossing (100%/2% → 51%/100%), and
+  sustain collapses 2.32 s → 0.53 s because there the mode is half body. With
+  coupling 0 the peak sits on the string to 0.010 Hz and every note rings for
+  exactly 3.20 s. See `research/log/2026-08-30-wolf.md`.
+- **Audibility arrives well before resolvability.** At a realistic body Q of 26
+  the wolf's splitting is about as wide as the body's own linewidth and the two
+  modes merge into one peak — 8 of 20 separable instead of 19 — while the
+  sustain collapse is untouched, 4.46x against 4.36x. The phenomenon is exactly
+  as strong; only the ability to point at it changes. Worth remembering before
+  concluding that something which cannot be resolved is not happening.
+- Sweep Q in `wolf` and find where the two peaks actually merge, then check it
+  against the linewidth arithmetic instead of asserting they are "about equal".
+- The wolf eliminator: a mass on the tailpiece is a *third* oscillator that
+  splits the body mode again. Three coupled modes, one more eigenvalue, and a
+  sharp prediction about where the mass should go.
+- A stick-slip bow for `wolf`. A real wolf is a bowing phenomenon — the stutter
+  is the bow losing and regaining grip as energy sloshes into the body — and
+  the current negative-resistance bow can only sustain, not stutter. This is the
+  same missing piece as `bow`'s hysteretic friction model; building it once
+  would serve both.
+- Plucking into a ringing string is not addition. A finger landing for the next
+  note stops most of what is there, so a re-pluck should keep a fraction of the
+  existing displacement rather than adding to it — otherwise long ring times and
+  fast scales stack without bound. Halving it converges on 2a and took `wolf`'s
+  quiet-to-loud spread from 1.50x to 1.19x.
 - Palm damping as a gesture: choosing what *not* to ring.
 - ~~A reed and a bore, so the register break falls out of the model.~~
   → `sketches/overblow`: quarter-wave bore (even harmonics −46 dB), and a vent
@@ -428,6 +457,30 @@ and link to what came of it.
   `crab`'s first run said the room beat the envelope by 0.046 with ±0.05 of
   noise — a wrong answer that agreed with the folk intuition, which is the
   hardest kind to catch. Three repeats took two minutes and settled it.
+- **But a bit-identical repeat is not a repeatability estimate.** `wolf`'s
+  shipping configuration reproduced every digit across two runs, which proves
+  there is no run-to-run noise and bounds nothing at all about bias: a
+  deterministic model measured by a deterministic analysis will reproduce a
+  wrong answer forever. The handle on bias is a channel with a known answer, not
+  a repeat.
+- **A silent sketch in the smoke suite may be the machine, not the sketch.**
+  Four unrelated sketches read exactly 0 in one run; `origin/main` passed 35/35
+  and the same branch passed 36/36 once six orphaned `vite` servers and a killed
+  run's chromium tree were cleaned up. Under load the audio thread underruns and
+  silence looks identical to a regression. The harness scripts are the cause —
+  `srv.kill()` reaps the `npx` shell and leaves its `vite` child running — so
+  either spawn vite directly or kill the process group.
+- **Size the window from the thing being measured, not from habit.** `wolf`
+  analysed 2 s of a note that is gone in 0.5 s — and the short decay *was* the
+  phenomenon, so the default window measured everything except the subject.
+  `arc` was the same mistake with the sign flipped: 2.4 s of a 20.9 s form, and
+  it hid a 1.478 peak for three weeks.
+- **A null is not a decay.** Two modes of similar height beat, so their envelope
+  hits zero every half beat period. A first-crossing t60 estimator finds the
+  first null and reports it as the decay — in `wolf` that was 0.30 s where the
+  answer was 0.64 s, wrong by 2x, and worst at exactly the note under study.
+  Read the *last* crossing. The general shape: any estimator that takes the
+  first time a signal crosses a threshold is measuring fluctuation, not trend.
 - Temporal masking: hide notes in the ~20 ms shadow after a drum hit. Same
   effect, different time base, no new model needed.
 - The inverse of `veil`: play a melody and have the sketch synthesise the
