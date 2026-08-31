@@ -255,6 +255,40 @@ and link to what came of it.
   that would kill it in the same breath. `entrain`'s decay error ordered
   perfectly by graph diameter and the story was still wrong — it was the
   discrete-time correction, and shrinking β proved it in one run.
+- ~~An instrument where a key is an *aim* rather than an assignment.~~
+  → `sketches/inertia`: pitch is a particle with mass moving in a landscape of
+  wells, U(x) = A(1 − cos(2πx/s)), and the instrument's pitches are the minima
+  of that landscape rather than the keys. Escape velocity measured at 12–12.5
+  st/s against 2√A = 12.00, with the excess rising monotonically 2.1% → 29.2%
+  as damping rises and never falling below the floor. Control (no landscape):
+  step-response overshoot within 0.4 points of exp(−πζ/√(1−ζ²)) across five
+  values of ζ. See `research/log/2026-08-31-inertia.md`.
+- **A residual with structure is a result nobody has recognised yet.**
+  `inertia`'s wobble law was 6.7% out at the deepest wells and 1% elsewhere,
+  which was not noise: the test kick was a 53° swing and the √A/s law is a
+  small-angle limit. The wells are cosine wells, so each is a pendulum, and the
+  wobble slows 28.1% from the softest landing to the hardest against 30.7% from
+  the exact elliptic-integral period. The discarded error was the best thing in
+  the sketch.
+- Velocity should set `inertia`'s kick rather than its spring, so hitting
+  harder overshoots into a different well — a real playing skill, currently
+  unavailable.
+- Wells at the degrees of a real scale rather than evenly spaced, with well
+  *depth* encoding how strongly a tuning wants each note. Costs the exact
+  arithmetic, buys jam compatibility (`root` + `scale`) and much better tunes.
+- Two particles in one landscape, pushing each other about — `entrain`'s
+  anti-phase result but in pitch instead of time.
+- Tilt `inertia`'s landscape with a constant force so ascending and descending
+  cost differently, which is what tessitura feels like.
+- **`noiseBuffer()` in `@core` should take a seed.** It uses unseeded
+  `Math.random()`, so every reverb in this repo is a different room on every
+  page load. Invisible until something measures through one: it moved
+  `inertia`'s fundamental-to-octave ratio between 1.9 and 8.2 across runs whose
+  worklet state was bit-identical, which read as an intermittent +12 semitone
+  tracking error and cost most of a day.
+- **Physics measurements do not belong on the master bus.** Level checks do —
+  that is where the ear is — but anything measuring what a sketch *is* doing
+  should tap the sketch's own node, before the room.
 - Two-player instrument where each player controls half the parameters.
 - ~~An instrument with deliberate latency — you commit a gesture a bar
   ahead.~~ → `sketches/foreshadow`: commits land ahead of the playhead on a
@@ -475,6 +509,14 @@ and link to what came of it.
   phenomenon, so the default window measured everything except the subject.
   `arc` was the same mistake with the sign flipped: 2.4 s of a 20.9 s form, and
   it hid a 1.478 peak for three weeks.
+- **Do not "fix" a detector from the inside when the evidence is ambiguous.**
+  `inertia`'s octave errors looked like a YIN problem, so I made YIN prefer
+  longer periods on near-equal evidence — but a signal periodic at T is also
+  periodic at 2T and 3T, so the rule fired on healthy frames and read a steady
+  pitch as 19.02 semitones flat, exactly a factor of three. Catching it
+  downstream on continuity works, because a 12-semitone jump between adjacent
+  frames is impossible when the fastest real motion is 0.33 per hop. A guard
+  that can only fire on impossible evidence cannot corrupt the good case.
 - **A null is not a decay.** Two modes of similar height beat, so their envelope
   hits zero every half beat period. A first-crossing t60 estimator finds the
   first null and reports it as the decay — in `wolf` that was 0.30 s where the

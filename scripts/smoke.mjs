@@ -68,6 +68,8 @@ const PLAN = {
   'irrational': 'play',
   'crab': 'play',
   'wolf': 'play',
+  // keys aim it, but it wanders on its own when nobody is playing
+  'inertia': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
