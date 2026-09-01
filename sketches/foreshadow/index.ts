@@ -107,7 +107,15 @@ better and I ran out of appetite for the geometry.
     const dly = delay(rev.input, { time: '3/16', feedback: 0.26, mix: 0.18 })
     const synth = poly(dly.input, {
       wave: 'triangle',
-      gain: 6.0,
+      /**
+       * 6.0 until 2026-09-01, where it ran too close to the ceiling to be safe.
+       * Measured pre-limiter across four smoke runs: 0.65, 0.93, 0.96 and
+       * **1.19** — the last one a genuine gate failure. The spread is the
+       * sketch's own generativity (how many commits pile onto one bar), so no
+       * single run bounds the worst case; this is scaled to put the loudest
+       * thing actually observed at 0.89 rather than over 1.
+       */
+      gain: 4.5,
       cutoff: 2400,
       envAmount: 1.5,
       attack: 0.005,

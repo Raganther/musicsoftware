@@ -73,6 +73,17 @@ and link to what came of it.
   suite had passed since 2026-08-05: its tension curve shapes a 20.9 s form so
   the loud part is late, and the gate was only ever hearing the opening bars.
   Fixed at the source (gain 3.4 → 1.95).
+- **`foreshadow` is the next `arc`.** Measured pre-limiter across four runs:
+  0.65, 0.93, 0.96, 1.19 — the last a real gate failure, and it predates the
+  2026-09-01 core change. Gain 6.0 → 4.5 puts the observed maximum at 0.89, but
+  that is scaled against what was seen rather than what is possible. A sketch
+  whose level depends on how much the player piles onto one bar needs a computed
+  worst case, not a sampled one.
+- A fixed reverb impulse response removes *one* source of run-to-run variance,
+  not all of it. After seeding `noiseBuffer` I assumed a repeat would reproduce
+  the suite exactly and it did not, because generative sketches carry their own
+  randomness. Cheap test, and it stopped me attributing two failures to my own
+  change.
 - **Ten seconds is still shorter than several forms here.** `arc`'s pass is
   20.9 s; `staircase`'s cycle is 24. A sketch whose loudest moment falls
   outside the window is still invisible to the gate. Either sample a full
@@ -280,12 +291,13 @@ and link to what came of it.
   anti-phase result but in pitch instead of time.
 - Tilt `inertia`'s landscape with a constant force so ascending and descending
   cost differently, which is what tessitura feels like.
-- **`noiseBuffer()` in `@core` should take a seed.** It uses unseeded
-  `Math.random()`, so every reverb in this repo is a different room on every
-  page load. Invisible until something measures through one: it moved
-  `inertia`'s fundamental-to-octave ratio between 1.9 and 8.2 across runs whose
-  worklet state was bit-identical, which read as an intermittent +12 semitone
-  tracking error and cost most of a day.
+- ~~**`noiseBuffer()` in `@core` should take a seed.**~~ Done 2026-09-01: it
+  used unseeded `Math.random()`, so every reverb in this repo was a different
+  room on every page load. Invisible until something measures through one: it
+  moved `inertia`'s fundamental-to-octave ratio between 1.9 and 8.2 across runs
+  whose worklet state was bit-identical. Worth noting it did *not* explain
+  `pivot`'s unstable key finder, which I assumed it would — seeding it left
+  those numbers bit-identical.
 - **Physics measurements do not belong on the master bus.** Level checks do —
   that is where the ear is — but anything measuring what a sketch *is* doing
   should tap the sketch's own node, before the room.
@@ -361,6 +373,35 @@ and link to what came of it.
 - A detector that cannot represent a repeat cannot measure music containing
   one. Four consecutive onset/pitch detectors have each failed *plausibly*;
   only the known-answer channel caught them.
+- ~~A tool for composing a modulation, where the question is when the *ear*
+  changes key rather than where the score does.~~ → `sketches/pivot`: a pivot
+  chord belongs to both keys, so it carries no evidence and the turn must wait
+  for the first chord the old key cannot explain. Prolonging the pivot moves the
+  notated junction while leaving the evidence put, which turns a comparison into
+  a pair of slopes: measured 0.99 behind the junction (predicted 1.00) and
+  −0.01 behind the first foreign chord (predicted 0.00), pooled over two seeds,
+  with ±0.30 of between-seed spread. Directional, not precise. See
+  `research/log/2026-09-01-pivot.md`.
+- **Validate the quantity the experiment reads, not the one the method is famous
+  for.** `pivot`'s key finder named the right key in 44% of frames and I nearly
+  abandoned it — but nothing in the experiment reads a 24-way argmax; it reads a
+  two-way discriminant, and lengthening the window made the argmax worse (17%)
+  while making the discriminant better. Two different questions.
+- **And validate the *rule*, not the frames.** Frame-wise accuracy still was not
+  it: the experiment reads one number per run, so the false-positive rate of the
+  crossing rule on music with no modulation is the test that matters. It
+  disqualified three of `pivot`'s four modulation distances.
+- Chroma correlation cannot separate a key from its dominant over these
+  timescales — six seconds of a ii-V-I really does contain more of the dominant
+  than of the tonic — so `pivot` could only be measured at ±2 flatward. A
+  likelihood ratio on the two candidate keys, or just tracking the leading tone,
+  would see what the twelve-way profile throws away.
+- Chromatic pivots for `pivot`: the German sixth and the diminished seventh
+  belong to several keys at once, which is how nineteenth-century music
+  modulates anywhere it likes.
+- The sharpward/flatward asymmetry `pivot` already draws but has not measured:
+  going up, the new V is foreign and gives the game away immediately; coming
+  down, the new V *is* the old tonic and says nothing.
 - Path-find across the Tonnetz: click a distant triangle and let it find the
   shortest route in P/L/R moves. That is the actual compositional tool — you
   would be composing a modulation rather than watching a walk.

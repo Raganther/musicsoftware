@@ -6,6 +6,7 @@
  * The limiter is deliberate: when you're prototyping DSP you *will* write a
  * feedback loop that explodes. It should be embarrassing, not painful.
  */
+import { rng } from './random'
 
 let ctx: AudioContext | null = null
 let master: GainNode | null = null
@@ -111,7 +112,18 @@ export function loadWorklet(url: string): Promise<void> {
 // Small graph helpers used all over the place
 // ---------------------------------------------------------------------------
 
-/** A cached buffer of white noise — regenerating this per-hit is a waste. */
+/**
+ * A cached buffer of white noise — regenerating this per-hit is a waste.
+ *
+ * **Seeded, not `Math.random()`.** Every reverb in the repo builds its impulse
+ * response from this, so an unseeded buffer meant a different room on every
+ * page load. That is invisible until something has to measure through one, and
+ * then it is very hard to see: it moved `inertia`'s fundamental-to-octave ratio
+ * between 1.9 and 8.2 across runs whose worklet state was bit-identical, and it
+ * destabilised `pivot`'s chroma enough to change which keys its key-finder
+ * could tell apart. A fixed seed costs nothing and makes every sketch that uses
+ * noise reproducible between loads.
+ */
 let noiseBuf: AudioBuffer | null = null
 export function noiseBuffer(seconds = 2): AudioBuffer {
   const { ctx } = audio()
@@ -119,7 +131,8 @@ export function noiseBuffer(seconds = 2): AudioBuffer {
   const len = Math.ceil(ctx.sampleRate * seconds)
   const buf = ctx.createBuffer(1, len, ctx.sampleRate)
   const d = buf.getChannelData(0)
-  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1
+  const r = rng(20260901)
+  for (let i = 0; i < len; i++) d[i] = r.next() * 2 - 1
   noiseBuf = buf
   return buf
 }

@@ -70,6 +70,7 @@ const PLAN = {
   'wolf': 'play',
   // keys aim it, but it wanders on its own when nobody is playing
   'inertia': 'play',
+  'pivot': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
