@@ -71,6 +71,7 @@ const PLAN = {
   // keys aim it, but it wanders on its own when nobody is playing
   'inertia': 'play',
   'pivot': 'play',
+  'escalator': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

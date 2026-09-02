@@ -84,6 +84,13 @@ and link to what came of it.
   the suite exactly and it did not, because generative sketches carry their own
   randomness. Cheap test, and it stopped me attributing two failures to my own
   change.
+- **The smoke gate produces spurious `silent` failures on about a third of
+  runs** — four sketches on 2026-08-30, `arc` on 09-01, `arc` and `attractor`
+  on 09-02, every one cleared by a re-run. Consistent with CPU contention each
+  time, but a gate that cries wolf that often trains you to re-run instead of
+  investigate, which is how a real regression gets waved through. Retry a
+  silent sketch before failing it, and print the retry so the flake rate is
+  measured rather than remembered.
 - **Ten seconds is still shorter than several forms here.** `arc`'s pass is
   20.9 s; `staircase`'s cycle is 24. A sketch whose loudest moment falls
   outside the window is still invisible to the gate. Either sample a full
@@ -93,6 +100,35 @@ and link to what came of it.
   without the anti-throttling flags and 50.0 with. The sampling gap it
   replaced was real but cost 1.6% on average, not the ~50% I first published
   from comparing single runs of generative sketches.
+- ~~A Risset rhythm: the Shepard tone done to tempo.~~ → `sketches/escalator`:
+  octave-spaced pulse rates under a fixed bell in log-tempo, every layer
+  doubling each cycle. Onsets come from the closed form u_k = T·log2(1 + k/A_i)
+  and land within **2.9 ms** of it; the inter-onset interval falls by 1.711
+  against 1.707 predicted. Density moves 1.36x with the bell against 1.75x
+  without (control matches its 1.75x exactly). See
+  `research/log/2026-09-02-escalator.md`.
+- **A capture tap records nothing while its input is disconnected.**
+  `capture.worklet.js` posts a block only when its input has channels, and
+  Chrome gives a worklet an empty input when nothing upstream is connected. A
+  sketch whose voices connect and disconnect per event therefore gets its
+  *silences deleted*: 24 s of `escalator` came back as 6.0 s with the clicks
+  butted together, which turns an accelerating pulse into a steady one — the
+  exact result the experiment existed to test. Connect a ConstantSourceNode at
+  offset 0 into the tap. Latent since the first harness, because every previous
+  one tapped something continuously driven.
+- **Check that a summary statistic can vary before believing it.** Two of
+  `escalator`'s did not: "density at the start of the cycle versus the end" is
+  ≈1 for *any* periodic curve sampled over one period, since those are the same
+  phase, and it dutifully reported 0.96 for the case that doubles.
+- **A low correlation against a flat prediction is not disagreement**, it is the
+  absence of anything to agree about. `escalator`'s bell case correlates at
+  0.407 and its control at 0.971; only the control's number means anything,
+  because only the control has a shape.
+- Lighter-tailed windows for `escalator`: the Gaussian bell's edges are the
+  entire cost of the residual ripple, and a raised cosine over a fixed span
+  should flatten the density at fewer layers. Predictable before building.
+- Non-octave ladders — space the layers by 3 and make the cycle a tripling. The
+  arithmetic is identical and it would sound nothing like it.
 - A sequencer you edit by singing at it (pitch detection → steps).
 - Rhythm as a cellular automaton — Rule 110 as a drum pattern generator.
 - ~~Cowell's continuum: rhythm and pitch as one generator at different
