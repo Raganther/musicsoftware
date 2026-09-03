@@ -72,6 +72,8 @@ const PLAN = {
   'inertia': 'play',
   'pivot': 'play',
   'escalator': 'play',
+  // a feedback loop is silent until something starts it; the transport pokes it
+  'larsen': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
@@ -227,8 +229,18 @@ try {
     return page.evaluate(() => window.__peak ?? 0)
   }
 
-  for (const id of ids) {
-    const act = PLAN[id] ?? 'play'
+  /**
+   * Load a sketch, provoke it, and measure its peak.
+   *
+   * Factored out so a silent reading can be retried. Between 2026-08-30 and
+   * 09-02 this suite reported `silent` for six sketches across three runs and
+   * every one passed on a re-run — consistent with CPU contention each time,
+   * but a gate that cries wolf on a third of its runs trains you to re-run
+   * instead of investigate, which is how a real regression gets waved through.
+   * A sketch now has to be silent *twice* to fail, and the retries are printed
+   * so the flake rate is measured rather than remembered.
+   */
+  const provoke = async (id, act) => {
     await page.goto(`${BASE}/#/${id}`, { waitUntil: 'networkidle' })
     await page.waitForTimeout(350)
     const urls = await moduleUrls()
@@ -262,9 +274,19 @@ try {
 
     if (act === 'keys') for (const k of ['a', 'e', 'g']) await page.keyboard.up(k)
     if (act === 'play+drag') await page.mouse.up()
+    return max
+  }
 
-    rows.push({ id, peak: Number(max.toFixed(3)) })
-    if (PLAN[id] && max < 0.001) failures.push(`${id}: silent`)
+  const retried = []
+  for (const id of ids) {
+    const act = PLAN[id] ?? 'play'
+    let max = await provoke(id, act)
+    if (PLAN[id] && max < 0.001) {
+      retried.push(id)
+      max = await provoke(id, act)
+    }
+    rows.push({ id, peak: Number(max.toFixed(3)), retried: retried.includes(id) })
+    if (PLAN[id] && max < 0.001) failures.push(`${id}: silent on two consecutive attempts`)
     if (max > 1) failures.push(`${id}: clipping into the limiter (${max.toFixed(2)})`)
   }
 
@@ -307,7 +329,13 @@ try {
 
   if (errors.length) failures.push(`console errors:\n  ${errors.join('\n  ')}`)
 
-  for (const r of rows) console.log(`  ${r.id.padEnd(24)} peak ${r.peak}`)
+  for (const r of rows) {
+    console.log(`  ${r.id.padEnd(24)} peak ${r.peak}${r.retried ? '   (silent first time, retried)' : ''}`)
+  }
+  if (retried.length) {
+    console.log(`\n  ${retried.length} sketch(es) read silent on the first attempt and were retried: ` +
+      retried.join(', '))
+  }
   console.log(`  ${'(residual after unmount)'.padEnd(24)} peak ${residual.toFixed(3)}`)
   console.log(`  ${'(jam: 2 channels)'.padEnd(24)} peak ${jamPeak.toFixed(3)}`)
   console.log(`  ${'(jam residual)'.padEnd(24)} peak ${jamResidual.toFixed(3)}`)

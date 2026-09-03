@@ -84,13 +84,13 @@ and link to what came of it.
   the suite exactly and it did not, because generative sketches carry their own
   randomness. Cheap test, and it stopped me attributing two failures to my own
   change.
-- **The smoke gate produces spurious `silent` failures on about a third of
-  runs** — four sketches on 2026-08-30, `arc` on 09-01, `arc` and `attractor`
-  on 09-02, every one cleared by a re-run. Consistent with CPU contention each
-  time, but a gate that cries wolf that often trains you to re-run instead of
-  investigate, which is how a real regression gets waved through. Retry a
-  silent sketch before failing it, and print the retry so the flake rate is
-  measured rather than remembered.
+- ~~**The smoke gate produces spurious `silent` failures on about a third of
+  runs**~~ — four sketches on 2026-08-30, `arc` on 09-01, `arc` and `attractor`
+  on 09-02, every one cleared by a re-run. Fixed 2026-09-03: a sketch now has to
+  read silent *twice* to fail, and the retries are printed, so the flake rate is
+  a measured quantity rather than something remembered badly. If a sketch starts
+  needing the retry every run, that is a regression showing itself instead of
+  hiding inside my re-run.
 - **Ten seconds is still shorter than several forms here.** `arc`'s pass is
   20.9 s; `staircase`'s cycle is 24. A sketch whose loudest moment falls
   outside the window is still invisible to the gate. Either sample a full
@@ -507,6 +507,29 @@ and link to what came of it.
 
 ## Wild
 
+- ~~Feedback as an instrument rather than an accident.~~ → `sketches/larsen`:
+  a delay-and-filter loop can only sing where it returns in phase, so the pitch
+  is quantised to a comb, one tooth per integer n. Put the sounding frequency
+  back through f·D/sr − ∠H(f)/2π and it comes out an integer to **0.0002**
+  across ten delays, mode index right 10/10, worst frequency error 0.01 Hz.
+  Sweeping the delay the pitch falls ~50 Hz within a tooth then snaps back, 11
+  of 11 steps matching. And it starts howling at 1/|H(f_n)| rather than 1, a
+  threshold that scallops between 1.002 and 1.216. See
+  `research/log/2026-09-03-larsen.md`.
+- **A quantity that must be an integer is the best thing to measure**, because a
+  broken detector cannot be subtly wrong about it — the residuals scatter across
+  the whole interval instead of looking plausible. `larsen` was the easiest
+  verification in weeks for exactly that reason.
+- Fractional delay for `larsen` (allpass interpolation), so the pitch glides
+  within a tooth instead of stepping; the phase condition already covers it.
+- Cross-coupled loops rather than parallel ones: the modes are not the union of
+  the two combs, and predicting them is an eigenvalue problem.
+- A real room impulse response in `larsen`'s loop instead of one bandpass —
+  Lucier's *I Am Sitting in a Room* with the loop closed, where the winning mode
+  is a genuine measurement of the room.
+- Play `larsen`'s threshold rather than its delay: a hair under 1/|H| gives a
+  loop that rings for seconds and dies, with a decay time the arithmetic
+  predicts.
 - Music software with no undo — everything is a performance.
 - ~~A melody hidden under a band of noise — present in the signal, absent in
   the ear.~~ → `sketches/veil`: simultaneous masking as an instrument. Measured
