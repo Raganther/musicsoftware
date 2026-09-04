@@ -337,6 +337,32 @@ and link to what came of it.
 - **Physics measurements do not belong on the master bus.** Level checks do —
   that is where the ear is — but anything measuring what a sketch *is* doing
   should tap the sketch's own node, before the room.
+- ~~An instrument that will not let you play a wrong note, with the cost of
+  that made countable.~~ → `sketches/guardrail`: a continuous pitch surface with
+  a variable snap. From no help to full help the vocabulary falls **61 → 8
+  distinguishable notes per octave** (5.93 → 3.00 bits) while the fraction in
+  tune with the scale goes **13% → 100%**, prediction and measurement never
+  disagreeing by more than one note out of 61. See
+  `research/log/2026-09-04-guardrail.md`.
+- **The safety/expression trade is a threshold, not a slope.** `guardrail`'s
+  vocabulary is untouched until the rail is half on and then falls off a cliff
+  between 0.5 and 0.75 — a little help is free, a lot takes almost everything.
+  The knee should sit where the snap brings neighbouring inputs closer together
+  than the ear can separate, which is a prediction a finer sweep would move.
+- A rail that is strong on the first note of a phrase and weak afterwards —
+  places you in the key, then leaves you alone. Should buy the same in-scale
+  fraction for far fewer bits.
+- Per-degree rail strength: pull hard to the tonic and barely at all to the
+  seventh, which is closer to how tonality behaves than a uniform snap and makes
+  the staircase uneven in a way you could compose with.
+- A rail with a *time constant* rather than an instantaneous one: vibrato
+  survives auto-tune only if the correction is slow, so the measurement becomes
+  one of modulation depth rather than static pitch.
+- **Scheduling more notes than there are voices plays only the last few.**
+  `PolySynth` allocates when `note()` is called, not when the note is due, so a
+  61-note sweep handed over at once came back as 10 notes — and paired against
+  the first 10 inputs it read as a 1021-cent tuning error rather than as missing
+  notes. Keep fewer notes pending than there are voices.
 - Two-player instrument where each player controls half the parameters.
 - ~~An instrument with deliberate latency — you commit a gesture a bar
   ahead.~~ → `sketches/foreshadow`: commits land ahead of the playhead on a
