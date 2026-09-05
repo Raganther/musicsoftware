@@ -75,6 +75,7 @@ const PLAN = {
   // a feedback loop is silent until something starts it; the transport pokes it
   'larsen': 'play',
   'guardrail': 'play',
+  'cone': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

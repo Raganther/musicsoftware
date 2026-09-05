@@ -237,9 +237,23 @@ and link to what came of it.
   `research/log/2026-08-08-overblow.md`.
 - Real tone holes for `overblow`: a row of them with open/closed state, so the
   fingering system *is* the instrument.
-- A true conical waveguide (the spherical spreading term at the apex). The
+- ~~A true conical waveguide (the spherical spreading term at the apex). The
   cheap version — flipping the far-end reflection — does not oscillate at all,
-  measured; a cone is not a sign flip.
+  measured; a cone is not a sign flip.~~
+  → `sketches/cone`: not a waveguide in the end but a *modal* bore, with the
+  modes solved from kL + arctan(k·r₀) = nπ, so the truncation is a knob. The
+  register break tracks the geometry from 1.999 (complete cone, octave) to
+  2.986 (cylinder, twelfth), worst error 0.060 — and that 2.986 lands on
+  `overblow`'s independently-measured 2.98. See
+  `research/log/2026-09-05-cone.md`.
+- The cone's modes are stretched rather than harmonic at any real truncation,
+  which is why saxophone fingerings work in both registers only approximately.
+  Measure the mistuning in cents against equal temperament as truncation grows.
+- Give `cone`'s reed a mass. A second oscillator can pull the pitch off the
+  bore's mode, which is what embouchure is, and it would let the sketch bend.
+- The oscillation threshold against damping should be a straight line in the
+  right coordinates: impedance has to beat losses, so threshold × damping
+  ought to be constant. `cone` has both as params and never plotted them.
 - Multiphonics: place a vent where two modes both have a node and see whether
   both speak.
 - Map breath against embouchure to get the reed's playable region — the wind
@@ -649,6 +663,27 @@ and link to what came of it.
   answer was 0.64 s, wrong by 2x, and worst at exactly the note under study.
   Read the *last* crossing. The general shape: any estimator that takes the
   first time a signal crosses a threshold is measuring fluctuation, not trend.
+- **A normalisation can cancel the effect you are trying to measure.** `cone`
+  scaled every bore mode to unit peak gain, so a mode spoiled to a
+  sixty-seventh of its Q came back out at exactly the same height — the
+  register vent did nothing, at any truncation, and the results table read
+  1.00 all the way across. That looks like a physics finding and is an
+  arithmetic identity. Normalise against a *fixed* reference, and before
+  believing a null result, check that the control you are varying can still
+  move the number at all.
+- **Match the model's phase, not just its peaks.** A sum of two-pole
+  resonators has the right magnitude response and the wrong phase: each pole
+  lags 90° at its own centre, so the total is real *between* modes rather than
+  on them. `cone`'s reed duly closed its loop in the gap and sang at 1.3–1.8×
+  the first mode at every geometry. A bore's input impedance is real at a
+  resonance, so the model has to be too — that needs a (1 − z⁻²) numerator,
+  not more poles. Whenever a nonlinearity picks its own operating point from a
+  linear block, phase is the part it is reading.
+- **Normalising a resonator away can remove the loop gain that made it sing.**
+  The fix above left `cone` silent, because unit-peak scaling had quietly been
+  supplying the gain. Worth the trouble: peak input impedance is a real
+  physical quantity, so it became a parameter with a measured threshold
+  (tail RMS 9.6e-4 at 4, 2.8e-1 at 6) instead of an accident of scaling.
 - Temporal masking: hide notes in the ~20 ms shadow after a drum hit. Same
   effect, different time base, no new model needed.
 - The inverse of `veil`: play a melody and have the sketch synthesise the
