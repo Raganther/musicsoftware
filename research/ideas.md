@@ -500,6 +500,31 @@ and link to what came of it.
   motion, or a target contour. One multiplication inside the DP.
 - Say *why* a square is dead in `species`: name the rule that kills it, and the
   tool starts teaching rather than just enforcing.
+- ~~`species` for a canon, where the second voice is the first one delayed.~~
+  → `sketches/canon`: the state has to widen to the last d+1 notes, because a
+  note is sung once as melody and again as harmony d notes later. Exact against
+  brute force (8 configurations, marginals 0.0e+0; chi-square 220.0 on 234 df).
+  Self-imitation costs ×2,003 to ×15,790, and at the fifth every simultaneity
+  costs 2.012 — one bit, which is exactly the six of twelve semitone classes
+  that are consonant. See `research/log/2026-09-06-canon.md`.
+- **A clean law is a claim about the conditions it was measured under.**
+  `canon`'s one-bit-per-simultaneity fit holds to 10.6% over 24 configurations
+  and two axes — and then misses by 74.7% at a different interval of imitation,
+  because there the harmonic and melodic constraints stop being independent.
+  The 24 configurations felt like enough generality. They were 24 samples of one
+  imitation.
+- The interval of imitation, counted: the third below leaves the most room
+  (247M at length 14), the octave and unison next, the textbook's fifth only
+  fourth at 120M. Whatever recommends the fifth, it is not permissiveness — and
+  no first-order harmonic statistic predicts the ordering (best r = 0.84, with
+  70% errors), because consecutive simultaneities share notes.
+- Free two-part counterpoint under `canon`'s exact rules, so the ×9,090 splits
+  into what a second voice costs and what *self*-imitation costs. The current
+  comparison is against no second voice at all.
+- Canon by inversion for `canon` — one line in the spec. Augmentation does not
+  fit the same machine: the follower would be at i/2, not a fixed lag.
+- Colour `canon`'s cells by how much fixing one would collapse the space, so the
+  tool shows which decisions are expensive before you make them.
 - ~~Let a node reference a non-predecessor — the chain becomes a graph and
   motifs recur by reference rather than by copy.~~ → `sketches/rhyme`: a score
   with no copies at all. Every repeat is a rhyme — "this span is that span,
@@ -663,6 +688,25 @@ and link to what came of it.
   answer was 0.64 s, wrong by 2x, and worst at exactly the note under study.
   Read the *last* crossing. The general shape: any estimator that takes the
   first time a signal crosses a threshold is measuring fluctuation, not trend.
+- **Take the harness's randomness from `@core` too.** `canon`'s uniformity check
+  failed at chi-square 1697 on 234 df and the sampler was the obvious suspect —
+  it is the fiddliest code in the sketch. The sampler was correct. The harness
+  used a throwaway LCG, `s = (s * 1103515245 + 12345) & 0x7fffffff`, whose
+  multiply exceeds 2^53 in JavaScript and silently loses exactly the low bits an
+  LCG's randomness lives in. Swapping in `rng` gave 220.0 with no other change.
+  A bad instrument does not read as "no result", it reads as a finding.
+- **When two guesses at an explanation both fail, change the question rather
+  than guessing a third time.** Neither of `canon`'s proposed predictors for
+  which imitation is roomiest correlated. What worked was asking which *rule*
+  produced the spread — turn each off, watch it move — which took three cheap
+  solves and narrowed it to one rule immediately. Predicting an effect and
+  localising it are different questions, and localising is usually cheaper.
+- **Write the notes field after the table, not before it.** `canon`'s prose was
+  drafted from what I expected and four of its claims were false — the roomiest
+  imitation, the narrowest, the order of magnitude, and a comparison to free
+  counterpoint I never ran. Drafting first is a fine way to find out what you
+  think; shipping it unchecked is how a sketch acquires a confident paragraph
+  nobody revisits.
 - **A normalisation can cancel the effect you are trying to measure.** `cone`
   scaled every bore mode to unit peak gain, so a mode spoiled to a
   sixty-seventh of its Q came back out at exactly the same height — the
