@@ -57,6 +57,24 @@ and link to what came of it.
   line, drag it, and the slope is the only parameter there is.
 - Let α drift slowly, so the rhythm passes through its own convergents in
   order — locking briefly at each and slipping between. A form nobody composes.
+- ~~A rhythm that resists being pushed off a ratio, the way a drummer does.~~
+  → `sketches/tongues`: the sine circle map, where the winding number *is* the
+  rhythm's density in events per pulse. Tongue widths open as K^q (measured
+  1.00 / 1.96 / 2.93 / 4.88 against 1 / 2 / 3 / 5), they nest by the Farey
+  mediant 5 of 5, and at criticality what is left between them has box
+  dimension **0.875** against the literature's 0.870. At K = 0 it is
+  `irrational` exactly, W = Ω to 2.1e−13. See
+  `research/log/2026-09-07-tongues.md`.
+- Above K = 1 the circle map is non-invertible and the winding number stops
+  being unique — the same Ω gives different densities from different starting
+  phases. `tongues` already plays there and it sounds like disagreement;
+  measuring the spread over initial conditions would make it a result.
+- Two circle maps that hear *each other* rather than a common drive: the
+  locking is then between players, which is an ensemble rather than a metronome.
+- The tongue you are in names a ratio p/q, so `continuum`'s trick would let the
+  same plateau be heard as a chord as well as a rhythm.
+- Hysteresis at a tongue's edges — the plateau you leave sweeping up is not the
+  one you re-enter sweeping down. One parameter away in `tongues`.
 - **A peak is a maximum, so it cannot be sampled sparsely — it has to be
   accumulated.** `irrational` read 0.335 over 24 s and 3.010 over 35 s from the
   same build, because three consonant voices coinciding sum in phase and the
@@ -688,6 +706,32 @@ and link to what came of it.
   answer was 0.64 s, wrong by 2x, and worst at exactly the note under study.
   Read the *last* crossing. The general shape: any estimator that takes the
   first time a signal crosses a threshold is measuring fluctuation, not trend.
+- **Identical values across different conditions mean you are measuring the
+  instrument.** `tongues` reported four different Arnold tongues at three
+  different couplings as all ≈4.0e−4 wide, which is exactly twice the detection
+  tolerance — the width a tongue of *zero* width measures, because off a plateau
+  the winding number passes through p/q with slope 1. A table where several
+  cells agree to three figures across conditions that should separate them is
+  the tell; the fix is to compute the method's floor, print it above the table,
+  and refuse to fit anything near it.
+- **A search that must first land inside the thing it is measuring cannot find
+  the small ones.** `tongues`'s first tongue-finder scanned outward in steps of
+  0.004 looking for a plateau, which misses every plateau narrower than that —
+  i.e. all of them in the regime the law being tested lives in. Bisection on a
+  monotone quantity needs no starting point inside, and was five orders of
+  magnitude more precise as a side effect, because the edge is a saddle-node
+  where precision in the measured quantity buys far more in the parameter.
+- **When the events are on a known grid, do not detect them — ask about the
+  grid.** A free-running onset detector read `tongues` 1.55x high, because a
+  decay three pulses long makes overlapping tails look like attacks. The drive
+  times are known from the audio clock, so the question is one binary decision
+  per pulse rather than a search, and it went from 1.55x wrong to 274/274 exact.
+  Same lesson as `canon`, in a different disguise: alignment beats detection
+  whenever the schedule is already known.
+- **A `select` param's value is not checked against the union it is drawn from.**
+  `scale: 'minorPentatonic'` for `pentatonicMinor` passed `tsc` and threw inside
+  the clock handler on every step. The options list comes from `SCALE_NAMES` but
+  the value is a plain string, so nothing connects them.
 - **Take the harness's randomness from `@core` too.** `canon`'s uniformity check
   failed at chi-square 1697 on 234 df and the sampler was the obvious suspect —
   it is the fiddliest code in the sketch. The sampler was correct. The harness

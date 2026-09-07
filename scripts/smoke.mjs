@@ -77,6 +77,7 @@ const PLAN = {
   'guardrail': 'play',
   'cone': 'play',
   'canon': 'play',
+  'tongues': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
