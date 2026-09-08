@@ -93,19 +93,27 @@ shared fitting.
 widest one is always (p+r)/(q+s) — checked on five pairs, 5 of 5. That is why
 the rhythm passing through 1/2 to 1/1 stops hardest at 2/3.
 
-**At K = 1 what is left between the tongues has dimension 0.875.** The locked
+**At K = 1 what is left between the tongues has dimension 0.879.** The locked
 ratios fill the line to full measure, and the leftovers — the Ω where the rhythm
 still refuses to settle — are a Cantor set whose box dimension the literature
-puts at 0.870. Box-counted over 8,193 values of Ω with R² = 1.0000, this model
-gives **0.875**, stable at 0.876 when the detection tolerance is tightened
-threefold.
+puts at 0.870. Box-counted over 16,385 values of Ω, R² = 0.9999, this model
+gives **0.8794**, and identically to four decimals whether the detection
+tolerance is a quarter, an eighth or a sixteenth of the box — because scaling
+the tolerance with the box is what makes the test mean the same thing at every
+size.
 
 That number only means something because the same estimator was pointed at two
 couplings where the answer has to be 1. Below criticality the leftovers have
-positive measure, so their dimension is 1 by definition: it returns **0.991 at
-K = 0.5 and 0.967 at K = 0.8**. Run the estimator carelessly — a tolerance
-three times looser — and the control reads 0.733, which is how I know the
-setting is right rather than lucky.
+positive measure, so their dimension is 1 by definition: it returns **0.985 at
+K = 0.5 and 0.960 at K = 0.8**. Those controls miss their known answer by 1.5
+to 4%, so the 1% gap between 0.879 and 0.870 sits inside the method's own
+demonstrated bias rather than being a residual with a story.
+
+(Corrected 2026-09-08. This first read 0.875 from an estimator that used one
+*fixed* tolerance at every box size, and I explained the gap to 0.870 as
+unresolvable plateaus. On a finer grid that estimator's control collapsed to
+0.572 — a fixed tolerance eventually exceeds the box itself and calls
+everything locked. See \`research/log/2026-09-08-sitting.md\`.)
 
 **And the sketch plays that model, not an approximation of it.** With Ω held
 still, the density actually dispatched matches the winding number to within

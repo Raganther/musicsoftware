@@ -613,6 +613,26 @@ and link to what came of it.
 - Play `larsen`'s threshold rather than its delay: a hair under 1/|H| gives a
   loop that rings for seconds and dies, with a decay time the arithmetic
   predicts.
+- ~~A real room impulse response in `larsen`'s loop instead of one bandpass —
+  Lucier's *I Am Sitting in a Room* with the loop closed.~~ Built open instead:
+  → `sketches/sitting`, where each generation is the last one convolved with
+  the room and truncated to the same length a tape would give. The process is
+  the multiplication to **0.18-0.28 dB** from generation 4 on, it ends at
+  203.9 Hz where the room's measured |H| peaks at 203.9 Hz, and what survives
+  narrows as N^(-0.54) against a predicted -1/2. See
+  `research/log/2026-09-08-sitting.md`.
+- **A recording of length T cannot hold a line narrower than 1/T**, which is a
+  limit on Lucier's process and not just on the analysis of it: with room modes
+  narrower than that the narrowing saturates within a few generations and the
+  rest of the piece does nothing. One good reason his recordings are long.
+- Longer recordings for `sitting`: at 2.6 s the floor is 0.4 Hz; at 15 s it is
+  0.07 Hz and the N^(-1/2) law has two more decades to run in.
+- A real measured impulse response in `sitting`, so the surviving pitch is a
+  measurement of an actual room. The machinery takes any buffer.
+- Play the *difference* between consecutive generations — what the room took
+  away rather than what it kept. Same data, nobody listens to it.
+- The second mode in `sitting`: |H2/H1|^N says exactly when it should vanish,
+  and the piece's best stretch is while two are still audible.
 - Music software with no undo — everything is a performance.
 - ~~A melody hidden under a band of noise — present in the signal, absent in
   the ear.~~ → `sketches/veil`: simultaneous masking as an instrument. Measured
@@ -706,6 +726,41 @@ and link to what came of it.
   answer was 0.64 s, wrong by 2x, and worst at exactly the note under study.
   Read the *last* crossing. The general shape: any estimator that takes the
   first time a signal crosses a threshold is measuring fluctuation, not trend.
+- **Do not window an impulse response.** A Hann window is zero at t = 0, which
+  is exactly where an impulse response keeps its energy, so transforming one
+  through a general-purpose spectrum function deletes every short-ringing mode
+  and leaves only the diffuse tail. In `sitting` that moved the room's apparent
+  best frequency from 203.9 Hz to a 14 kHz noise spike three octaves above any
+  mode in the room, and every conclusion downstream followed from it. An IR
+  already decays to nothing; it needs no window, only a fade at the end.
+- **Two bugs can produce the same symptom, and fixing the first one not moving
+  the number is the signal.** `sitting` returned byte-identical results for
+  three deliberately different rooms. The first cause was real — the harness
+  handle snapshots the impulse response and has to be re-fetched after a
+  change — and fixing it changed nothing, which is what said to keep looking.
+- **A finite recording has spectral detail at the 1/T scale everywhere**, so
+  the width of a raw spectral argmax is about one bin no matter what shaped it.
+  `sitting`'s first width series read 0.68, 0.63, 0.65, 0.67 Hz across four
+  generations — four numbers that were all the analysis floor. What a repeated
+  filter shapes is the *envelope*; smooth well above 1/T and well below the
+  feature, and report the fit at more than one kernel so the reader can see the
+  kernel is not doing the work.
+- **Check the dynamic range before believing an exponent.** Even with the
+  windows fixed, `sitting`'s first configuration had a 2.7 Hz resonance against
+  a 0.58 Hz floor — a factor of four to watch a power law in, most of it eaten
+  by the smoothing kernel. The measured -0.28 was not "the law is wrong", it
+  was "there is nothing here to measure". A law over one octave is not a
+  measurement.
+- **A tolerance that does not scale with the box is not a box-counting
+  estimator.** `tongues` published 0.875 for the critical circle map from a
+  fixed tolerance at every box size; in an unlocked region the winding number
+  changes by about the box size, so a fixed tolerance means something different
+  at each scale and on a fine grid calls everything locked — its control
+  collapsed to 0.572 at 32,769 points. Scaled to the box it gives 0.8794,
+  identical at tol = eps/4, /8 and /16. And since the controls themselves miss
+  1.0 by 1.5-4%, the gap to the literature's 0.870 is inside the method's own
+  bias: the first writeup explained a residual smaller than an error bar it had
+  never established.
 - **Identical values across different conditions mean you are measuring the
   instrument.** `tongues` reported four different Arnold tongues at three
   different couplings as all ≈4.0e−4 wide, which is exactly twice the detection
