@@ -79,6 +79,7 @@ const PLAN = {
   'canon': 'play',
   'tongues': 'play',
   'sitting': 'play',
+  'lombard': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

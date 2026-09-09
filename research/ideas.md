@@ -395,6 +395,28 @@ and link to what came of it.
   61-note sweep handed over at once came back as 10 notes — and paired against
   the first 10 inputs it read as a 1021-cent tuning error rather than as missing
   notes. Keep fewer notes pending than there are voices.
+- ~~An ensemble that couples through *loudness* rather than pitch or time —
+  everyone wanting to be heard over everyone else.~~
+  → `sketches/lombard`: to first order it is a max-plus linear system, so it
+  grows at the **maximum cycle mean** of the "what I need over you" graph.
+  Measured exact, 7 of 7 configurations at 0.0000 dB/round, once the graph is
+  corrected for the soft maximum. See `research/log/2026-09-09-lombard.md`.
+- **A room can run away with nobody in it being unreasonable.** The plain
+  max-plus value is a strict lower bound, because hearing three rivals at once
+  is ~5 dB louder than hearing the loudest. In `lombard` the pairwise threshold
+  sits two spacing steps early: at spacings where no *pair* of players is in an
+  escalating relationship, the room still climbs. Crowding causes the arms
+  race, not assertiveness — and crowding is what nobody in a loud room can
+  change.
+- Per-band *listening* in `lombard`, separate from the band a player occupies.
+  Wider ears than voice makes the graph asymmetric, and asymmetric graphs have
+  different cycles.
+- A player who drops out entirely when it cannot be heard — removing a node can
+  flip the cycle mean, and ensembles really do this.
+- Real masking instead of a Gaussian overlap in `lombard`, using `veil`'s
+  machinery. Masking is asymmetric, low over high, so the graph is too.
+- `lombard`'s settled levels are automatic mixing by simulated players. The
+  converging case is a balance nobody wrote and it is currently unlistened to.
 - Two-player instrument where each player controls half the parameters.
 - ~~An instrument with deliberate latency — you commit a gesture a bar
   ahead.~~ → `sketches/foreshadow`: commits land ahead of the playhead on a
@@ -726,6 +748,25 @@ and link to what came of it.
   answer was 0.64 s, wrong by 2x, and worst at exactly the note under study.
   Read the *last* crossing. The general shape: any estimator that takes the
   first time a signal crosses a threshold is measuring fluctuation, not trend.
+- **A log-sum-exp computed as a sum of powers underflows, and the symptom is a
+  plausible catastrophe rather than a NaN.** `lombard`'s quiet rooms reach
+  −1400 dB within a couple of hundred rounds, every 10^(L/10) term becomes
+  exactly 0, and the model reported a growth rate of −2,499,996 dB per round.
+  Factor out the largest term before summing — which is also the form the
+  theory is written in, so the numerically right edit and the conceptually
+  right one were the same.
+- **State that a control is *about* has to survive the control.** Changing any
+  structural parameter in `lombard` re-ran its constructor and reset every
+  level, which made the one gesture worth having — let a crowded room fill,
+  then pull the players apart and hear it drain — impossible, because the drain
+  always restarted from silence. It surfaced as a measurement returning zero
+  usable bars.
+- **Offer a third explanation only after testing the first two.** `lombard`'s
+  heard growth rates ran a consistent 6% short of predicted. Transient bars in
+  the fit: dropping them moved the slope 0.005, dead. The recording measuring
+  the sum where the prediction follows the loudest: the model's own total power
+  grows at the predicted rate, dead. The shortfall is real, small and
+  unexplained, and saying so beats a third story I have not run.
 - **Do not window an impulse response.** A Hann window is zero at t = 0, which
   is exactly where an impulse response keeps its energy, so transforming one
   through a general-purpose spectrum function deletes every short-ringing mode
