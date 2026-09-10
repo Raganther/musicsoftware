@@ -80,6 +80,7 @@ const PLAN = {
   'tongues': 'play',
   'sitting': 'play',
   'lombard': 'play',
+  'rosin': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

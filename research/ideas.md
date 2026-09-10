@@ -209,9 +209,29 @@ and link to what came of it.
   node of the modes feeding the strongest triads should delay it. Sharp,
   untested prediction.
 - Two plates coupled through a shared edge — which is what a gong rack is.
-- A hysteretic friction model — a real stick/slip state machine with distinct
+- ~~A hysteretic friction model — a real stick/slip state machine with distinct
   static and dynamic coefficients. That is what would put Schelleng's wedge
-  into `bow` rather than merely onto it.
+  into `bow` rather than merely onto it.~~
+  → `sketches/rosin`: two thresholds instead of a curve, so breaking away costs
+  μs·F and recapture only μd·F. It buys the *shape* — a band of exactly one
+  release per period at every β ≥ 0.04, and **0 of 224 cells** with the loop
+  closed, where the string is never once captured. It does not buy the
+  arithmetic. See `research/log/2026-09-10-rosin.md`.
+- **A clean law with the wrong exponent is a sharper negative than scatter.**
+  `rosin`'s minimum bow force fits β^(−0.373) at R² 0.919 against Schelleng's
+  −2. A boundary that scattered would be a measurement problem; this is the
+  model saying something definite and wrong, and finding what sets −0.373 is a
+  better question than forcing it toward −2.
+- `rosin`'s duty cycle runs ~0.2 below the 1 − β that ideal Helmholtz motion
+  requires, and climbs with bow force where it should sit still. The slip phase
+  is too long because capture waits for |Δv| ≤ μd·F; a velocity-dependent
+  dynamic coefficient would shorten it and is one line.
+- The thermal rosin model — grip depending on a temperature that integrates the
+  power dissipated in the slip. That is the physically honest hysteresis and
+  what the literature uses to get Schelleng out.
+- Point `rosin`'s state machine at `wolf`. A real wolf note is a bowing
+  phenomenon and `wolf`'s negative-resistance bow can only sustain, never
+  stutter. Same missing piece, now built once.
 - Fractional-delay interpolation on `bow`'s split point, so the node sits
   exactly on the bow and the notch stops shallowing as n rises.
 - A "which partial carries the energy" helper in `@core` — hand-written in
@@ -748,6 +768,29 @@ and link to what came of it.
   answer was 0.64 s, wrong by 2x, and worst at exactly the note under study.
   Read the *last* crossing. The general shape: any estimator that takes the
   first time a signal crosses a threshold is measuring fluctuation, not trend.
+- **An OfflineAudioContext finishes rendering before a postMessage is
+  delivered.** `rosin`'s first sweep configured each cell by posting to the
+  worklet and ran all 176 of them at the constructor defaults. The symptom was a
+  grid of identical numbers — the third time in four days that tell has caught
+  something. Sweep by AudioParam, and get analysis data out on a spare output
+  channel rather than through the port.
+- **Two copies of one algorithm are not one algorithm.** A worklet cannot
+  import, so a measured diagram needs a main-thread port of the same model.
+  `rosin`'s two copies disagreed on 3 of 7 configurations — whole different
+  attractors, not rounding — for two reasons nobody lists as part of a model:
+  the port used `Float64Array` where a worklet's delay lines are `Float32Array`,
+  and it ramped a parameter per sample where an AudioParam is a staircase that
+  moves only at 128-sample block boundaries. Matching both made them agree to
+  every printed digit. In a sensitive system the numeric type and the parameter
+  update rate *are* the model.
+- **Check what a simulation needs to settle before deciding what it shows.**
+  `rosin`'s canvas simulated 0.7 s per cell where the string takes ~600 periods
+  to settle at its shipped losses; at that length not one cell of the grid reads
+  as speaking, and the diagram would have been confidently, uniformly wrong.
+- **A boundary of the swept range is not a result.** `rosin` finds nothing at
+  β ≤ 0.028 and it looked like a minimum force rising toward the bridge — until
+  the fitted law put those cells well inside the range. At β = 0.02 the
+  bridge-side delay line is five samples: the simulation has run out of string.
 - **A log-sum-exp computed as a sum of powers underflows, and the symptom is a
   plausible catastrophe rather than a NaN.** `lombard`'s quiet rooms reach
   −1400 dB within a couple of hundred rounds, every 10^(L/10) term becomes
