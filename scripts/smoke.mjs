@@ -81,6 +81,7 @@ const PLAN = {
   'sitting': 'play',
   'lombard': 'play',
   'rosin': 'play',
+  'elastic': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

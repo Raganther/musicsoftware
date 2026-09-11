@@ -594,9 +594,32 @@ and link to what came of it.
   reduction over the rationals 50 of 50, 980 of 980 constraint rows hold in the
   realised score, 66 refusals all independently confirmed justified, and every
   rhyme holds in the recording. See `research/log/2026-08-27-rhyme.md`.
-- Rhymes over *rhythm*: durations as ratios are affine in log time, so
+- ~~Rhymes over *rhythm*: durations as ratios are affine in log time, so
   augmentation and diminution drop straight into `rhyme`'s solver — and that is
-  also the rhythm half `develop` is missing.
+  also the rhythm half `develop` is missing.~~
+  → `sketches/elastic`: it is not the same problem, because a rhythm has a
+  constraint pitch has no analogue of — the durations must *add up*. Ratios fix
+  each component up to a scale; the bars are then a V × C linear system in
+  those scales. Exact to 4.4e−16 over 300 problems, and 0.49% read back off the
+  audio. See `research/log/2026-09-11-elastic.md`.
+- **You may state how two voices relate, or state both their bars — not both.**
+  Linking two voices drops the component count while the number of bar
+  constraints stays put, so the system is over-determined and exactly one ratio
+  has a solution: accepted 200/200 at that value, refused 200/200 at 0.01%
+  away. It is why a polyrhythm is *named* by its ratio rather than assembled
+  from two independent parts, and it has no counterpart in `rhyme` because
+  pitch has no bar.
+- Solve for a *bar* instead of a scale in `elastic`. If you want to state the
+  voices' ratio, one of the bars has to give; it is the same system read the
+  other way and probably the more musical direction.
+- Cross-voice ratios between notes other than the firsts — the forced value
+  depends which pair you pick, so choosing the pair is choosing which
+  relationship to make explicit. Draw all of them at once.
+- Notation cost for `elastic`: realised durations are reals and notation wants
+  small denominators. How complex a tuplet does a ratio set need, and which
+  sets cannot be written at all?
+- Say *which* ratio to relax when `elastic` refuses. One more linear solve, and
+  it turns a refusal into a suggestion the way `species` does.
 - Draw the rhyme by hand in `rhyme`: select two spans, pick a transform, watch
   the free-note count fall. Everything downstream already re-derives.
 - A rhyme with a *tolerance* — "roughly that span, up a third" — turning the
@@ -768,6 +791,18 @@ and link to what came of it.
   answer was 0.64 s, wrong by 2x, and worst at exactly the note under study.
   Read the *last* crossing. The general shape: any estimator that takes the
   first time a signal crosses a threshold is measuring fluctuation, not trend.
+- **The obvious way to write down a relational rhythm is unplayable.** Stating
+  each note against its predecessor is how anyone would naturally chain ratios,
+  and four links from a pool containing 3 and 1/3 puts 81:1 between two notes of
+  one bar — one note takes almost all of it, the rest are milliseconds. The
+  solver realises that perfectly; it is a bug in what it was asked for. Stating
+  every note against the *first* note of its voice bounds every duration by the
+  pool's own range, and is what a composer would say out loud anyway.
+- **A floored denominator invents a discrepancy.** `elastic`'s onset check first
+  read "55 onsets, about 50 expected" — a 10% error that was entirely
+  `Math.floor(26 / 2.4)`. Rewritten as notes per bar, the quantity that has to
+  be an integer, it reads 5.066 against 5. Inventing a gap and then hunting for
+  it in the thing being measured is an expensive way to spend an afternoon.
 - **An OfflineAudioContext finishes rendering before a postMessage is
   delivered.** `rosin`'s first sweep configured each cell by posting to the
   worklet and ran all 176 of them at the constructor defaults. The symptom was a
