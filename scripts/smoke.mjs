@@ -82,6 +82,7 @@ const PLAN = {
   'lombard': 'play',
   'rosin': 'play',
   'elastic': 'play',
+  'hollow': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

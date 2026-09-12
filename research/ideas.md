@@ -698,6 +698,28 @@ and link to what came of it.
   away rather than what it kept. Same data, nobody listens to it.
 - The second mode in `sitting`: |H2/H1|^N says exactly when it should vanish,
   and the piece's best stretch is while two are still audible.
+- ~~An instrument that is silent until you take something away.~~
+  → `sketches/hollow`: N oscillators at one frequency with phases spread evenly
+  sum to exactly zero, so you play it by *muting* and the note you hear is the
+  one you did not play. The loudness of a silenced run of m is a Dirichlet
+  kernel |sin(πm/N)/sin(π/N)| — measured off the audio to **0.0008** — so
+  muting more can make it quieter, and on an even bank an opposite pair is
+  silent. See `research/log/2026-09-12-hollow.md`.
+- **Two kinds of nothing measure differently.** A cancelling bank reads
+  −150.1 dB, which is the audio graph's own arithmetic floor; the same bank
+  switched off reads exactly 0.00e+0. They sound identical and are not the same
+  thing. Worth knowing before reading any "silent" result.
+- Every *subset* of a `hollow` bank is a chord with a computable loudness,
+  |Σ e^(2πik/N)| over the subset — 2^N of them, most not runs, and the silent
+  ones form a subgroup.
+- Phases that are not evenly spaced in `hollow`. Any set summing to zero works,
+  and non-uniform ones make some voices worth more than others, which is a
+  better instrument.
+- The fragility as the instrument: a slow random walk on one voice's tuning so
+  the bank never quite manages to disappear. Four cents — a twenty-fifth of a
+  semitone — already makes it breathe every 2.5 s.
+- What sets `hollow`'s −150 dB floor? If it is float32 in the summing bus it
+  should move with voice count and amplitude, and both are testable.
 - Music software with no undo — everything is a performance.
 - ~~A melody hidden under a band of noise — present in the signal, absent in
   the ear.~~ → `sketches/veil`: simultaneous masking as an instrument. Measured
@@ -791,6 +813,16 @@ and link to what came of it.
   answer was 0.64 s, wrong by 2x, and worst at exactly the note under study.
   Read the *last* crossing. The general shape: any estimator that takes the
   first time a signal crosses a threshold is measuring fluctuation, not trend.
+- **A lesson filed under the sketch it happened to is not where you look.**
+  `hollow`'s beat detector autocorrelated an envelope and took the largest peak,
+  returning 0.270 Hz for a 1.621 Hz beat — six times too slow, because a
+  periodic signal correlates as well at multiples of its period. That exact
+  warning has been in this file since `bow`, where it happened twice in one day.
+  Take the *first* peak that is nearly as good as the best, never the best.
+- **One point is not enough to catch a period-multiple error.** `hollow`'s
+  detune sweep was right at 4 and 8 cents and 83% wrong at 16, because the
+  ambiguity only appears once the capture holds several cycles. A single
+  detune would have read as a clean confirmation.
 - **The obvious way to write down a relational rhythm is unplayable.** Stating
   each note against its predecessor is how anyone would naturally chain ratios,
   and four links from a pool containing 3 and 1/3 puts 81:1 between two notes of
