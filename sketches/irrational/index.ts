@@ -1,4 +1,4 @@
-import { clamp, degree, disposeAt, euclid, mtof, reverb, rng, SCALE_NAMES, type ScaleName } from '@core'
+import { clamp, degree, disposeAt, euclid, mtof, nearestFraction, reverb, rng, SCALE_NAMES, type ScaleName } from '@core'
 import { defineSketch } from '@runtime/sketch'
 
 /**
@@ -40,21 +40,6 @@ import { defineSketch } from '@runtime/sketch'
 /** s(n) for slope α and offset β — 1 if step n carries a hit. */
 const word = (n: number, alpha: number, beta: number) =>
   Math.floor((n + 1) * alpha + beta) - Math.floor(n * alpha + beta)
-
-/** Nearest p/q with q ≤ maxQ. Used by `Snap` to make the rhythm repeat. */
-function nearestFraction(x: number, maxQ: number): { p: number; q: number } {
-  let best = { p: Math.round(x), q: 1 }
-  let err = Math.abs(x - best.p)
-  for (let q = 1; q <= maxQ; q++) {
-    const p = Math.round(x * q)
-    const e = Math.abs(x - p / q)
-    if (e < err - 1e-12) {
-      err = e
-      best = { p, q }
-    }
-  }
-  return best
-}
 
 /** How many distinct windows of each length the word has — its complexity. */
 function complexity(bits: number[], maxLen: number): number[] {

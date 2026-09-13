@@ -159,6 +159,31 @@ export function euclid(pulses: number, steps: number, rotate = 0): boolean[] {
   return r ? [...pattern.slice(r), ...pattern.slice(0, r)] : pattern
 }
 
+/**
+ * The nearest p/q to x with q ≤ maxQ. Third use, so it lives here now.
+ *
+ * Brute force over every denominator, which is definitional rather than clever.
+ * A Stern-Brocot descent finds best approximations of the *second* kind and is
+ * not the same thing — it stops when the mediant's denominator exceeds maxQ and
+ * so never reports an endpoint, missing 1/1 for x just under 1. `tongues`
+ * carried that version and mislabelled 0.99 as 63/64; measured against this one
+ * it was worse on 0.8% of x at maxQ = 64 and 6.3% at maxQ = 8, and better on
+ * none of them.
+ */
+export function nearestFraction(x: number, maxQ: number): { p: number; q: number } {
+  let best = { p: Math.round(x), q: 1 }
+  let err = Math.abs(x - best.p)
+  for (let q = 2; q <= maxQ; q++) {
+    const p = Math.round(x * q)
+    const e = Math.abs(x - p / q)
+    if (e < err - 1e-12) {
+      err = e
+      best = { p, q }
+    }
+  }
+  return best
+}
+
 /** Velocity curve helper: 0..1 -> 0..1 with a bend. gamma > 1 = softer. */
 export function curve(x: number, gamma = 2): number {
   return Math.pow(Math.max(0, Math.min(1, x)), gamma)

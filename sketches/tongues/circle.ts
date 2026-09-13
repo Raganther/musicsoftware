@@ -43,28 +43,6 @@ export function winding(omega: number, K: number, iters = 20000, warmup = 2000):
   return (t - t0) / iters
 }
 
-/** The rational p/q nearest w with q ≤ maxQ, by Farey/Stern-Brocot descent. */
-export function nearestRational(w: number, maxQ = 64): { p: number; q: number } {
-  let lo = { p: 0, q: 1 }
-  let hi = { p: 1, q: 1 }
-  if (w <= 0) return lo
-  if (w >= 1) return hi
-  let best = { p: 0, q: 1 }
-  let bestErr = Math.abs(w)
-  for (let i = 0; i < 200; i++) {
-    const mid = { p: lo.p + hi.p, q: lo.q + hi.q }
-    if (mid.q > maxQ) break
-    const err = Math.abs(w - mid.p / mid.q)
-    if (err < bestErr) {
-      bestErr = err
-      best = mid
-    }
-    if (w < mid.p / mid.q) hi = mid
-    else lo = mid
-  }
-  return best
-}
-
 /**
  * Where the p/q tongue sits at this K: the interval of Ω over which W = p/q.
  *

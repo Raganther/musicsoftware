@@ -1,6 +1,6 @@
-import { clamp, disposeAt, mtof, noiseBuffer, reverb, rng, SCALE_NAMES, degree, type ScaleName } from '@core'
+import { clamp, disposeAt, mtof, nearestFraction, noiseBuffer, reverb, rng, SCALE_NAMES, degree, type ScaleName } from '@core'
 import { defineSketch } from '@runtime/sketch'
-import { nearestRational, step as mapStep, winding } from './circle'
+import { step as mapStep, winding } from './circle'
 
 /**
  * A rhythm that would rather be a ratio.
@@ -371,7 +371,7 @@ moment ago.
 
       // -- the numbers ---------------------------------------------------------------
       const heard = pulses > 0 ? fires / pulses : 0
-      const rat = wHere !== null && wHere !== undefined ? nearestRational(wHere, 12) : null
+      const rat = wHere !== null && wHere !== undefined ? nearestFraction(wHere, 12) : null
       const locked = rat && wHere !== null && wHere !== undefined && Math.abs(wHere - rat.p / rat.q) < 3e-3
       g.font = '11px ui-monospace, monospace'
       g.fillStyle = 'rgba(255,255,255,0.8)'

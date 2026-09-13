@@ -4,6 +4,46 @@ Unfiltered. No idea is too small or too silly to write down. Move one into
 `sketches/` the moment it gets interesting; strike it through when explored
 and link to what came of it.
 
+## Measuring
+
+This section exists because of `hollow` (2026-09-12), which walked into a trap
+`bow` had already written down: *"a lesson filed under the sketch it happened to
+is not where you look."* Measurement lessons go here from now on, whatever
+sketch they happened to. The older ones are still in their family sections — the
+big three being **a peak has to be accumulated, not sampled** (under rhythm,
+from `irrational`), **autocorrelation alone never establishes which period is
+fundamental** (under synthesis, from `bow`), and **check that a summary statistic
+can vary before believing it** (under rhythm, from `escalator`).
+
+- **A threshold that has to split the data cannot report "nothing is missing".**
+  `hocket`'s per-step detector cut at the widest ratio gap in the sorted step
+  energies — self-calibrating, and right on every configuration that contained
+  silence. On the interlocked pair, where the right answer is *every step is a
+  note*, there was no note/silence boundary to find, so it split the two
+  **voices** instead (they differ by 1.57 in level) and reported one voice's
+  density as the notes-per-step. Prefer an absolute cut when "none" is a legal
+  answer, and make the detector able to say *nothing rejected*.
+- **The capture worklet posts channel 0.** Anything panned is attenuated at the
+  tap, and two voices panned apart arrive at different levels for no musical
+  reason. Sum to mono first: one gain node with `channelCount = 1` and
+  `channelCountMode = 'explicit'`. Latent in every harness here that has ever
+  compared panned voices by level.
+- **A search bounded by a number you picked will eventually be too small.**
+  Sliding a recording against a predicted pattern needs an offset equal to the
+  transport's step count when the capture began — which grows through a run. A
+  span of 300 was fine for the first capture and short for the second, and the
+  near-miss read 62% where chance was 53%, which is exactly the range that does
+  not look like a bug. Bound the search by something the run knows.
+- **Do not edit anything under `src/` or `sketches/` while a harness is live.**
+  Vite hot-reloads the page and the in-page handles vanish mid-capture. Same
+  hazard as the `?t=` second-copy trap in CLAUDE.md, from the other end.
+- **A double is not the rational it prints as, and sometimes that is the
+  finding.** `hocket`'s 1/q collapse is a fact about the ratio: in integer
+  arithmetic all 79 fractions with q ≤ 16 collapse, but as doubles 6 of them
+  tile perfectly and 10 collapse at less than the predicted rate. Snapping to
+  2/3 sounds like nothing happened. When a law is about exact rationals, test it
+  in integers and treat the float version as a separate question.
+
 ## Sequencing & rhythm
 
 - Sequencer where each step holds a *probability* and a *condition* ("only on
@@ -50,9 +90,28 @@ and link to what came of it.
   denominator of the best fraction you can resolve, agreeing 24 of 24 with a
   derivation from fractional parts. π−3 has apparent period 113 forever; the
   golden ratio has none. See `research/log/2026-08-28-irrational.md`.
-- Two voices at densities α and 1−α: between them they hit every step exactly
+- ~~Two voices at densities α and 1−α: between them they hit every step exactly
   once, which is a tiling canon with an irrational rhythm — something `tiling`
-  cannot express.
+  cannot express.~~ → `sketches/hocket`: Rayleigh's theorem, and it is exact —
+  0 collisions and 0 gaps over 200,000 steps for each of five irrationals, and
+  the complement is the only partner (0 of 4001 others). Each voice's own gaps
+  take two values and the pair's take one. Read off a recording, each voice
+  matches `floor(n/d)` on **229 of 229 steps** (23.6% at any other alignment)
+  and together they fill all 229. See `research/log/2026-09-13-hocket.md`.
+- **The simpler the ratio between two interlocking parts, the worse they
+  interlock.** At an exact p/q a complementary pair drops 1/q of the notes and
+  doubles 1/q — 17 fractions, worst departure 1.2e−5. That inverts the usual
+  story, where simple ratios are the good ones, and it is the only place I have
+  found where a rhythm *prefers* an irrational relationship.
+- Uspensky's theorem in `hocket` says no three parts can share a pulse this way,
+  but that is for *homogeneous* Beatty sequences. `floor(n·r + s)`, with an
+  intercept, does admit partitions into three or more — which ones is Fraenkel's
+  conjecture, open for six parts and up. A three-part hocket that works.
+- Beatty sequences nest: the steps a voice does *not* play are themselves a
+  Beatty sequence, so the split recurses. A hocket whose parameter is a tree
+  rather than a list of densities, sidestepping Uspensky entirely.
+- Two densities drifting slowly in opposite directions, so a hocket interlocks,
+  comes apart at the rate M·ε, and re-locks.
 - A Sturmian word is the cutting sequence of a line through a grid. Draw the
   line, drag it, and the slope is the only parameter there is.
 - Let α drift slowly, so the rhythm passes through its own convergents in
