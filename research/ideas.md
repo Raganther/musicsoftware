@@ -37,6 +37,28 @@ can vary before believing it** (under rhythm, from `escalator`).
 - **Do not edit anything under `src/` or `sketches/` while a harness is live.**
   Vite hot-reloads the page and the in-page handles vanish mid-capture. Same
   hazard as the `?t=` second-copy trap in CLAUDE.md, from the other end.
+- **A prediction checked only where two hypotheses coincide has been checked
+  against one hypothesis.** Cost `drag` two whole findings in one day. Its drag
+  rate was predicted from a player's *own* mean delay and verified exactly on a
+  symmetric ring — where a player's own mean and the ensemble's are the same
+  number. The asymmetric layouts, sitting at a dead-constant 0.7778 and 1.1334,
+  were what said it belongs to the ensemble. Then the ensemble average was a
+  plain one, verified at ratio 1.00000 on 24 cells — every one with uniform
+  earshot, where the plain and attention-weighted averages agree to 0.0000%.
+  Ask what the symmetric case cannot distinguish, and go and measure *that*.
+- **Validate a detector in the regime you are about to use it in, not the one
+  where it is easy.** `drag` burned two. A fixed refractory that merged attacks
+  within a beat passed on a tight ensemble and read 287 bpm for a room playing
+  110 the moment narrowing the earshot pulled the players apart — the exact
+  setting under test. Its replacement passed nothing: plain autocorrelation of
+  the onset flux returned 60.003 where the answer was 120.000 by construction.
+- **Do not autocorrelate a signal that still has sustained tones in it.**
+  `drag`'s players beat against each other at ~31 Hz, and a half-second beat
+  holds 15.5 cycles of that — a half-integer, so the fine structure inverts
+  every beat and repeats every two, and the true period correlates *worse* than
+  its double (0.698 against 0.9922). The first-near-best-peak rule does not save
+  you, because the true peak is genuinely the smaller one. Smooth the onset
+  envelope past the beating first.
 - **A double is not the rational it prints as, and sometimes that is the
   finding.** `hocket`'s 1/q collapse is a fact about the ratio: in integer
   arithmetic all 79 fractions with q ≤ 16 collapse, but as doubles 6 of them
@@ -397,10 +419,44 @@ can vary before believing it** (under rhythm, from `escalator`).
   prediction: one player listens to nobody. The Laplacian stops being
   symmetric, the sum is no longer conserved, and the ensemble should land on
   the leader's tempo instead of the mean.
-- Consensus **with delay**. Real players hear each other late, and past some
+- ~~Consensus **with delay**. Real players hear each other late, and past some
   coupling strength a delayed consensus system oscillates rather than
-  converging — which is the flutter a large ensemble gets in a live room.
-  One parameter away in `entrain`.
+  converging — which is the flutter a large ensemble gets in a live room.~~
+  → `sketches/drag`: it does not oscillate, it **slows down**, and that is the
+  better result. At perfect synchrony everyone still hears everyone else late,
+  so everyone waits: the period grows by β·τ per beat (24 of 24 cells at ratio
+  1.00000) and the room settles at T + (α + β/γ)·τ, exact to 0.00000% on 30 of
+  36 settings and measured off the recording at 0.002–0.050% across six room
+  sizes. Six players in a ring lose 0.49 bpm at half a metre and 29.83 at forty.
+  See `research/log/2026-09-14-drag.md`.
+- **The delay does not cause the instability — this idea's premise was wrong.**
+  `drag` does go unstable above α ≈ 1.5, but the threshold is 2/(1 − μ) for the
+  smallest eigenvalue of the listening matrix (predicting 1.333 / 1.500 / 1.667
+  for 3 / 4 / 6 players, all measured at ratio 0.987), and **a 20× change in
+  delay moves it by 0.049%**. It is plain over-correction and would happen in a
+  room of no size at all. The delay causes the drag; the flutter is a separate
+  mechanism that was sitting in the same sentence.
+- **A conductor works by being *seen*.** An ear is a delayed *relative*
+  reference; an eye is an undelayed *absolute* one, and any weight at all on it
+  pins the tempo at exactly the nominal — the weight only sets how long it
+  takes. Switching one on mid-drag makes the room *sprint* to recover the lag it
+  built: 95.82 bpm, then 160.43, 119.63, 119.93, 119.99.
+- **The tempo belongs to the players everybody listens to.** `drag`'s rate is an
+  average of the players' delays weighted by how much each is *attended to* —
+  the stationary distribution of the listening matrix. The one nobody can hear
+  does not drag the room, which is why narrowing your own ears recovers ten of
+  the thirteen bpm a bad room costs.
+- Anticipation, which is the actual fix and is one line in `drag`: correct
+  toward `heard + τ̂` rather than toward `heard`. Real players predict where you
+  will be rather than following where you were, and that term cancels the travel
+  time exactly. Whether an ensemble can estimate its own τ̂ is the real question.
+- Put a wall in `drag`'s room so the listening graph disconnects. λ₂ from
+  `entrain` sets how fast they agree and τ from `drag` sets what they agree on;
+  a partition makes those two fight.
+- Latency is the same arithmetic for a network as for a room, at 200,000 km/s
+  instead of 343 m/s. `drag` is already a calculator for how far apart two
+  musicians can play online, and it would be worth checking against what people
+  report.
 - Let the listening graph change while it plays: musicians look up and look
   away, so λ₂ becomes a function of time and the rate should track it.
 - Edge weights as a mix decision — how loud each player is *is* how much they

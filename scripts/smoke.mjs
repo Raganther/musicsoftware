@@ -84,6 +84,7 @@ const PLAN = {
   'elastic': 'play',
   'hollow': 'play',
   'hocket': 'play',
+  'drag': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
