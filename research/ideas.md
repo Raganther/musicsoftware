@@ -37,6 +37,31 @@ can vary before believing it** (under rhythm, from `escalator`).
 - **Do not edit anything under `src/` or `sketches/` while a harness is live.**
   Vite hot-reloads the page and the in-page handles vanish mid-capture. Same
   hazard as the `?t=` second-copy trap in CLAUDE.md, from the other end.
+- **Give a model a check that can only pass if it is internally consistent, and
+  run it first.** `lattice`'s transfer matrices have a free gift: for a lossless
+  reciprocal cell, half the trace must be a *real number*. Nothing about tone
+  holes is being asserted — it only fails if the sign conventions in two
+  different functions disagree. It read 6.55e−3 on the first run, small enough
+  to have been shrugged at, and it was a real fault. After the fix, 0.00e+0.
+- **A cliff-finding rule needs the cliff to be bigger than the slope, and that is
+  a property of the signal.** `lattice` burned two detectors on this. Walking
+  every harmonic found the cutoff at exactly 2·f0 for all eight fingerings,
+  because a cylindrical pipe suppresses even harmonics by 20 dB. Walking the odd
+  harmonics found exactly 3·f0, because the natural rolloff from the first to
+  the third is 15–21 dB. Both wrong answers were suspiciously *clean*, which is
+  the tell: a detector locking onto the same simple multiple every time is
+  reporting its own structure, not the signal's.
+- **Validate a knee-finder on a knee you chose.** A two-segment fit recovered
+  synthetic knees to 0.3–3.3% and then returned 324–1512 Hz on the instrument —
+  which is how you know the scatter is the signal rather than the tool, and the
+  answer is "there is no knee". Without the synthetic channel that is just a
+  third broken detector.
+- **An exponent picked by ear can blunt the very feature you are measuring.**
+  `lattice` rendered harmonic amplitudes as |Z|^0.55, which compressed the
+  model's own 20 dB collapse at the cutoff into 10. Exponent 1 — the harmonic
+  follows the impedance — is both more faithful and less arbitrary. It did not
+  change the conclusion, which is how I know the bluntness was physics and not
+  taste; but until it was tested, it was my thumb on the scale.
 - **A prediction checked only where two hypotheses coincide has been checked
   against one hypothesis.** Cost `drag` two whole findings in one day. Its drag
   rate was predicted from a player's *own* mean delay and verified exactly on a
@@ -354,8 +379,42 @@ can vary before believing it** (under rhythm, from `escalator`).
   that is a *hole at a position* — 1/3 gives a twelfth, 1/5 gives two octaves
   and a third, measured ×2.98 and ×4.98. See
   `research/log/2026-08-08-overblow.md`.
-- Real tone holes for `overblow`: a row of them with open/closed state, so the
-  fingering system *is* the instrument.
+- ~~Real tone holes for `overblow`: a row of them with open/closed state, so the
+  fingering system *is* the instrument.~~ → `sketches/lattice`: a transfer-matrix
+  bore with a row of holes, which is a *periodic structure* and so has a stopband.
+  Two independent routes to the cutoff — the infinite lattice's Bloch dispersion
+  relation, and where the fingered bore's resonances stop being odd harmonics —
+  agree to **2.8%** across five fingerings whose fundamental moves by a factor of
+  1.80, and to 9.0% across nine geometries. See
+  `research/log/2026-09-15-lattice.md`.
+- **A woodwind's spectral ceiling belongs to its holes, not to its note.** That
+  is why a clarinet is recognisable across its whole range: every fingering
+  shares one cutoff, set by hole width, spacing and wall thickness, scaling as
+  (b/a)/√(s·t_e) to within 1.1–6.7%.
+- **An irregular lattice takes its ceiling from its *worst* cell.** Over six
+  settings `lattice`'s ceiling correlates with the lowest cell's own cutoff at
+  r = 0.875 and with the mean at 0.250. One sloppy hole leaks and the instrument
+  loses its top — which is what makers have always said.
+- **A cutoff can be sharp in one observable and blunt in another.** `lattice`'s
+  is crisp in *where the resonance series stops being harmonic* (±2.8%) and has
+  no locatable knee at all in the radiated envelope (324–1512 Hz across
+  fingerings), because above it the bore's impedance bounces rather than staying
+  low. The bore stops **organising** the spectrum without **removing** it, and
+  those are different things.
+- A real reed for `lattice` — a nonlinear valve driven by the computed
+  impedance, instead of harmonic amplitudes assigned from it. That is the step
+  that would put the cutoff into the radiated sound, and it is the same shape of
+  object as `rosin`'s stick-slip state machine.
+- Cross-fingerings, which want per-hole state rather than counting open holes
+  from the bell. They work *because* a closed hole downstream is not nothing;
+  `lattice` already carries the compliance term and it currently does nothing
+  visible.
+- A conical lattice, which is a saxophone. `cone` has the modal bore and
+  `lattice` has the holes; the two have not met.
+- What sets the 1.1–6.7% spread between `lattice` and the long-wavelength closed
+  form? The "k·s grows" story is dead (correlation 0.312). The end corrections
+  (0.75b inner, 0.85b outer) are the next suspect and one sweep from being ruled
+  in or out.
 - ~~A true conical waveguide (the spherical spreading term at the apex). The
   cheap version — flipping the far-end reflection — does not oscillate at all,
   measured; a cone is not a sign flip.~~

@@ -85,6 +85,7 @@ const PLAN = {
   'hollow': 'play',
   'hocket': 'play',
   'drag': 'play',
+  'lattice': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
