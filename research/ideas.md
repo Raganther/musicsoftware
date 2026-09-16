@@ -37,6 +37,23 @@ can vary before believing it** (under rhythm, from `escalator`).
 - **Do not edit anything under `src/` or `sketches/` while a harness is live.**
   Vite hot-reloads the page and the in-page handles vanish mid-capture. Same
   hazard as the `?t=` second-copy trap in CLAUDE.md, from the other end.
+- **A gate that passes on the broken case is not a gate.** `tuplet`'s onsets
+  came back 300–600 ms from the model while its bar-to-bar repeat check read
+  1.1 ms — because the capture starts mid-bar, so onset 0 is not note 0, and a
+  *rotated* fold repeats exactly as cleanly as an aligned one. The check could
+  not see the error it was there to catch. Fixed the way `hocket` did it: search
+  every rotation and report the runner-up as the control (1.1 ms against 299).
+- **Choose a known-answer case that has an answer.** `tuplet`'s first validation
+  asked where five notes land on a grid of quarters. There are four slots, so
+  the honest reply is a refusal — and calling the refusal "wrong" is testing the
+  wrong thing. It still earned its keep: the sketch had been silently answering
+  with a denominator outside the budget it was given, and that was a real bug.
+  But the check had to be split in two before it meant anything.
+- **`pkill -f <name>` matches its own shell.** `pkill -f tuplet-verify` killed
+  the compound command it was part of, before the edit later in that command ran.
+  Exit code 144, file unchanged, `npm run check` passing on the old code. Match
+  on something the killing command does not itself contain, or use
+  `ps -eo pid,args | grep -F ... | grep -v grep`.
 - **Give a model a check that can only pass if it is internally consistent, and
   run it first.** `lattice`'s transfer matrices have a free gift: for a lossless
   reciprocal cell, half the trace must be a *real number*. Nothing about tone
@@ -789,9 +806,45 @@ can vary before believing it** (under rhythm, from `escalator`).
 - Cross-voice ratios between notes other than the firsts — the forced value
   depends which pair you pick, so choosing the pair is choosing which
   relationship to make explicit. Draw all of them at once.
-- Notation cost for `elastic`: realised durations are reals and notation wants
+- ~~Notation cost for `elastic`: realised durations are reals and notation wants
   small denominators. How complex a tuplet does a ratio set need, and which
-  sets cannot be written at all?
+  sets cannot be written at all?~~ → `sketches/tuplet`: notation is a
+  number-theoretic constraint. Everything writable is 2^(−k)·Π(m/n), so **a
+  duration is writable exactly when its denominator is N-smooth** for the
+  largest tuplet N you allow — checked against the definition of smoothness for
+  N = 3, 5, 7, 11, the same set every time. The nesting depth is the shortest
+  factorisation of the odd part. See `research/log/2026-09-16-tuplet.md`.
+- **One tuplet level is worth more than three halvings of the note value.**
+  Halving the shortest note halves the error; one more tuplet divides it by
+  seven. At a two-second bar, five notes written with no tuplets at eighth-notes
+  land **108.7 ms** from what was meant — a different rhythm, not a nuance —
+  against 16.1 ms with one tuplet and 2.3 ms with two.
+- **Notating is not rounding, because the bar has to close.** Round each note to
+  the nearest writable value on its own and the bar came out wrong in 161 of 400
+  random rhythms. That is `elastic`'s add-up constraint arriving from the other
+  side, and it is why somebody always absorbs the remainder.
+- **What separates rhythms is exactness, not accuracy.** Durations from simple
+  ratios are written exactly 105 times in 400; from uniform reals or powers of
+  φ, 0 of 400. But the inexact ones are all *equally* inexact (0.043% / 0.056% /
+  0.052%). I expected φ to be the most expensive to write, being the hardest
+  number to approximate, and it is not: a tuplet budget gives you a sparse
+  scatter of large smooth numbers rather than all denominators up to a bound, so
+  the continued-fraction structure of the target stops mattering.
+- Point `tuplet` at `elastic` directly: one produces real durations from stated
+  ratios, the other says what they cost to write. Together they answer "can I
+  notate what I just composed", and neither half knows about the other yet.
+- Notate a whole piece rather than one bar. A denominator chosen per bar is
+  cheaper than one chosen for the movement, but changing it every bar is
+  unreadable — that trade is the real problem a copyist solves.
+- Which note absorbs the rounding remainder is currently "whoever was rounded
+  furthest". A copyist puts it where it is least audible: on the longest note,
+  or off the downbeat. Worth measuring rather than asserting.
+- Nested tuplets are not equally readable — 5-in-4 inside 7-in-4 is legal and
+  nobody can play it. A readability cost that is not just depth would change
+  every number in `tuplet`, and the honest version needs players.
+- Where does `tuplet`'s smoothness penalty go asymptotically? It grows 1.17× at
+  denominator 12 to 3.87× at 192, and smooth numbers have a known density
+  (Dickman's function), so this is predictable rather than merely measurable.
 - Say *which* ratio to relax when `elastic` refuses. One more linear solve, and
   it turns a refusal into a suggestion the way `species` does.
 - Draw the rhyme by hand in `rhyme`: select two spans, pick a transform, watch
