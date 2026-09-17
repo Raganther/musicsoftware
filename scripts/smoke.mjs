@@ -87,6 +87,7 @@ const PLAN = {
   'drag': 'play',
   'lattice': 'play',
   'tuplet': 'play',
+  'contrary': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

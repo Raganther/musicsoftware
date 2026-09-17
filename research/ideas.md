@@ -37,6 +37,33 @@ can vary before believing it** (under rhythm, from `escalator`).
 - **Do not edit anything under `src/` or `sketches/` while a harness is live.**
   Vite hot-reloads the page and the in-page handles vanish mid-capture. Same
   hazard as the `?t=` second-copy trap in CLAUDE.md, from the other end.
+- **A rectangular window's leakage can *be* the floor you report.** `contrary`
+  read its supposedly-absent melodies at −70 to −81 dB where the model puts them
+  at −273, and I went looking for a nonlinearity in the signal path. Two tones at
+  −10.8 dB leak into every other frequency as sinc sidelobes falling only as
+  1/Δf; a Hann window moved a control frequency from −66.5 dB to **−136.4** and
+  the melodies to −164 to −211. Pair it with the opposite lesson from `sitting`:
+  do *not* window an impulse response, which keeps its energy at t = 0. A steady
+  tone is not an impulse response.
+- **The tell for an analysis floor is a control that reads the same as the
+  subject.** The number that diagnosed the above was already printed in the
+  validation line — a frequency 40 Hz off a carrier, at −66.5 dB, the same order
+  as the "melodies". Put a control frequency in every spectral readout.
+- **Check which node the harness is tapping before believing a null.**
+  `contrary`'s reveal control read −81.9 dB at 0 and −82.9 at full, which I
+  nearly wrote up as "the reveal is too weak". The handle returned the bus
+  *before* the shaper. Tapping the wrong side of an effect gives a perfectly
+  steady, perfectly wrong null.
+- **A capture has to be comfortably shorter than the thing it is catching, and
+  "comfortably" counts the overheads.** `contrary` held a note for 3.0 s and its
+  2 s capture took 3.05 s of wall clock, so the check that the note had not
+  changed almost never passed and one condition reported failure eight times
+  running.
+- **Write the claim after measuring it, including in the doc comment.**
+  `contrary`'s module asserted that the audible carriers were "doing something
+  that is neither melody" before anything had been measured. They correlate with
+  one of the melodies at 0.962. The constraint turned out to have a solution and
+  the sketch is better for it, but the prose was in the file first.
 - **A gate that passes on the broken case is not a gate.** `tuplet`'s onsets
   came back 300–600 ms from the model while its bar-to-bar repeat check read
   1.1 ms — because the capture starts mid-bar, so onset 0 is not note 0, and a
@@ -960,8 +987,34 @@ can vary before believing it** (under rhythm, from `escalator`).
   −39 dB after a nonlinearity; splitting the primaries between the ears
   collapses it by 38 dB. The audible carrier moves opposite to the phantom,
   9 changes out of 9. See `research/log/2026-08-18-tartini.md`.
-- Two phantoms at once in `tartini`: the quadratic and cubic products move in
-  opposite directions, so one pair of carriers could carry two melodies.
+- ~~Two phantoms at once in `tartini`: the quadratic and cubic products move in
+  opposite directions, so one pair of carriers could carry two melodies.~~
+  → `sketches/contrary`: A = f2 − f1 and B = 2f1 − f2 invert exactly, f1 = A + B
+  and f2 = 2A + B, round-tripped to **0.00e+0 Hz** over 20,000 pairs. Each tune
+  comes from its own term — quadratic only gives A and leaves B at the floor,
+  cubic only the reverse — in the model and again off a recording. In the wire
+  the melodies sit at −164 to −211 dB; bending the recording brings them up by
+  **120.4 dB**. See `research/log/2026-09-17-contrary.md`.
+- **The obstacle was the instrument.** The two phantoms cannot move the same way
+  (∂A/∂f2 = +1 against ∂B/∂f2 = −1), so hold A + B fixed — strict contrary
+  motion — and f1 = A + B **never moves**: 0.0 Hz over 40 notes, against 114.8
+  for f2, with corr(A,B) = −1.000 and corr(f1,A) = 0.000. One audible tone that
+  stands completely still, and two tunes going opposite ways that nothing plays.
+- **A phantom melody only hides if its partner mirrors it.** The ear needs
+  f2/f1 ≈ 1.2, which forces B ≫ A, which makes f1 = A + B mostly B — two
+  *independent* melodies put one of them straight into the audible signal
+  (corr 0.962). Mirrored ones hide both and nothing else does.
+- A third phantom: 3f1 − 2f2 is the next cubic product, so three tunes from two
+  tones — with A, B and C forced to satisfy one linear relation, which is a
+  compositional constraint nobody has ever had to write under.
+- Let `contrary`'s mirror axis glide, so f1 drifts while the two tunes keep
+  their contrary motion about a moving centre. One line, and a real form.
+- Primary level changes the *balance* of the two melodies, because the cubic
+  difference tone grows faster with level than the quadratic one. Not exposed in
+  `contrary` and it is a whole compositional dimension.
+- `tartini` and `contrary` both need a carrier pair in a narrow ratio band. For a
+  given melody range, which sums are playable at all? The answer is a wedge in
+  (A, B) that would serve both and has never been drawn.
 - Sweep `tartini`'s carrier while holding the phantom fixed — the tune stands
   still while everything audible slides.
 - **A reveal control belongs on every absence claim.** `tartini`'s turned
