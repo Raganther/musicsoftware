@@ -37,6 +37,21 @@ can vary before believing it** (under rhythm, from `escalator`).
 - **Do not edit anything under `src/` or `sketches/` while a harness is live.**
   Vite hot-reloads the page and the in-page handles vanish mid-capture. Same
   hazard as the `?t=` second-copy trap in CLAUDE.md, from the other end.
+- **A ring buffer is a low-pass filter on your own experiment.** `nest`'s
+  control looked broken — 0.0000 empty steps against a predicted 0.3286 — because
+  I read the sketch's 4096-long dispatch ring 400 ms after flipping the toggle,
+  about three steps' worth, so almost everything in it predated the change.
+  Waiting six seconds gave 0.3250. Before doubting the sketch, check how much of
+  what you are reading is older than the thing you changed.
+- **A model module the harness imports cannot use the `@core` alias**, because
+  node cannot resolve a Vite alias. Promoting a helper to core on its second use
+  is right, and the module that runs outside the app then has to reach it by
+  relative path with the `.ts` extension — which both Vite and node accept.
+- **A smoke suite that plays every sketch at its defaults cannot see a param
+  that stacks voices.** `nest` clipped at 1.203 pre-limiter with a long decay
+  while the suite passed throughout. Third time in this file (`arc`,
+  `foreshadow`): a sketch whose level depends on how much the player piles on
+  needs a computed worst case, not a sampled one.
 - **A rectangular window's leakage can *be* the floor you report.** `contrary`
   read its supposedly-absent melodies at −70 to −81 dB where the model puts them
   at −273, and I went looking for a nonlinearity in the signal path. Two tones at
@@ -198,9 +213,34 @@ can vary before believing it** (under rhythm, from `escalator`).
   but that is for *homogeneous* Beatty sequences. `floor(n·r + s)`, with an
   intercept, does admit partitions into three or more — which ones is Fraenkel's
   conjecture, open for six parts and up. A three-part hocket that works.
-- Beatty sequences nest: the steps a voice does *not* play are themselves a
+- ~~Beatty sequences nest: the steps a voice does *not* play are themselves a
   Beatty sequence, so the split recurses. A hocket whose parameter is a tree
-  rather than a list of densities, sidestepping Uspensky entirely.
+  rather than a list of densities, sidestepping Uspensky entirely.~~
+  → `sketches/nest`: it works, and exactly. **0 steps unowned or doubled over
+  200,000**, for 2, 3, 4, 5 and 8 voices in both tree shapes — ten
+  configurations of ten. Leaf densities are the products down the tree (worst
+  3.4e−6, summing to 1.000000000000), and from the sound, 238 of 238 steps carry
+  exactly one note at every voice count. See `research/log/2026-09-18-nest.md`.
+- **Uspensky is sidestepped, not violated, and the gaps say which.** The
+  three-distance theorem gives a real Beatty rhythm exactly two distinct
+  inter-onset gaps; nested voices measure 3, 4 at three voices and 7, 8 at eight.
+  A Beatty sequence *of* a Beatty sequence is not a Beatty sequence, so the
+  theorem does not reach it. The one voice in a three-leaf tree that still reads
+  2 is the one split off at the root and never subdivided.
+- **The same densities, flat against nested: 0.6577 and 0.0000.** Identical
+  numbers, one arranged as a list and one as a tree. `nest`'s `Flatten` toggle
+  is that comparison and you can hear it fall apart.
+- The tree's *shape* is a compositional parameter: balanced and chain with four
+  voices both tile exactly and agree on who plays only 39.7% of steps. Two points
+  in a space of Catalan-many shapes, with no existing notation.
+- Let a node's density drift while `nest` plays: everything below it
+  re-partitions continuously, so one slider re-voices a whole texture without
+  ever breaking the tiling. No mixer can do that.
+- Nest in *pitch* rather than time — the same recursion over an interval gives a
+  chord whose notes partition an octave the way these partition a bar.
+- `tiling`, `hocket` and `nest` are the same search at three levels of
+  generality (a finite cycle, an infinite one with two voices, an infinite one
+  with any number) and have never been put side by side.
 - Two densities drifting slowly in opposite directions, so a hocket interlocks,
   comes apart at the rate M·ε, and re-locks.
 - A Sturmian word is the cutting sequence of a line through a grid. Draw the

@@ -13,18 +13,13 @@
  * three densities you choose, some steps get two notes and some get none.
  */
 
-/**
- * Does a voice of density d play step m?
- *
- * m is in { floor(n/d) } iff some integer n lies in [m·d, (m+1)·d), which is
- * the closed form below. Stateless, so the picture and the sound can be
- * computed from the same call — worth more than it sounds, because a cursor
- * that has to be stepped in order cannot be asked about a step twice.
- */
-export function plays(d: number, m: number): boolean {
-  if (m < 1 || d <= 0 || d >= 1) return d >= 1 && m >= 1
-  return Math.ceil(m * d) < (m + 1) * d
-}
+// By relative path, not `@core`: the harnesses import this module directly in
+// node, and node cannot resolve a Vite alias. A model module that is meant to be
+// run outside the app has to say where things are.
+import { beatty } from '../../src/core/theory.ts'
+
+/** Does a voice of density d play step m? Lives in `@core` since `nest`. */
+export const plays = beatty
 
 /** Steps 1…upto that a voice of density d plays. */
 export function hits(d: number, upto: number): Uint8Array {

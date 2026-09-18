@@ -160,6 +160,33 @@ export function euclid(pulses: number, steps: number, rotate = 0): boolean[] {
 }
 
 /**
+ * Does a voice of density d play step m of a Beatty rhythm?
+ *
+ * A Beatty sequence is { floor(n/d) : n ≥ 1 } — a maximally even rhythm whose
+ * density among the steps is exactly d. m is in it iff some integer lies in
+ * [m·d, (m+1)·d), which is the closed form below. Stateless, so the drawing and
+ * the sound can come from the same call rather than from a cursor that has to
+ * be stepped in order and cannot be asked about a step twice.
+ *
+ * Second use (`hocket`, `nest`), so it lives here now.
+ */
+export function beatty(d: number, m: number): boolean {
+  if (m < 1 || d <= 0 || d >= 1) return d >= 1 && m >= 1
+  return Math.ceil(m * d) < (m + 1) * d
+}
+
+/**
+ * How many steps of a density-d Beatty rhythm fall at or below m.
+ *
+ * Needed to index *into* a Beatty sequence rather than merely test membership,
+ * which is what nesting one inside another requires.
+ */
+export function beattyCount(d: number, m: number): number {
+  if (m < 1) return 0
+  return Math.max(0, Math.ceil((m + 1) * d) - 1)
+}
+
+/**
  * The nearest p/q to x with q ≤ maxQ. Third use, so it lives here now.
  *
  * Brute force over every denominator, which is definitional rather than clever.
