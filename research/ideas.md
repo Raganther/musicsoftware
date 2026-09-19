@@ -149,6 +149,67 @@ can vary before believing it** (under rhythm, from `escalator`).
   tile perfectly and 10 collapse at less than the predicted rate. Snapping to
   2/3 sounds like nothing happened. When a law is about exact rationals, test it
   in integers and treat the float version as a separate question.
+- **A worst departure taken over cells where the prediction is near zero is
+  arithmetic on noise.** `afteryou`'s deaf-mode law read 39.81% worst, which was
+  a cell predicting 0.0024% and delivering 11 clean turns out of 163,572. Over
+  the cells with 500+ events behind them it is 4.08%. Report the count beside
+  every ratio and say which cells the headline excludes, or the honest number is
+  buried by the meaningless one.
+- **A selection that requires two events to be close has already selected for
+  the collision you are predicting.** `afteryou`'s 2τ/W backoff law was ~10%
+  high, so I re-sampled on both players retrying within one window of the same
+  clash — and it got three times *worse*, because that condition is most of the
+  collision criterion. Split on one side at a time. Doing so explained the
+  residual exactly: prompt retries run 1.26–1.94× over the law (you only retry
+  promptly if you got in first, and the player who is first can be talked over
+  from one side only) while deferred ones sit at background, and the two cancel.
+  **The pooled agreement was luck.**
+- **Independence in the closed form means independence in the generator.** One
+  shared `rng` across simulated agents makes how many draws A takes depend on
+  what B is doing, and `afteryou`'s renewal law came out 1.4–3.1% off in exactly
+  the cells with the most data. One stream per agent — and a separate one for
+  anything musical — took those cells to 1.0002 / 1.0006 / 1.0009. The second
+  half matters on its own: sharing a stream between timing and notes means
+  changing a tune moves every event in the piece.
+- **Read a sketch's own log as it goes if the sketch trims it.** `afteryou`
+  keeps 26 s of turns, so a harness reading the list once after a 34 s capture
+  lost the first third and scored real sound as model-silence, collapsing a
+  known-answer contrast to 1.0x. Poll and merge by id. Same family as `nest`'s
+  ring buffer: **the sketch's memory is part of your instrument.**
+- **Ship an envelope out of the page, not a waveform.** Serialising 34 s of
+  samples as a JS array through `page.evaluate` is ~1.6M numbers and it failed
+  midway through a sweep for no reproducible reason. Accumulating RMS frames in
+  the page is 100× less to move, and the envelope is what the analysis wanted.
+- **When a level measurement is not reproducible, the level is not the
+  problem.** `afteryou`'s worst setting read 1.199, 1.700 and 1.178 on three
+  runs of the *same* config, which is not a gain to tune — it is an unbounded
+  voice count, and the peak was whichever way a dozen oscillators happened to
+  line up. The cause was each player's notes decaying 0.55 s over a 0.24 s
+  spacing, so one "player" rang four notes at once. **A player is one
+  instrument**: ending each note at the next bounded simultaneity by the player
+  count and the spread collapsed. Reproducibility first, calibration second.
+- **The same reading twice from two different gains is a ceiling, not a
+  measurement.** 0.993 twice, while every other row moved, was the limiter.
+- **A gain computed per note at schedule time cannot answer a surge**, because
+  the notes are already booked — so a density normaliser belongs on a gain node,
+  not in the note. And with a lookahead scheduler it can be *predictive*: the
+  model runs ahead of the sound, so the window that sets the gain is mostly
+  still in the future and it starts moving before the surge is audible.
+- **The peak of a sparse random texture has a ±50% spread between 15-second
+  windows.** Two readings cannot tune a level to a tight band; set the ceiling
+  with margin and stop. The gate that matters is "nothing clips", not "the
+  defaults hit 0.6".
+- **Do not edit a watched file while a Playwright harness is running.** Vite's
+  HMR reloads the page, the sketch's window handle vanishes mid-capture, and the
+  run is wasted. It failed loudly only because the harness checked its capture
+  for nothing — without that guard it would have been a table of zeros.
+- **A rare-event demonstration has to be given a rare event.** `afteryou`'s
+  deadlock is permanent once it starts, but it needs a collision to start it,
+  and at the defaults collisions are ~3% of turns — so 26 s of audio often
+  contained none and all three backoff settings returned *byte-identical*
+  numbers. Identical output across settings that should differ is the signature:
+  the branch was never taken. Configure the seeding event to be near-certain,
+  then let the phenomenon establish before recording.
 
 ## Sequencing & rhythm
 
@@ -735,6 +796,46 @@ can vary before believing it** (under rhythm, from `escalator`).
   interesting object in `understudy` and is currently invisible.
 - A zealot that decays rather than vanishing on release, so a held pitch
   leaves a memory the crowd drifts back toward (`sketches/earshot`).
+- ~~Turn-taking, not tempo: who plays, decided by ear, with no pulse.~~
+  → `sketches/afteryou`. Improvisers waiting for a gap are doing **carrier sense
+  multiple access**, and they inherit its bug: two who start within one travel
+  time cannot have heard each other. Set every τ to zero and collisions are
+  exactly 0 over 72,927 turns; the room is the only mechanism there is. See
+  `research/log/2026-09-19-afteryou.md`.
+- **What matters is starts per second of *silence*, not starts per second.** A
+  player can only enter when the floor sounds clear, so that is the density
+  inside the vulnerable window. With the correction, P(clean) = exp(−2·r·Στ)
+  lands within **0.40%** over an 80× range of room size; without it the same
+  prediction is 17% out at forty metres. One division separates a law from an
+  excuse, and the naive version looks fine in every small room you would test in.
+- **A clash preserves the gap between the two starts, exactly.** Both break off,
+  both wait, both go — and the difference in their retry times is the difference
+  in their original start times, for any response they *both* make, whatever
+  their separate reaction times. So if it was inside the window it still is.
+  `afteryou` on `polite` gives two players 10,474 consecutive collided turns with
+  the offset frozen at −0.027425399 s. Being polite in the same way is not
+  politeness; only disagreeing about how long to wait resolves anything.
+- **A third player does what politeness cannot.** Two on `polite` clash 99.95%
+  of the time, three 19.98%, six 19.61%. The crowd supplies the randomness the
+  rule refuses to. A duo is the worst case — the opposite of `lombard`, where
+  crowding is what causes the arms race.
+- **Waiting for the gap is what makes you collide.** Sitting out a busy floor
+  and entering the moment it clears runs 1.33–3.12× over the Poisson law and
+  collides 9.4× more than re-drawing your own wait, in the identical room,
+  because everybody's entry is now timed off the same event.
+- Anticipation belongs here as much as in `drag`: enter toward where you predict
+  the floor will be rather than where you hear it. It *cannot* close this window
+  — the information has not arrived — so what it trades for what is the question,
+  and `afteryou` is the sketch that can answer it.
+- p-persistent entry — take a gap with probability p rather than always or never.
+  The two extremes are measured; the sweep between them should have a minimum,
+  and where it sits is a claim about how big an ensemble can be.
+- A player who does not yield when talked over. Collision detection is currently
+  perfect and universal, which is not how any ensemble actually works, and it is
+  one branch in `begin`.
+- Exponential backoff doubles the window per failure, which is the Ethernet rule
+  and almost certainly not the musical one. Growing it with *how long you have
+  been waiting* instead is a different and more human policy.
 
 ## Composition tools
 

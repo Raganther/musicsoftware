@@ -89,6 +89,7 @@ const PLAN = {
   'tuplet': 'play',
   'contrary': 'play',
   'nest': 'play',
+  'afteryou': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
