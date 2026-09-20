@@ -180,6 +180,33 @@ can vary before believing it** (under rhythm, from `escalator`).
   samples as a JS array through `page.evaluate` is ~1.6M numbers and it failed
   midway through a sweep for no reproducible reason. Accumulating RMS frames in
   the page is 100× less to move, and the envelope is what the analysis wanted.
+- **Ask whether the quantity is reproducible before hunting the discrepancy.**
+  `chatter` runs the same integrator in node and in a worklet, and their bounce
+  counts differed by up to 40% after every real difference had been fixed.
+  Perturbing the drop speed by one part in 10¹⁵ — the last bit of a double —
+  moved it 2.3%, and by 10¹² moved it 23.6%. A ball bouncing on a vibrating
+  surface is chaotic, so two V8 builds disagreeing in the last ulp of
+  `Math.pow` is a complete explanation, and the bounce count is not an
+  observable. The two agree *exactly* (19 and 19, 77 and 77) on the settings
+  where the dynamics are not chaotic, which is the same fact stated usefully.
+- **NaN in a filter state is silence, and silence looks like a clean zero.**
+  A `Float64Array` zero-fills, so a worklet's first `process()` — which runs
+  before its configuration message arrives — divided 0/0 and poisoned the modal
+  state forever. Every number in the verification run came back `0.000` rather
+  than as an error. Initialise anything a divisor might be, and have the
+  worklet *rescue* NaN state and count it so it can never be invisible.
+- **Two copies of a model must be checked for the boring differences first.**
+  `chatter`'s node model started the stick at rest where the worklet started it
+  at the drop speed, and clamped the bar's decay at 20 ms where the worklet
+  clamped at 0.4 ms — so the "dead bar" rows were not the same bar. A
+  cross-check between two implementations is worthless until the initial
+  conditions and the clamps match, and both of those look like results while
+  they are wrong.
+- **What a strike puts into a resonator is momentum, not force.** The impulse
+  of a Hertzian contact is (1+e)·m·v — peak force and contact time both depend
+  on stiffness and hardness and the two cancel. So stiffness and hardness are
+  timbre knobs and mass and speed are level knobs, which is what a level
+  normaliser should be built on.
 - **When a level measurement is not reproducible, the level is not the
   problem.** `afteryou`'s worst setting read 1.199, 1.700 and 1.178 on three
   runs of the *same* config, which is not a gain to tune — it is an unbounded
@@ -441,8 +468,33 @@ can vary before believing it** (under rhythm, from `escalator`).
 - Contact *hysteresis* — Stulov's relaxation term, where the head does not
   return the energy it stored. It is what makes a felt hammer sound felt, and
   it is one convolution away in the same worklet.
-- Strike the bar twice within one contact time and see what the interference
-  does; a roll at 300 Hz is not thirty strikes, it is one continuous contact.
+- ~~Strike the bar twice within one contact time and see what the interference
+  does; a roll at 300 Hz is not thirty strikes, it is one continuous contact.~~
+  → `sketches/chatter`: do not drive it — *hold* it. A stick kept against a bar
+  bounces, gaps shrinking geometrically by the restitution, infinitely many of
+  them, over in finite time. Inelastic collapse, which out loud is a buzz roll.
+  The contact time is exact rather than a scaling (Beta functions; at p = 1 it
+  must be π√(m/k) and is, to nine figures in 9 of 9 cells). See
+  `research/log/2026-09-20-chatter.md`.
+- **A bar is not a table, and that is the whole difference.** A table does not
+  push back; a bar is still ringing when the stick comes down, and a surface
+  moving up at the moment of impact hands energy back. The textbook geometric
+  law holds on a *dead* bar (gap ratio ÷ restitution = 1.028, identical for
+  every decay under 40 ms) and breaks on a live one (1.254, collapse 28.55×
+  the ballistic sum). **A buzz lasts 5.3–20× longer on something that rings**,
+  which is one slider and is why a buzz on a practice pad dies.
+- **Restitution is velocity-independent only for a linear spring**: p = 1 gives
+  0.8401 / 0.8400 / 0.8401 / 0.8403 over a 30× speed range and p = 3 falls
+  0.9047 → 0.6875. The same nonlinearity `mallet` found in the contact time,
+  seen from the other side, with p = 1 as the control.
+- The bounce sequence on a ringing bar is chaotic and nobody has asked what
+  *kind*. A return map of gap n+1 against gap n would say whether there is
+  structure in it or only noise, and it is ten lines.
+- Two sticks on one bar, which is a real roll: they share a resonator, so each
+  one's bounces are thrown by the other's, and whether they lock or scatter is
+  the drummer's whole problem.
+- `rosin` has a stick-slip state machine and `chatter` has a bouncing contact.
+  A brush is both at once and neither sketch can make one.
 - The same rig with a *string* rather than a beam: the piano hammer problem,
   where the strike point kills the 8th partial and everyone can hear it.
 - ~~A gong rather than a bell: the shimmer that arrives *after* the strike,

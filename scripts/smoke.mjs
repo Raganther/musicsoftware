@@ -90,6 +90,7 @@ const PLAN = {
   'contrary': 'play',
   'nest': 'play',
   'afteryou': 'play',
+  'chatter': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
