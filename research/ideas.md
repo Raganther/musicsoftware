@@ -180,6 +180,24 @@ can vary before believing it** (under rhythm, from `escalator`).
   samples as a JS array through `page.evaluate` is ~1.6M numbers and it failed
   midway through a sweep for no reproducible reason. Accumulating RMS frames in
   the page is 100× less to move, and the envelope is what the analysis wanted.
+- **If the thing you are measuring the value of also appears in how you made
+  the data, you have measured your generator.** `shorthand`'s first transform
+  ablation asked how much allowing inversion helps — on tunes its own generator
+  had built using inversion 25% of the time. The fix is a control row where the
+  transform is absent: 14.5% becomes 0.9%. Same shape as `afteryou`'s circular
+  backoff sample two days earlier, and the pattern is worth a name.
+- **Check that the question is answerable before reading its answer as a
+  failure.** `shorthand`'s recovery of planted structure was 33%, which looks
+  bad — but it finds a *cheaper* description than the planted one 199 times in
+  200, so a parse cannot be both optimal and in agreement. The cost comparison
+  was the test that meant something, and it was already passing.
+- **An onset is a rise, not a level.** Notes that ring for five steps make the
+  level inside a step window mostly the previous note's tail, and thresholding
+  it gave `shorthand` 93.2% agreement at an 8.5x contrast — plausible, and an
+  artefact. On the rise at the step boundary the same audio reads 100.0% and
+  exactly 0.00000. Fifth sketch here to hand-roll an onset detector and get it
+  wrong first time; `ideas.md` has wanted a shared spectral-flux one since
+  `groove`.
 - **Ask whether the quantity is reproducible before hunting the discrepancy.**
   `chatter` runs the same integrator in node and in a worklet, and their bounce
   counts differed by up to 40% after every real difference had been fixed.
@@ -1073,8 +1091,51 @@ can vary before believing it** (under rhythm, from `escalator`).
   exact solve into least squares, which is much closer to how music rhymes.
 - `species`'s rules as extra rows in `rhyme`'s system: counterpoint and form
   solved together is the next altitude up from either.
-- Export only the free notes as the score. Hand someone eighteen notes and a
-  rhyme list and they have the whole piece — the compression claim made real.
+- ~~Export only the free notes as the score. Hand someone eighteen notes and a
+  rhyme list and they have the whole piece — the compression claim made real.~~
+  → `sketches/shorthand`, which also does the *finding*: given the notes, look
+  for the shortest description. That is Lempel–Ziv with a composer's vocabulary
+  (a back-reference may be transposed, inverted or reversed), and because the
+  parse runs left to right each token's position is implicit — so the optimum is
+  a shortest path over note positions, a **dynamic program rather than a
+  search**. Exact against an exhaustive search 95 of 95, gap 0.0e+0 bits, and
+  lossless 180 of 180. At the defaults 13 notes of 64 are written out and the
+  other 51 follow; `Play: skeleton` sounds at exactly those 13 and at **exactly
+  0.00000** elsewhere. See `research/log/2026-09-21-shorthand.md`.
+- **A transform is worth exactly what the tune contains.** Allowing inversion
+  and retrograde saves 14.5% on tunes built with them, 0.9% on tunes built with
+  transposition alone, and **0.2% on uniform noise** — and the discrimination is
+  specific, since on tunes containing inversions allowing *inversion* gives
+  3.183 bits/note where allowing retrograde instead gives 3.450. A detector that
+  found structure everywhere would not be one.
+- **A transform's value for reaching a target is not its value for describing
+  one.** `develop` found invert (+0.25) and retrograde (+0.23) mattered least of
+  its operations, because involutions open almost no new space; I predicted the
+  same here and they are worth 9.3%+. Both are right: a transform that opens no
+  new territory can still be the cheapest way to say where you already are.
+- **A short rhyme is not a fact about a tune.** `shorthand` recovers planted
+  rhymes of 3 and 4 notes **0%** of the time and ones of 10+ at 43–69%, because
+  it finds a *cheaper* description than the planted one in 199 of 200 tunes.
+  Recovery pooled to 33% and looked like a failure; split by length it is the
+  finding.
+- **A tolerance is not a bound on the error, because approximations chain.** At
+  tolerance 1 `shorthand` cuts the description 33% for a mean error of 0.61
+  degrees — but the worst is **4**, and 454 notes in 4,800 end up outside the
+  tolerance, because a loosely fitted span becomes the source for the next one
+  and the chains run 5 deep. That is the hazard waiting for the least-squares
+  `rhyme` below.
+- Bound the *realised* error in `shorthand` rather than the per-step one: a
+  token's tolerance should shrink with its source's depth. One line in `fit`,
+  and it turns that hazard into a guarantee.
+- Entropy-code `shorthand`'s tokens. Every cost there is a flat log2, an upper
+  bound; a real code would price a short back-reference far below a long one and
+  might change which parse wins.
+- Let `shorthand` reference *forward* as well as back. Music does — a theme is
+  often stated after the material that explains it — and it turns the shortest
+  path into a genuinely harder problem.
+- Point `shorthand` at real tunes. Everything measured there is against
+  structure I planted, which is the right way to test a tool and the wrong way
+  to learn anything about music.
 - **When two independent methods give the same wrong answer, the bug is
   upstream of both.** Two unrelated pitch detectors scored 80.0/85.0/65.0 to
   one decimal in `rhyme`; the fault was the candidate list, not either

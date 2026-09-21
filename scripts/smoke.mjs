@@ -91,6 +91,7 @@ const PLAN = {
   'nest': 'play',
   'afteryou': 'play',
   'chatter': 'play',
+  'shorthand': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
