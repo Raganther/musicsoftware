@@ -180,6 +180,27 @@ can vary before believing it** (under rhythm, from `escalator`).
   samples as a JS array through `page.evaluate` is ~1.6M numbers and it failed
   midway through a sweep for no reproducible reason. Accumulating RMS frames in
   the page is 100× less to move, and the envelope is what the analysis wanted.
+- **A column that does not move when its input does is the finding.**
+  `dichotic`'s first generator produced 2.9 crossings per 64 steps whatever
+  crossing rate it was asked for — a flat column across a ten-fold sweep, read
+  past twice. A crossing is a sign change of the *gap* between two lines, so the
+  gap is what has to be written; as a centre plus a cosine the rate comes out
+  right by construction and can be checked against `cross·n` (measured 0.948 to
+  0.986 of it).
+- **A comparison of two things as a set always matches when both sides hold
+  both.** Asking whether a stream passed through a crossing by comparing the two
+  notes at that step against the two composed notes read 100.0% for both rules
+  at every rate — a clean confirming table measuring nothing, because both
+  streams always contain both notes. The question was about identity *over
+  time*: which line each stream was following before and after.
+- **A sign test that skips zeros skips the crossings that matter.** Two lines
+  that *meet* on a degree and turn — which is exactly what Deutsch's scales do —
+  counted as never crossing, so pieces were reported crossing-free while failing
+  a test crossing-free pieces cannot fail.
+- **The capture worklet posts `r` as well as `l`.** Every harness here has
+  mono-summed because channel 0 is the documented trap; a genuinely stereo
+  sketch wants both, with `channelCount: 2` and `channelCountMode: 'explicit'`
+  on the node, and then per-channel attribution is available.
 - **If the thing you are measuring the value of also appears in how you made
   the data, you have measured your generator.** `shorthand`'s first transform
   ablation asked how much allowing inversion helps — on tunes its own generator
@@ -1228,6 +1249,35 @@ can vary before believing it** (under rhythm, from `escalator`).
   semitone — already makes it breathe every 2.5 s.
 - What sets `hollow`'s −150 dB floor? If it is float32 in the summing bus it
   should move with voice count and amplitude, and both are testable.
+- ~~Nothing here is binaural: an illusion where the two ears receive different
+  things and the percept is neither.~~ → `sketches/dichotic`, Deutsch's scale
+  illusion (1975). Unlike every other illusion in this file the fact is not in
+  the wire — it is central — so what gets measured instead is the
+  combinatorics: regrouping two notes into two streams is a two-state
+  assignment with an exact optimum. Alternating which ear gets which line makes
+  each ear **13.45× more jagged while leaving the music exactly where it was**,
+  and the per-stream figure is identical to the composed lines' own. See
+  `research/log/2026-09-22-dichotic.md`.
+- **The classic demo is not "the listener reassembles the score".** Deutsch's
+  two scales meet in the middle, so they *cross*, and a proximity listener gets
+  the bouncing contour (8 7 6 5 4 5 6 7) rather than either scale — recovery
+  0.5625. The listener assembles something nobody wrote, which is a stronger
+  claim than the one usually made for it.
+- **How fast two lines converge decides whether they are heard to cross or
+  bounce.** By-height grouping can never hear a crossing (0.0% passed through at
+  every rate). Minimum-motion grouping passes through **39.6%** of slow
+  crossings and **7.7%** of fast ones, because slowly converging lines linger
+  near each other and passing costs no motion, while a fast sweep would need a
+  leap. A compositional handle, not a fact about the notes.
+- Onset synchrony as the competing cue in `dichotic`: the notes start together
+  by construction, and staggering them should re-form the streams by *time*
+  rather than by pitch.
+- Deutsch's octave illusion — one tone, two octaves, a different percept in each
+  ear. `dichotic`'s scatter code already does everything except the octave.
+- Sweep an ear imbalance in `dichotic` until the grouping breaks. Where the
+  threshold sits is exactly the sort of number the sketch is built to report.
+- Point `shorthand` at `dichotic`'s ear sequences: the composed lines should
+  compress and the scattered ears should not, which is the same claim in bits.
 - Music software with no undo — everything is a performance.
 - ~~A melody hidden under a band of noise — present in the signal, absent in
   the ear.~~ → `sketches/veil`: simultaneous masking as an instrument. Measured
