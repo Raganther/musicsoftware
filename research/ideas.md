@@ -276,6 +276,29 @@ can vary before believing it** (under rhythm, from `escalator`).
   numbers. Identical output across settings that should differ is the signature:
   the branch was never taken. Configure the seeding event to be near-certain,
   then let the phenomenon establish before recording.
+- **A comparison that fails in precisely the way your hypothesis predicts is not
+  evidence for it.** `vuza`'s first audio run scored the aperiodic canon 35/140
+  and the periodic controls 129/140, which reads as "the aperiodic one is harder
+  to recover" and is an artefact: the sequences were compared *by position in
+  the onset list*, so one missed onset shifts everything after it — which a
+  repeating sequence absorbs and an aperiodic one cannot. Align to the grid by
+  *time* and all four go to 149/149. Before believing a gap between conditions,
+  ask whether the *instrument* is differently sensitive to them.
+- **Typechecking a param default proves nothing about the param.** A select's
+  default is a plain string, so `majorPentatonic` for `pentatonicMajor` is
+  well-typed, throws inside `degree()` on every mount, and leaves the sketch
+  completely silent while every table computed in node stays immaculate — they
+  never touch the sketch. Worth tightening the type so the default has to be one
+  of the declared options.
+- **The first lag of an autocorrelation search is always a local maximum**,
+  because nothing is computed below it. For a low note that edge reads as a
+  pitch several octaves up. Start the peak scan one lag in — and check the pitch
+  histogram against the number of voices, which is what caught it: thirteen
+  classes where there were twelve voices.
+- **Filter on the property you are testing before the expensive step.** `vuza`'s
+  first survey enumerated every entry set of every subject including the
+  periodic ones, which cannot qualify — 79 million of them at n = 48, 88 s where
+  4.6 s would do.
 
 ## Sequencing & rhythm
 
@@ -308,9 +331,32 @@ can vary before believing it** (under rhythm, from `escalator`).
   → `sketches/tiling`: draw a rhythm, and a complete backtracking search finds
   the entry points that tile the cycle. Composite even to 0.07 of a pulse while
   each voice wanders by 4.1. See `research/log/2026-08-10-tiling.md`.
-- Vuza canons — the rhythms that tile but whose entry set is *not* periodic.
+- ~~Vuza canons — the rhythms that tile but whose entry set is *not* periodic.
   The search in `tiling` almost finds them; it needs to reject entry sets that
-  are a union of cosets.
+  are a union of cosets.~~ → `sketches/vuza`: they exist, and not until 72
+  pulses. A complete enumeration of **every** cyclic length from 2 to 60 — every
+  split whose smaller half fits, which for all but 49 and 56 is every split —
+  tried 11,913,350 subjects, found 56,722 that are aperiodic and tile, and
+  **0 with both halves aperiodic**. At 72 there are 1,296. Read off a recording:
+  149 onsets on 149 consecutive pulses, none doubled, 149/149 voices correct,
+  and no shift of the heard sequence comes back onto itself under any renaming
+  of the voices. See `research/log/2026-09-23-vuza.md`.
+- **The property is not generic even where it first exists.** Of 47,821 subjects
+  of six notes that are aperiodic and tile 72 pulses, exactly **3** have an
+  aperiodic partner — 432 entry sets each, 6 up to translation. Eighteen objects
+  in total, and no notation for any of them.
+- **A repeat inside a rhythm is not the same as the rhythm being a repeat.** The
+  subject `{0,8,16,18,26,34}` is `{0,8,16} ⊕ {0,18}`, so 48 of 72 pulses keep
+  their owner under a shift of 8 — and still no shift maps the set to itself.
+  Self-similarity is cheap; periodicity is the thing that can be heard as a loop.
+- Close the one gap in the sweep: the 8×9 split at 72 is C(71,7) = 1.3 × 10⁹
+  subjects by brute force. Building the two sides together instead of filtering
+  finished subjects should cut it enough.
+- 108 and 120, the next two non-Hajós orders, to check that the sweep's zeroes
+  stop exactly where the classification says they do.
+- Nest a Vuza canon inside itself — `nest` recurses a two-voice split into a
+  tree, and subdividing one voice of an exact finite partition is the same move
+  on a different object.
 - Augmentation in a tiling canon: a copy at double the pulse spacing, which is
   how real mensuration canons work and changes the problem completely.
 - Fill each voice of a tiling canon with a pitch sequence rather than one note,

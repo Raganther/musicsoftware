@@ -93,6 +93,7 @@ const PLAN = {
   'chatter': 'play',
   'shorthand': 'play',
   'dichotic': 'play',
+  'vuza': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
