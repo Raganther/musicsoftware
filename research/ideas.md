@@ -299,6 +299,36 @@ can vary before believing it** (under rhythm, from `escalator`).
   first survey enumerated every entry set of every subject including the
   periodic ones, which cannot qualify — 79 million of them at n = 48, 88 s where
   4.6 s would do.
+- **A peak-per-hop envelope needs a hop longer than one cycle of the tone.**
+  `elbows`' detector used 32 samples against a 131 Hz note whose period is 337,
+  so every cycle of the waveform read as a fresh rise: **34 onsets a bar where
+  there were 8**. An RMS window spanning several periods, peak-picked rather
+  than edge-found, fixes it — the envelope peaks a fixed lag after each attack
+  and a constant lag cancels out of every interval. **Four sketches have now
+  hand-rolled an onset detector and all four were wrong first time**; the
+  spectral-flux one this file keeps asking for is overdue.
+- **Two onsets closer together than the notes are long cannot be separated, and
+  the count tells you so.** `elbows` read a steady 11 onsets a bar for 23 of 30
+  bars because gaps of 48 ms held notes of 80 ms, and the overlap beat. A
+  histogram of events-per-bar is a one-line diagnostic whenever the true answer
+  is a known integer, and it named this immediately where the trace only looked
+  noisy.
+- **Validate a window by a quantity that must hold, not by its position in a
+  list.** Indexing windows by onset index put spikes in `elbows`' trace exactly
+  as it had in `vuza`'s the day before. Here n players firing once each span
+  exactly a bar, so checking the span *is* checking that the window holds one of
+  each — a bad window is dropped instead of shifting every window after it.
+- **When a measurement of a moving thing is worse than of a still one, suspect
+  the window, not the thing.** `elbows` agreed with its model to 0.006 and 0.002
+  in log rms for the two arrangements that stand still and only 0.041 for the
+  one converging — because a one-bar window straddles a bar line and mixes the
+  arrangement before the update with the one after. The static cases have
+  nothing to mix, which is what makes the comparison diagnostic.
+- **Normalise the level by what is actually changing.** `elbows` swung 2× in
+  pre-limiter peak — 0.31 settled against 0.62 bunched — for the same notes,
+  because a bunched ensemble is a chord and a spread one is a pulse train. The
+  sketch already computed how bunched it was, so dividing by `1 + order` flattened
+  it. A level that drifts with the state needs the state in its formula.
 
 ## Sequencing & rhythm
 
@@ -802,10 +832,46 @@ can vary before believing it** (under rhythm, from `escalator`).
   away, so λ₂ becomes a function of time and the rate should track it.
 - Edge weights as a mix decision — how loud each player is *is* how much they
   are heard, which makes λ₂ something you perform rather than configure.
-- **Repulsive coupling gives two camps, not an even spread.** Predicted a
+- ~~**Repulsive coupling gives two camps, not an even spread.** Predicted a
   splay, measured clustering at half a beat: "avoid whoever you can hear" is
   satisfied by anti-phase, and an even ring requires knowing how many players
-  there are, which no player does. Worth a rule that does know.
+  there are, which no player does. Worth a rule that does know.~~
+  → `sketches/elbows`, and the rule does **not** need to know. Listen only to
+  whoever played immediately before and immediately after you, move to the
+  middle of that gap, and the ensemble lands on a perfect round-robin —
+  Degesys and Nagpal's DESYNC. The error is the discrete heat equation on a
+  ring, eigenvalues `(1−α) + α·cos(2πk/n)`; measured decay matched **20 of 21**
+  runs at ratio 1.0000, with the mean phase held to 4e−15 and **0 swaps**. See
+  `research/log/2026-09-24-elbows.md`.
+- **The order parameter cannot tell an even ring from a lopsided one.** Twelve
+  seeds at eight players: `midpoint` ends 1.8e−16 uneven and `repel all` ends
+  **0.468** uneven, and the Kuramoto order parameter reads **0.000000 for
+  both**. `repel all` settles with one gap twice the fair share and another
+  half of it. The natural statistic for "spread out" measures bunching, which
+  is a different question, and it is confidently wrong about this one.
+  (At eight players `entrain`'s "two camps" is really a ring with a hole in it.)
+- **At exactly α = 1 the parity of the ensemble decides.** The
+  shortest-wavelength mode has eigenvalue `1 − 2α`, so at 1 it flips sign each
+  bar and never shrinks — and it only exists when n is even. Nine sizes of
+  nine: every even ensemble sticks at ≈0.64 forever, every odd one converges.
+  Not chaos, two arrangements alternating.
+- **A rule can be free of n while its best gain is not.** The fastest
+  correction is `α* = 2/(2 − cos(2π/n) − cos(2π⌊n/2⌋/n))`, ratios 0.9963 →
+  1.0020 over ten sizes. So an ensemble can share a bar out without counting
+  itself and cannot tune how fast it does so without counting itself. At three
+  players α* = 2/3 zeroes every mode and they land in a single bar.
+- Delay in `elbows`: the players already re-place themselves from a bar ago, and
+  more of it should move the stability edge off exactly 1. `drag`'s arithmetic
+  says where.
+- A player who joins or leaves `elbows` mid-piece. The rule never knew how many
+  there were, so it should absorb a newcomer with nothing being told — and how
+  many bars that costs is a number no other sketch here can report.
+- Weight `elbows`' midpoint toward one neighbour and the ensemble should settle
+  on a *ratio* rather than an even split, which is the difference between a
+  metronome and a groove. The eigenvalues stop being circulant.
+- `elbows` finds an exact partition of a bar **by ear**; `vuza` and `nest`
+  construct them. A found partition beside a constructed one is a comparison
+  nothing here has made.
 - When a residual has a tidy explanation, the explanation needs the experiment
   that would kill it in the same breath. `entrain`'s decay error ordered
   perfectly by graph diameter and the story was still wrong — it was the

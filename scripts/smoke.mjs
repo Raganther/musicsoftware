@@ -94,6 +94,7 @@ const PLAN = {
   'shorthand': 'play',
   'dichotic': 'play',
   'vuza': 'play',
+  'elbows': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
