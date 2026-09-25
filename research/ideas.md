@@ -329,6 +329,23 @@ can vary before believing it** (under rhythm, from `escalator`).
   because a bunched ensemble is a chord and a spread one is a pulse train. The
   sketch already computed how bunched it was, so dividing by `1 + order` flattened
   it. A level that drifts with the state needs the state in its formula.
+- **Read back every control, not just the one that already bit you.** `blare`'s
+  `Bore length` slider rounds to its step, so a requested 0.0773 became 0.075
+  and reading σ off the *request* showed a 2.87% model error that was not there.
+  I fixed it for that control. The next run asked for a root of 60 against a
+  slider that maxes at 56, projected the spectrum at a frequency nothing was
+  playing, and reported the model **92.36%** wrong. The fix is the same one
+  applied to everything at once.
+- **A quantity that is wrong only for some inputs is telling you which.** A
+  Bessel quadrature was accurate to 1e−15 at (10, 20) and (24, 24) and wrong at
+  1e−3 at (12, 8.4) — every accurate case had an integer step count, because
+  the count was `256·(n + x)` and the grid then missed the endpoint. Sorting the
+  failures by what they had in common named the bug in one line.
+- **When an error does not move under more effort, it is not that kind of
+  error.** J₁₀(20) sat 1.0e−4 from my remembered reference under a 64× increase
+  in quadrature steps, and the recurrence relation closed at 1e−15 — so the
+  reference was wrong, not the code. One cheap independent check instead of a
+  day chasing a bug that was not there.
 
 ## Sequencing & rhythm
 
@@ -748,6 +765,42 @@ can vary before believing it** (under rhythm, from `escalator`).
   both speak.
 - Map breath against embouchure to get the reed's playable region — the wind
   player's version of Schelleng's bow-force diagram, drawn from measurement.
+- ~~The same rig with a *string* rather than a beam~~ — still open, but the
+  bigger gap was upstream of all of it: **every bore here propagated
+  linearly.** → `sketches/blare`: finite-amplitude propagation, where a
+  compression travels faster than a rarefaction and the waveform shears until a
+  sine is a sawtooth. That is why a trombone blares and a flute does not, and
+  nothing here had it. The worklet solves the implicit simple-wave equation on a
+  delay line whose read position depends on the value being read; measured
+  against Fubini's Bessel series it is within **0.03–0.58%** off the radiated
+  sound and 3.8e−14 in node. See `research/log/2026-09-25-blare.md`.
+- **Amplitude, pitch and bore length are the same knob**, because all three
+  enter only through σ = β·û·ω·x/c₀². Nine settings sweeping each of the three
+  separately land on one Fubini curve to **0.01%** worst. A high note blares at
+  a dynamic where a low note does not, and nobody wrote that rule in.
+- **The numerical method fails exactly where the physics does.** The fixed point
+  `u ← u₀(φ + σu)` contracts by |σ·u₀′|, which for a sine is σ — so it stops
+  converging at σ = 1, which is where the shock forms. The steepest slope runs
+  as 1/(1−σ), measured 1.111 / 1.429 / 2.000 / 3.333 / 6.666 / 19.984 against
+  1.111 / 1.429 / 2.000 / 3.333 / 6.667 / 20.000.
+- **Brightness saturates at the shock.** Past σ = 1 the weak-shock law is a
+  sawtooth, `2/(n(1+σ))`, whose *shape* has no σ in it — so blowing harder stops
+  adding harmonics and only costs amplitude. You cannot blow past a sawtooth.
+- The transition region 1 < σ < 3 in `blare` is unmodelled: Fubini gives 0.880
+  for the fundamental at the shock and the sawtooth law gives 1.000, and the two
+  do not meet. Equal-area shock fitting is the honest version.
+- Steepening should be **cumulative over round trips** rather than a single
+  pass, so a long bore at a given loudness is brighter than a short one at the
+  same pitch. That is the trombone/trumpet difference and it is one delay line.
+- Put `blare`'s line inside `lattice`'s tone-hole bore: the cutoff belongs to
+  the holes and the brightness to the air, and whether steepening pushes energy
+  *past* the lattice cutoff decides whether a loud clarinet is loud or bright.
+- Losses, and the Gol'dberg number — whether a bore reaches its shock before it
+  damps is one dimensionless comparison and it decides whether an instrument can
+  blare at all.
+- The flute is the same sentence backwards: its *jet* is the nonlinearity and
+  its bore is linear, so it saturates in amplitude instead of brightening.
+  Nothing here does an air jet at all.
 - Granular sampler driven by pointer position over a waveform.
 - A synth whose only control is a drawn curve — everything else derived from it.
 - ~~Feedback FM: two operators modulating each other, kept just short of
