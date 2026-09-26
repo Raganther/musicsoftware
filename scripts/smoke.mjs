@@ -96,6 +96,7 @@ const PLAN = {
   'vuza': 'play',
   'elbows': 'play',
   'blare': 'play',
+  'dovetail': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

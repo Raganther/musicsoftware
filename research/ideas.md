@@ -341,6 +341,17 @@ can vary before believing it** (under rhythm, from `escalator`).
   1e−3 at (12, 8.4) — every accurate case had an integer step count, because
   the count was `256·(n + x)` and the grid then missed the endpoint. Sorting the
   failures by what they had in common named the bug in one line.
+- **A fallback can make a claim true by accident.** `dovetail` fell back to
+  `avail[0]` when the requested partner kind was unavailable — and `avail[0]` is
+  the retrograde, which every row has. So a hexachord with no inversional
+  partner silently got one and reported a perfect aggregate. The measurement was
+  right and the thing it measured was not what the panel said. A default that
+  cannot fail will quietly prove whatever you were hoping for.
+- **A canonical label is worth nothing if it is not the literature's.**
+  `dovetail`'s first prime form took the lexicographically smallest rotation,
+  which is perfectly consistent and calls (023457) "(0,1,2,3,5,10)". The counts
+  were right; the six set classes could not be checked against the published six
+  until the labels matched, which was the whole point of counting them.
 - **When an error does not move under more effort, it is not that kind of
   error.** J₁₀(20) sat 1.0e−4 from my remembered reference under a 64× increase
   in quadrature steps, and the recurrence relation closed at 1e−15 — so the
@@ -456,8 +467,13 @@ can vary before believing it** (under rhythm, from `escalator`).
 - Let a node's density drift while `nest` plays: everything below it
   re-partitions continuously, so one slider re-voices a whole texture without
   ever breaking the tiling. No mixer can do that.
-- Nest in *pitch* rather than time — the same recursion over an interval gives a
-  chord whose notes partition an octave the way these partition a bar.
+- ~~Nest in *pitch* rather than time — the same recursion over an interval gives a
+  chord whose notes partition an octave the way these partition a bar.~~
+  → `sketches/dovetail`: the question already had a name. A twelve-tone row
+  splits into two hexachords and is **hexachordally combinatorial** when some
+  transformation begins with the six notes it ends with — so the two voices
+  together give all twelve pitch classes exactly once, which is `nest`'s claim
+  moved from time into pitch. See `research/log/2026-09-26-dovetail.md`.
 - `tiling`, `hocket` and `nest` are the same search at three levels of
   generality (a finite cycle, an infinite one with two voices, an infinite one
   with any number) and have never been put side by side.
@@ -1322,6 +1338,36 @@ can vary before believing it** (under rhythm, from `escalator`).
 - Point `shorthand` at real tunes. Everything measured there is against
   structure I planted, which is the right way to test a tool and the wrong way
   to learn anything about music.
+- ~~Counterpoint and form solved together~~ — still open, but the aggregate half
+  is done: → `sketches/dovetail`. Measured exhaustively over all 924 hexachords:
+  **Babbitt's theorem holds 924 of 924** (a hexachord and its complement have
+  the same interval vector), and the hexachords combinatorial under all four
+  transformations are **48**, forming exactly **six set classes** — the published
+  source sets A–F, found by search rather than looked up, with members
+  12+12+12+6+4+2 = 48 falling out of each set's own transpositional symmetry.
+- **Combinatoriality belongs to the unordered hexachord**, so the order of the
+  row is free: reordering 200 times inside each half leaves it combinatorial
+  200/200, with the identical partner set. The first six notes decide the
+  structure and the melody is yours, which is the difference between a tool and
+  a cage.
+- **Most rows cannot do it at all.** Of 924 hexachords, **384 have only the
+  trivial retrograde partner**, 480 have two, and 12 have more than four. The
+  whole-tone hexachord has 24.
+- **A control that is true by definition is not a control.** Retrograde
+  combinatoriality reads **924 of 924** — because the retrograde of a row starts
+  with the notes the row finished with, always. I nearly reported it as a
+  result. The content is in P, I and RI.
+- Trichordal derivation for `dovetail`: a row built from one trichord and its
+  transformations is combinatorial at a finer grain, every quarter complete.
+  That is `nest`'s recursion one level down, in pitch.
+- All-interval rows — 3856 of them, `isAllInterval` is written and unused, and
+  whether any are also all-combinatorial is one search away.
+- Point `shorthand` at a *serial* piece: built entirely from transforms of one
+  row, so a compressor with a composer's vocabulary should find it nearly free
+  while a naive statistic sees noise. The sharpest available test of
+  `shorthand`, and it needs no corpus.
+- Hexachordal *arrays* — three or more rows partitioning the aggregate between
+  them, which is `nest` going past two voices with no Uspensky in the way.
 - **When two independent methods give the same wrong answer, the bug is
   upstream of both.** Two unrelated pitch detectors scored 80.0/85.0/65.0 to
   one decimal in `rhyme`; the fault was the candidate list, not either
