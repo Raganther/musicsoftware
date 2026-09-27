@@ -347,6 +347,26 @@ can vary before believing it** (under rhythm, from `escalator`).
   partner silently got one and reported a perfect aggregate. The measurement was
   right and the thing it measured was not what the panel said. A default that
   cannot fail will quietly prove whatever you were hoping for.
+- **A control whose right answer is exactly zero localises bugs a plausible
+  number hides.** `mend` shipped three independent envelope bugs, and the same
+  control — the tone gated identically but with the noise removed, which must
+  read silence — moved 0.71 → 0.33 → **0.0000** as each was fixed, one number
+  per fix, which is also what said they were independent. A control that reads
+  "about right" cannot do that.
+- **Chained `linearRampToValueAtTime` is a line, not a gate.** Each ramp starts
+  from the *previous scheduled event*, so a sequence of them is one continuous
+  piecewise-linear curve. `mend`'s tone drifted down across a whole note where it
+  should have been switched off at a burst edge. `setValueAtTime` first, always.
+- **Two schedules of events are not a gate either.** Notes and bursts as
+  independent event streams meant a note beginning inside a burst switched the
+  tone back on. Write the envelope as a piecewise *function of time*, evaluate it
+  at every boundary of either schedule, and it is right by construction rather
+  than by case analysis.
+- **Align on a statistic that actually moves with alignment.** Finding a cycle
+  phase by maximising a high percentile of coherent amplitude fails, because the
+  tone is present most of the time at any offset; the mean only peaks when every
+  window sits inside the note whose frequency it is projected onto. The bad
+  objective made the *control* read 64.5% absent where the answer was 0.
 - **A canonical label is worth nothing if it is not the literature's.**
   `dovetail`'s first prime form took the lexicographically smallest rotation,
   which is perfectly consistent and calls (023457) "(0,1,2,3,5,10)". The counts
@@ -1773,8 +1793,38 @@ can vary before believing it** (under rhythm, from `escalator`).
   supplying the gain. Worth the trouble: peak input impedance is a real
   physical quantity, so it became a parameter with a measured threshold
   (tail RMS 9.6e-4 at 4, 2.8e-1 at 6) instead of an accident of scaling.
+- ~~A melody present in the signal and absent in the ear~~ has a mirror, and it
+  was missing: → `sketches/mend`, auditory continuity. The tone is switched
+  **hard off** under each noise burst and the ear carries the line through.
+  Everything else in this section hides something; nothing here restored
+  anything. Off the sound, the hole reads **exactly 0.0000** with the noise
+  removed, against 1.016 for the same bursts with the tone left playing. See
+  `research/log/2026-09-27-mend.md`.
+- **A note buried end to end cannot be restored by anything**, because there is
+  no evidence either side of it — so which notes are restorable is a property of
+  the *schedule*, not of the listener. Nothing is buried until a burst is
+  strictly longer than a note: 0 buried at exactly one note long, 4 at 1.2.
+- **The same noise covers a high note far more easily.** The auditory filter is
+  38 Hz wide at 125 Hz and 456 at 4 kHz, so the masked threshold rises
+  **10.77 dB** across that range for identical noise. Integrating the roex
+  filter returns the published ERB at ratio 1.0000, and Fletcher's band-widening
+  saturates exactly at the critical band (0.990 of it at 400 Hz wide, 1.000 at
+  800).
+- **A biquad is not a band.** The flat-band model says noise an octave from the
+  tone contributes 3.5e−7 of what centred noise does; a single 2-pole bandpass
+  measured **3.9e−2**, five orders out, because it falls at only 6 dB/octave.
+  Three cascaded stages give 2.8e−4. Any claim of the form "this band is far
+  enough away to do nothing" is about the idealisation until the filter is
+  measured.
+- The pulsation threshold is the real experiment `mend` has not run: sweep the
+  burst level and find where the line stops pulsing. It should sit at the masked
+  threshold, which makes continuity a *way of measuring masking* — and `veil`
+  has the other half of the comparison.
+- Restore something never played: continuity interpolates, so a glide
+  interrupted mid-sweep should be heard completing a curve nobody synthesised.
 - Temporal masking: hide notes in the ~20 ms shadow after a drum hit. Same
-  effect, different time base, no new model needed.
+  effect, different time base, no new model needed. **Backward** masking is the
+  stranger half — a burst hides a tone that came *before* it — and is not here.
 - The inverse of `veil`: play a melody and have the sketch synthesise the
   narrowest band of noise that would hide it — composing the mask, not the tune.
 - Equal-loudness contours in `veil`, so its absolute floor is a real hearing
