@@ -347,6 +347,24 @@ can vary before believing it** (under rhythm, from `escalator`).
   partner silently got one and reported a perfect aggregate. The measurement was
   right and the thing it measured was not what the panel said. A default that
   cannot fail will quietly prove whatever you were hoping for.
+- **Check that your control is the theorem's control.** `stagger` first compared
+  its partition against homogeneous Beatty at the same *rational* densities,
+  which fails at two voices as well — 66,667 unowned, 66,666 doubled — and would
+  have "shown" that two voices cannot hocket either, contradicting `hocket` in a
+  published table. Rayleigh's theorem needs the densities **irrational**;
+  rationals fail for their own reasons and say nothing about voice count.
+- **A partial is indistinguishable from a note, and a detector will say so.**
+  `stagger`'s voices carried a partial at exactly 2.0x, which lands on the
+  fundamental of any voice an octave up: 31 false doubles in 240 pulses. Moving
+  it off the octave did not help — the new ratio landed 16 Hz from a different
+  voice's fundamental, closer than the analysis window resolves. The fix was a
+  threshold above the loudest partial (0.39 of its fundamental), not a change to
+  the instrument. Detector problems do not always have instrument solutions.
+- **One tap, two different right answers.** Channel 0 alone under-reads a
+  panned voice by three times, so attribution needs both channels summed; but
+  the *level* that matters is per channel, because that is what the limiter and
+  the DAC each see, and summing inflated `stagger`'s peak from 0.91 to 1.26.
+  Ask what the number is for before choosing the downmix.
 - **A control whose right answer is exactly zero localises bugs a plausible
   number hides.** `mend` shipped three independent envelope bugs, and the same
   control — the tone gated identically but with the noise removed, which must
@@ -460,10 +478,32 @@ can vary before believing it** (under rhythm, from `escalator`).
   doubles 1/q — 17 fractions, worst departure 1.2e−5. That inverts the usual
   story, where simple ratios are the good ones, and it is the only place I have
   found where a rhythm *prefers* an irrational relationship.
-- Uspensky's theorem in `hocket` says no three parts can share a pulse this way,
+- ~~Uspensky's theorem in `hocket` says no three parts can share a pulse this way,
   but that is for *homogeneous* Beatty sequences. `floor(n·r + s)`, with an
   intercept, does admit partitions into three or more — which ones is Fraenkel's
-  conjecture, open for six parts and up. A three-part hocket that works.
+  conjecture, open for six parts and up. A three-part hocket that works.~~
+  → `sketches/stagger`: one head start per voice and it works, at every voice
+  count — **0 unowned and 0 doubled over 200,000 pulses**, 2 to 7 voices. See
+  `research/log/2026-09-29-stagger.md`.
+- **And the search says there is only one.** Every partition of a period into
+  voices with distinct densities, each a Beatty sequence with any head start, is
+  exhaustively enumerable. Over periods 4–24 and 262 three-voice density splits,
+  partitions exist **only at multiples of 7 and always at ratio 1:2:4**; at four
+  voices, nothing until 15 and then 1:2:4:8. That is Fraenkel's `2^i/(2^m − 1)`,
+  reached by exhaustion rather than looked up, and whether it is *all* there is
+  has been open since 1973.
+- **The voices are real Beatty sequences and `nest`'s were not**, and the gaps
+  say so: `[31] [15,16] [7,8] [3,4] [1,2]` at five voices, one or two distinct
+  gaps each, exactly as the three-distance theorem requires. `nest` measured 3,
+  4, 7 and 8. Two ways round one impossibility, told apart by counting gaps.
+- Six voices and up is where Fraenkel's conjecture is actually open — the search
+  in `stagger` is complete to period 24 at three voices, and a counterexample at
+  six would be a result rather than a verification.
+- Non-distinct densities, which the conjecture excludes and music does not: two
+  voices at one density partition happily (the ruler sequence), so "distinct" is
+  doing real work and dropping it opens a much larger space to compose in.
+- Expose `stagger`'s head starts per voice. They are computed and thrown away,
+  and showing them turns it from a player into a tool for *finding* partitions.
 - ~~Beatty sequences nest: the steps a voice does *not* play are themselves a
   Beatty sequence, so the split recurses. A hocket whose parameter is a tree
   rather than a list of densities, sidestepping Uspensky entirely.~~
