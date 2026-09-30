@@ -347,6 +347,21 @@ can vary before believing it** (under rhythm, from `escalator`).
   partner silently got one and reported a perfect aggregate. The measurement was
   right and the thing it measured was not what the panel said. A default that
   cannot fail will quietly prove whatever you were hoping for.
+- **The instrument that measures a modulation has its own response to it.**
+  `waver`'s pitch tracker uses a 23 ms analysis window, which is a low-pass on
+  the pitch track: it reads a 5.5 Hz modulation at sinc(π·f·T) = 97.3% of its
+  depth. Left in, that is a uniform 2.7% shortfall against the model at every
+  setting — indistinguishable in shape from a real disagreement. Divide out the
+  window's known response; the residual then sits at 0.2%.
+- **Sweep the axis the effect lives on.** `waver`'s first boundary-crossing
+  table held the time constant slow and varied the depth, and found nothing at
+  any depth — correctly, because a slow rail is barely correcting at the vibrato
+  rate and so has almost nothing to distort. The nonlinearity is a function of
+  *both*, and picking the wrong one to vary made a real effect invisible.
+- **A distortion measure needs a signal whose only content is what it measures
+  around.** `waver`'s warble floored at 0.065 and never reached zero, because it
+  counts everything not at the vibrato rate — including the drift term
+  deliberately present in the same signal.
 - **Check that your control is the theorem's control.** `stagger` first compared
   its partition against homogeneous Beatty at the same *rational* densities,
   which fails at two voices as well — 66,667 unowned, 66,666 doubled — and would
@@ -1058,9 +1073,35 @@ can vary before believing it** (under rhythm, from `escalator`).
 - Per-degree rail strength: pull hard to the tonic and barely at all to the
   seventh, which is closer to how tonality behaves than a uniform snap and makes
   the staircase uneven in a way you could compose with.
-- A rail with a *time constant* rather than an instantaneous one: vibrato
+- ~~A rail with a *time constant* rather than an instantaneous one: vibrato
   survives auto-tune only if the correction is slow, so the measurement becomes
-  one of modulation depth rather than static pitch.
+  one of modulation depth rather than static pitch.~~
+  → `sketches/waver`: lag the correction instead of weakening it and what
+  survives is a one-pole **high-pass on pitch error** — measured against the
+  exact discrete transfer function at ratio **1.0000 on 11 of 12** cells, and
+  0.998 off the sound at every time constant. See
+  `research/log/2026-09-30-waver.md`.
+- **The strength axis cannot separate expression from error, and the number is
+  1.00.** Over strengths 0 → 1 the vibrato kept runs 0.9830 / 0.7372 / 0.4915 /
+  0.2457 / 0.0000 and the slow error 0.9911 / 0.7434 / 0.4956 / 0.2478 / 0.0000
+  — identical to three figures everywhere, because a gain scales both. The time
+  axis reaches a ratio of **14.1** (86% of a 6 Hz vibrato kept, 94% of a 0.2 Hz
+  drift removed, at 50 ms). Not a better setting of one trade, a different one.
+- **The knee is exactly half a snap step**, where `snap` starts jumping and the
+  rail stops being a filter. Under it the linear answer holds to four decimals;
+  over it **a vibrato escapes the rail entirely** (0.4524 kept below, 0.9634
+  above) and takes a warble with it. A fast rail flattens a subtle vibrato and
+  lets a wide one through.
+- **And the warble belongs to the fast rail, not to the crossing**: at a fixed
+  depth of 1.8 half-steps it runs 0.1011 at τ = 0 and exactly 0.0000 by τ = 0.3,
+  because a slow rail is barely correcting at 6 Hz and so has nothing to distort.
+- A rail with two time constants — fast for the attack, slow for the sustain. A
+  scoop into a note is a fast pitch move that should be left alone, and a fast
+  rail flattens it.
+- The knee moves with the scale: on a pentatonic it should sit at a whole
+  semitone rather than half of one. Measured only chromatically so far.
+- Correct toward the *predicted* pitch rather than the current one — `drag` and
+  `afteryou` both want anticipation for timing and pitch has the same structure.
 - **Scheduling more notes than there are voices plays only the last few.**
   `PolySynth` allocates when `note()` is called, not when the note is due, so a
   61-note sweep handed over at once came back as 10 notes — and paired against

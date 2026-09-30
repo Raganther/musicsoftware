@@ -99,6 +99,7 @@ const PLAN = {
   'dovetail': 'play',
   'mend': 'play',
   'stagger': 'play',
+  'waver': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------
