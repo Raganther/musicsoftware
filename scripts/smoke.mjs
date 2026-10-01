@@ -100,6 +100,7 @@ const PLAN = {
   'mend': 'play',
   'stagger': 'play',
   'waver': 'play',
+  'stretch': 'play',
 }
 
 // -- locate playwright -------------------------------------------------------

@@ -411,6 +411,50 @@ can vary before believing it** (under rhythm, from `escalator`).
   reference was wrong, not the code. One cheap independent check instead of a
   day chasing a bug that was not there.
 
+- **A constant floor on an exponential ramp is a *relative* floor.** An
+  AudioParam exponential ramp cannot reach zero, so it needs a positive target,
+  and `Math.max(1e-5, peak*0.0008)` looks like a safe one. It is a different
+  number of dB down for a quiet partial than for a loud one, so the quiet ones
+  stop decaying early and ring on. In `stretch` every partial from the twelfth
+  up measured high, by up to 55%, and the crossover sat exactly where
+  `gain·a·0.0008` fell under the floor. Make the floor small enough never to
+  bind (1e-9) rather than small enough to sound inaudible.
+- **Cleanup runs before the host's fade, so disconnecting in it clicks.**
+  `host.ts` fades a sketch's bus out over 10 ms and disconnects at 120 ms
+  precisely to avoid cutting a ringing voice — but `ctx.cleanup` functions run
+  *first*, so a `bus.disconnect()` there pre-empts the fade. Measured, the sound
+  stopped dead inside one render quantum where the fade would have left 13% of
+  it 20 ms later. Hand the teardown to the same timer.
+- **`#/` is not an empty route.** `route()` does `id ? findSketch(id) :
+  sketches[0]`, so the bare hash mounts the *first* sketch — `aeolian-harp`,
+  which plays on its own. Checking "nothing is audible after navigating away" by
+  navigating to `#/` reads 3.5e-2 of someone else's sketch and sends you looking
+  for a leak you do not have. An unknown id renders "Not found" and mounts
+  nothing; that is the route that tests teardown. Now in `CLAUDE.md`.
+- **Analyse the note that is sounding, not the one you asked for.** A harness
+  that measures `partial(mtof(root), B, n)` while the sketch plays a seeded walk
+  is analysing frequencies belonging to a note that is not playing. Two fixes
+  worth reusing: strike exactly one note by starting the transport and stopping
+  it before the second (the first is already scheduled on the audio graph and
+  rings on regardless), and recover its pitch *from the recording* by scanning
+  equal-tempered candidates and taking the lowest strong one.
+- **Fit the onset instead of trusting the detector, and report both numbers.**
+  A decay of `6/n^0.7` seconds is steep enough that a 4 ms error in where the
+  note started reads as a smooth 2%-per-partial drift — indistinguishable in
+  shape from a real disagreement. Fitting one free parameter over sixteen
+  partials took the worst error from 3.3% to 0.1%, and the fitted offset was
+  4.4 ms, the length of the attack ramp. One parameter against sixteen
+  constraints is a calibration; quoting only the fitted number would not be.
+- **An estimator that discards the outliers in one direction is biased.** The
+  time constant of a fade, taken as the mean of block-to-block ratios with the
+  ratios above 1 dropped, read 8.3 ms where a least-squares fit on log amplitude
+  gives 9.9 and the endpoints give 10.15. The fade began while partials were
+  still beating, so the early blocks are not monotone, and throwing away only
+  the ones above 1 pulls the mean down.
+- **A table in a `notes` field is read as data, so it had better not be
+  arithmetic done in your head.** Two cells of `stretch`'s partial-cents table
+  were 205.77 and 429.45 where the function says 197.30 and 393.76.
+
 ## Sequencing & rhythm
 
 - Sequencer where each step holds a *probability* and a *condition* ("only on
@@ -718,8 +762,44 @@ can vary before believing it** (under rhythm, from `escalator`).
   the drummer's whole problem.
 - `rosin` has a stick-slip state machine and `chatter` has a bouncing contact.
   A brush is both at once and neither sketch can make one.
-- The same rig with a *string* rather than a beam: the piano hammer problem,
-  where the strike point kills the 8th partial and everyone can hear it.
+- ~~The same rig with a *string* rather than a beam: the piano hammer problem,
+  where the strike point kills the 8th partial and everyone can hear it.~~
+  → `sketches/stretch`: the strike comb turned out to be the small half of it.
+  A real wire resists bending, so its partials are **stretched** — 197 cents at
+  n = 16 for B = 0.001 — and the octave then has four right answers that
+  disagree by 37 cents. Closed form `width = 1200·log₂(2√(4 − 3/(1+Bk²)))`,
+  which makes "always wide", "ordered in k" and a ceiling of exactly 2400 cents
+  theorems rather than observations. Beats measured off the audio within
+  0.01 Hz of prediction; the 1/8 null reads −137 dB. See
+  `research/log/2026-10-01-stretch.md`.
+- **Three strings per note, slightly apart, which is what a piano has.**
+  `stretch` has one string per note and so has no unison; the beats *within* a
+  unison are the other half of what a tuner sets, and they are a different
+  sound from the octave beats — slower, and not dependent on stiffness.
+- **A felt hammer instead of a comb.** The strike comb assumes a point contact
+  at an instant. A real hammer has a width, which low-passes the comb so the
+  nulls fill in, and a contact time, which cannot excite a partial whose period
+  is shorter than it. `mallet` already has Chaigne–Askenfelt contact; against a
+  string it would make the nulls *approximate*, which is the honest version of
+  the claim `stretch` currently makes exactly.
+- **Stiffness as a tuning instrument rather than a piano simulation.** B is a
+  continuous knob from harmonic to bell-like, and the scale that sounds
+  consonant on a stretched spectrum is not 12-TET. A Sethares dissonance curve
+  over the partials `n·f₀·√(1+Bn²)` gives a different optimal scale for every B:
+  one slider that retunes the keyboard to match the timbre.
+- **The 2400-cent ceiling is audible and untested.** At B = 0.012 the k = 8
+  partial pair wants an "octave" of 1343 cents and `stretch` only offers k up to
+  4. Let k reach 16 and you could hear a beat-free interval of nearly a twelfth
+  — the strangest consequence of the closed form, and currently only a number.
+- **Fit B to a real recording rather than choosing it.** The formula says B is
+  fixed by `d²/(f₀²L⁴)`; a recorded piano note would say whether the partials of
+  an actual instrument follow `√(1+Bn²)` as far as n = 16 or drift off it, and
+  the drift is where soundboard coupling lives.
+- The strike comb and the octave choice are independent in `stretch` and are not
+  independent in a piano: the hammer line is placed to suppress the partials
+  that would otherwise make the tuner's life impossible. Striking at 1/8 kills
+  partial 8 and so **removes the 8:4 octave from the tuner's options entirely**.
+  That interaction is implemented and unexplored.
 - ~~A gong rather than a bell: the shimmer that arrives *after* the strike,
   which no linear model can produce.~~ → `sketches/bloom`: modal plate plus
   resonant-triad coupling. Measured a 2.76× brightness rise peaking 0.47 s
@@ -902,7 +982,10 @@ can vary before believing it** (under rhythm, from `escalator`).
   bifurcation, so dynamics and timbre are the same gesture.
 - A third FM operator — quasi-periodic (torus) territory, not just more chaos.
 - A harmonic-deviation measure for the core, so inharmonicity claims can be
-  tested; spectral flatness can only see noisiness.
+  tested; spectral flatness can only see noisiness. `stretch` has
+  `partialCents(B, n)`, which is this for the one case where the deviation has a
+  closed form — promoting a measured-against-nearest-harmonic version is the
+  general one, and would let `bloom`, `attractor` and `wolf` be compared.
 
 ## Improvisation & interaction
 

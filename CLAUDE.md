@@ -122,6 +122,11 @@ at `/opt/pw-browsers/`), tap the master bus *before* the limiter, and check:
 sketch produces sound, pre-limiter peak stays under 1.0, and nothing is still
 audible after navigating away.
 
+**Navigate away to an unknown id, not to `#/`.** `route()` falls back to
+`sketches[0]` for an empty hash, so `#/` mounts `aeolian-harp`, which plays on
+its own — the silence check then reads someone else's sketch. `#/__nothing__`
+renders "Not found" and mounts nothing.
+
 **A driven page runs slower than real time unless you say otherwise.** Chromium
 throttles timers in a page it thinks is backgrounded, and the lookahead
 scheduler then only ever fills its own horizon — so the transport advances at
