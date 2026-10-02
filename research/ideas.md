@@ -455,6 +455,39 @@ can vary before believing it** (under rhythm, from `escalator`).
   arithmetic done in your head.** Two cells of `stretch`'s partial-cents table
   were 205.77 and 429.45 where the function says 197.30 and 393.76.
 
+- **A search window centred on the answer finds the answer-shaped thing nearest
+  to it.** Peak-picking the tierce of a bell within ±2% of where it should be is
+  ±35 cents, and another bell's quint sat 13.7 cents away: the search took the
+  quint and read 302.01 cents for a 315.64-cent interval. Worse, in the next run
+  the same trap caught the *prime* instead, so the two errors came out in
+  opposite directions and looked like a sign error in the arithmetic rather than
+  contamination in the signal. Remove the contamination rather than narrowing
+  the window — one source sounding alone — and then find the partials by
+  *scanning* rather than by guessing where they are. All of them coming out is a
+  stronger check than the one you set out to make.
+- **An instrument's resolution is a claim about the last digit you may print.**
+  A log-frequency scan at 1.0008 per step is a 1.39-cent grid, and partials read
+  straight off it came out at 1.9988, 2.9980 and 3.9982 against an exact 2, 3
+  and 4 — a tidy −1 cent that looks exactly like a real stretch. Refining each
+  peak locally gives 2.0000, 3.0000, 4.0000.
+- **A test that encodes a half-remembered fact fails for two reasons and tells
+  you about neither.** `extent`'s first check asserted that three courses of
+  Plain Bob with bobs make the extent on four bells. The plain course *is* the
+  extent there — the 3 belongs to five bells — so the check was wrong at the
+  same time as the code it was checking, and the output said only "true false".
+- **Branch on the parity of the thing that alternates.** Whether the change that
+  returns plain hunt to rounds is `(12)(34)…` or `(23)(45)…` depends on the
+  parity of the *step index*; branching on the parity of the number of *bells*
+  reported "does not close" for all eight cases when the answer is yes for all
+  eight. The construction already proved it, so the check had no way to be right
+  and every opportunity to look authoritative.
+- **A voice cap is a guess about what graceful degradation means, and sometimes
+  it is wrong.** Capping concurrent bells at 16 in `extent` would have muted
+  nine blows in every twenty-five at the longest ring — and a muted bell there
+  is not a thinner texture, it is a **wrong row**. Where the concurrent count is
+  bounded by construction (`ring / step`), set the cap above that bound and
+  count the drops where it can still bind.
+
 ## Sequencing & rhythm
 
 - Sequencer where each step holds a *probability* and a *condition* ("only on
@@ -772,6 +805,16 @@ can vary before believing it** (under rhythm, from `escalator`).
   theorems rather than observations. Beats measured off the audio within
   0.01 Hz of prediction; the 1/8 null reads −137 dB. See
   `research/log/2026-10-01-stretch.md`.
+- **A bell is a shell of revolution, not seven sines.** `extent` uses the
+  founders' tuning *targets* (hum 0.5, prime 1, tierce 1.2, quint 1.5, nominal
+  2) rather than anything derived, and measured they come out exactly because
+  they were put in exactly. `bloom` has a modal plate; a real bell would let the
+  tierce move because the **shape** moved, which is what tuning a bell by
+  shaving metal off the inside actually does.
+- **Odd-struck bells.** Real bells do not strike on the beat — the metal has its
+  own opinion — and ringers compensate by ear. A per-bell timing offset plus a
+  listener's correction is a rhythm experiment with a measurable target, and
+  `waver`'s one-pole rail is already the machinery for it.
 - **Three strings per note, slightly apart, which is what a piano has.**
   `stretch` has one string per note and so has no unison; the beats *within* a
   unison are the other half of what a tuner sets, and they are a different
@@ -1522,6 +1565,36 @@ can vary before believing it** (under rhythm, from `escalator`).
 - Point `shorthand` at real tunes. Everything measured there is against
   structure I planted, which is the right way to test a tool and the wrong way
   to learn anything about music.
+- **Change ringing: a composition is a Hamiltonian cycle.** → `sketches/extent`.
+  A bell can move at most one place between rows, so a change is a set of
+  disjoint adjacent swaps and the number of legal ones is **F(n+1)** (checked
+  n = 1…12). Exactly one of them moves every bell on an even number of bells and
+  **none** does on an odd number, so a method must make places. Plain Bob's
+  plain course is 2n(n−1) rows and an extent is **(n−2)!/2** of them; of 4096
+  bob patterns in a 120 of Doubles exactly **12** are true. Rows recovered from
+  the *audio* matched the composition 24/24, 120/120, 120/120 and 12/12. See
+  `research/log/2026-10-02-extent.md`.
+- **A place-notation parser is the one piece that opens the corpus.**
+  `-16-16-16-16-16-12` fully specifies Plain Bob Minor; with a reader for that
+  string, Grandsire, Stedman, Cambridge and a few thousand named methods become
+  data rather than code. `extent` hard-codes three methods because it has none.
+- **Singles as well as bobs.** A 720 of Plain Bob Minor needs them and their
+  absence is exactly why `extent` cannot reach the extent on six bells. A single
+  (`1234`) swaps two bells where a bob rotates three, so it changes the parity —
+  which is the real reason it is needed rather than a second flavour of call.
+- **Score a composition by its music, and search for that.** Ringers prize
+  particular rows — queens (135246), tittums (142536), runs of 5678 at the back
+  — and judge a peal by how many it contains. That makes the seeded search an
+  *optimiser over Hamiltonian cycles with a musical objective*, which is a
+  composition tool rather than a generator.
+- **Falseness**: the classical account of why a composition cannot be true, in
+  terms of false course heads, is a statement about which courses overlap before
+  a note is rung. `extent.callPatterns` finds the 12 true 120s by brute force
+  over 4096; falseness explains *why* twelve.
+- **Call changes** — a conductor names each swap aloud and the band rings it.
+  A human walking the Cayley graph one edge at a time, which is a wholly
+  different interaction from running a method, and nothing in the repo lets you
+  hear a composition being made as you make it.
 - ~~Counterpoint and form solved together~~ — still open, but the aggregate half
   is done: → `sketches/dovetail`. Measured exhaustively over all 924 hexachords:
   **Babbitt's theorem holds 924 of 924** (a hexachord and its complement have
